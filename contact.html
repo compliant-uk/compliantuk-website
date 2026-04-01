@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — CompliantUK</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap');
+:root{--bg:#080c14;--bg1:#0d1220;--bg2:#111827;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--blue:#3b82f6;--blue2:#60a5fa;--blue3:#1d4ed8;--emerald2:#34d399;--font:'Bricolage Grotesque',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+nav{background:rgba(8,12,20,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 5%;position:sticky;top:0;z-index:99}
+.nav-wrap{max-width:1160px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--blue3),var(--blue));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:white}
+.logo-name{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-0.4px}
+.logo-name span{color:var(--blue2)}
+.back-link{color:var(--text3);text-decoration:none;font-size:14px}
+.back-link:hover{color:var(--text2)}
+.page-wrap{max-width:960px;margin:0 auto;padding:60px 20px 80px}
+.page-tag{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue2);margin-bottom:12px}
+h1{font-size:2.2rem;font-weight:800;letter-spacing:-1px;margin-bottom:12px}
+.sub{font-size:1rem;color:var(--text2);margin-bottom:48px;line-height:1.7}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px}
+.contact-card{background:var(--bg1);border:1px solid var(--border2);border-radius:14px;padding:24px}
+.cc-icon{font-size:24px;margin-bottom:12px}
+.cc-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.cc-desc{font-size:13.5px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.cc-link{display:inline-flex;align-items:center;gap:6px;color:var(--blue2);text-decoration:none;font-size:14px;font-weight:600}
+.cc-link:hover{text-decoration:underline}
+.form-card{background:var(--bg1);border:1px solid var(--border2);border-radius:14px;padding:32px}
+.form-title{font-size:18px;font-weight:700;margin-bottom:6px}
+.form-sub{font-size:14px;color:var(--text2);margin-bottom:24px}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px}
+input,select,textarea{background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:8px;padding:11px 13px;font-size:14px;font-family:var(--font);color:var(--text);outline:none;transition:all 0.15s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.1)}
+input::placeholder,textarea::placeholder{color:var(--text3)}
+textarea{resize:vertical;min-height:120px}
+select option{background:var(--bg2)}
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--blue3),var(--blue));color:white;border:none;padding:14px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;margin-top:6px}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,0.3)}
+.success-msg{display:none;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:9px;padding:14px 16px;font-size:14px;color:var(--emerald2);margin-top:14px;text-align:center}
+.response-note{font-size:12px;color:var(--text3);text-align:center;margin-top:10px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+footer{border-top:1px solid var(--border);padding:28px 5%;text-align:center;font-size:12px;color:var(--text3)}
+footer a{color:var(--text3);text-decoration:none}
+footer a:hover{color:var(--text2)}
+</style>
+</head>
+<body>
+<nav><div class="nav-wrap"><a href="index.html" class="logo"><div class="logo-mark">✓</div><span class="logo-name">Compliant<span>UK</span></span></a><a href="index.html" class="back-link">← Back to home</a></div></nav>
+
+<div class="page-wrap">
+  <div class="page-tag">Support</div>
+  <h1>Get in touch</h1>
+  <p class="sub">Questions about your order, the service, or compliance requirements? We're here to help. Most enquiries are answered within a few hours.</p>
+
+  <div class="grid">
+    <div class="contact-card">
+      <div class="cc-icon">📧</div>
+      <div class="cc-title">Email us</div>
+      <div class="cc-desc">For general enquiries, order questions, or compliance guidance. We aim to respond within 4 hours during business hours.</div>
+      <a href="mailto:huseyin.turkay@compliantuk.co.uk" class="cc-link">huseyin.turkay@compliantuk.co.uk →</a>
+    </div>
+    <div class="contact-card">
+      <div class="cc-icon">⚡</div>
+      <div class="cc-title">Urgent support</div>
+      <div class="cc-desc">If you have an urgent compliance issue — for example the 31 May deadline is imminent — email us with "URGENT" in the subject line.</div>
+      <a href="mailto:huseyin.turkay@compliantuk.co.uk?subject=URGENT" class="cc-link">Send urgent message →</a>
+    </div>
+    <div class="contact-card">
+      <div class="cc-icon">🏘️</div>
+      <div class="cc-title">Portfolio & agent enquiries</div>
+      <div class="cc-desc">Managing multiple properties or a letting agency? Ask about our portfolio discounts and monthly retainer options.</div>
+      <a href="mailto:huseyin.turkay@compliantuk.co.uk?subject=Portfolio enquiry" class="cc-link">Enquire about portfolio pricing →</a>
+    </div>
+    <div class="contact-card">
+      <div class="cc-icon">🛡️</div>
+      <div class="cc-title">Compliance expertise</div>
+      <div class="cc-desc">Our founder has 10+ years in HHSRS, Awaab's Law, and housing compliance. We can help with more than just the Information Sheet.</div>
+      <a href="mailto:huseyin.turkay@compliantuk.co.uk?subject=Compliance question" class="cc-link">Ask a compliance question →</a>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-title">Send us a message</div>
+    <div class="form-sub">Fill in the form below and we'll get back to you shortly.</div>
+
+    <div class="field">
+      <label>Your name *</label>
+      <input type="text" id="c-name" placeholder="John Smith" />
+    </div>
+    <div class="field">
+      <label>Email address *</label>
+      <input type="email" id="c-email" placeholder="you@email.com" />
+    </div>
+    <div class="field">
+      <label>Subject</label>
+      <select id="c-subject">
+        <option value="">Select a topic...</option>
+        <option>Order question</option>
+        <option>Compliance guidance</option>
+        <option>Portfolio / agent pricing</option>
+        <option>Technical issue</option>
+        <option>Refund request</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Message *</label>
+      <textarea id="c-message" placeholder="Tell us how we can help..."></textarea>
+    </div>
+
+    <button class="submit-btn" onclick="sendMessage(this)">Send message →</button>
+    <div class="success-msg" id="success-msg">✓ Message sent — we'll be in touch shortly!</div>
+    <p class="response-note">We typically respond within 4 hours Mon–Fri, 9am–6pm</p>
+  </div>
+</div>
+
+<footer>© 2026 CompliantUK · <a href="index.html">Home</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></footer>
+
+<script>
+function sendMessage(btn) {
+  var name = document.getElementById('c-name').value.trim();
+  var email = document.getElementById('c-email').value.trim();
+  var message = document.getElementById('c-message').value.trim();
+  if (!name || !email || !message) { alert('Please fill in your name, email, and message.'); return; }
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  // Opens email client as fallback — replace with proper form handler when backend is ready
+  var subject = document.getElementById('c-subject').value || 'Website enquiry';
+  var body = 'Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message;
+  window.location.href = 'mailto:huseyin.turkay@compliantuk.co.uk?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  setTimeout(function() {
+    document.getElementById('success-msg').style.display = 'block';
+    btn.textContent = 'Send message →';
+    btn.disabled = false;
+  }, 1000);
+}
+</script>
+</body>
+</html>
