@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CompliantUK — Renters' Rights Act 2026 Compliance for Landlords</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#080c14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CompliantUK">
 <meta name="description" content="Serve the official Information Sheet to your tenants with verified proof of delivery. Avoid £7,000 fines. Compliant in minutes.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;1,400;1,500&display=swap');
@@ -2131,6 +2135,18 @@ window.addEventListener('scroll', () => {
     nav.style.borderBottomColor = 'rgba(255,255,255,0.07)';
   }
 });
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(reg) {
+      console.log('SW registered');
+    }).catch(function(err) {
+      console.log('SW error', err);
+    });
+  });
+}
 </script>
 
 </body>
