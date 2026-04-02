@@ -814,7 +814,6 @@ h2 .serif {
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto auto;
   gap: 14px;
 }
 .bento-card {
@@ -841,8 +840,8 @@ h2 .serif {
   transform: translateY(-2px);
   box-shadow: 0 8px 32px rgba(0,0,0,0.3);
 }
-.bento-card.wide { grid-column: span 2; }
-.bento-card.tall { grid-row: span 2; }
+
+
 .bento-icon {
   width: 44px; height: 44px;
   border-radius: 10px;
@@ -1235,11 +1234,13 @@ footer {
   .steps-grid { grid-template-columns: 1fr 1fr; }
   .step-connector { display: none; }
   .bento-grid { grid-template-columns: 1fr 1fr; }
-  .bento-card.wide { grid-column: span 2; }
+  
 }
 @media (max-width: 700px) {
   .bar { font-size: 11.5px; }
   .nav-links { display: none; }
+
+
   .hero { padding: 60px max(5%,16px) 60px; }
   h1.hero-h { font-size: 2.3rem; letter-spacing: -0.8px; }
   .stats-inner { grid-template-columns: 1fr 1fr; }
@@ -1396,11 +1397,43 @@ footer {
 }
 
 @media (max-width: 600px) {
+  .hamburger { display: flex; }
+  .nav-links { display: none; }
+
   .step-v2 { grid-template-columns: 60px 1fr; gap: 0 16px; }
   .step-v2-icon-wrap { width: 54px; height: 54px; border-radius: 14px; }
   .step-v2-title { font-size: 1.05rem; }
 }
 
+
+/* ── HAMBURGER MOBILE MENU ── */
+.hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:8px; }
+.hamburger span { display:block; width:22px; height:2px; background:var(--text2); border-radius:2px; transition:all 0.3s; }
+.hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+.hamburger.open span:nth-child(2) { opacity:0; }
+.hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+.mobile-menu {
+  display:none;
+  position:fixed;
+  top:60px; left:0; right:0;
+  background:rgba(13,18,32,0.98);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border2);
+  padding:16px;
+  z-index:998;
+  flex-direction:column;
+  gap:4px;
+}
+.mobile-menu.open { display:flex; }
+.mm-link {
+  display:flex; align-items:center; gap:10px;
+  padding:12px 14px; border-radius:10px;
+  text-decoration:none; font-size:15px; font-weight:600;
+  color:var(--text2); transition:all 0.15s;
+}
+.mm-link:hover { background:rgba(255,255,255,0.06); color:var(--text); }
+.mm-link.primary { background:var(--blue); color:white; margin-top:8px; justify-content:center; }
+.mm-link.primary:hover { background:#2563eb; }
 </style>
 <script type="application/ld+json">
 {
@@ -1482,10 +1515,27 @@ footer {
       <li><a href="#features">Features</a></li>
       <li><a href="#pricing">Pricing</a></li>
       <li><a href="#faq">FAQ</a></li>
+      <li><a href="blog.html">Blog</a></li>
       <li><a href="login.html" class="nav-btn">Log in</a></li>
     </ul>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#how-it-works" class="mm-link" onclick="closeMenu()">📋 How it works</a>
+  <a href="#features" class="mm-link" onclick="closeMenu()">✨ Features</a>
+  <a href="#pricing" class="mm-link" onclick="closeMenu()">💷 Pricing</a>
+  <a href="blog.html" class="mm-link" onclick="closeMenu()">📖 Blog</a>
+  <a href="bulk.html" class="mm-link" onclick="closeMenu()">🏘️ Portfolio & Agency</a>
+  <a href="about.html" class="mm-link" onclick="closeMenu()">👋 About us</a>
+  <a href="contact.html" class="mm-link" onclick="closeMenu()">✉️ Contact</a>
+  <a href="login.html" class="mm-link" onclick="closeMenu()">👤 Log in</a>
+  <a href="#get-compliant" class="mm-link primary" onclick="closeMenu()">Get compliant — £49 →</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -1789,7 +1839,7 @@ footer {
     <div class="bento-grid reveal">
 
       <!-- Wide — Official document -->
-      <div class="bento-card wide">
+      <div class="bento-card">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;">
           <div style="flex:1;min-width:200px;">
             <div class="bento-icon blue">
@@ -1837,7 +1887,7 @@ footer {
       </div>
 
       <!-- Live tracking — tall with demo -->
-      <div class="bento-card tall">
+      <div class="bento-card">
         <div class="bento-icon blue">
           <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
             <circle cx="11" cy="11" r="9" stroke="var(--blue2)" stroke-width="1.4" fill="rgba(59,130,246,0.08)"/>
@@ -1909,7 +1959,7 @@ footer {
       </div>
 
       <!-- Wide — Dashboard -->
-      <div class="bento-card wide">
+      <div class="bento-card">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;">
           <div style="flex:1;min-width:200px;">
             <div class="bento-icon emerald">
@@ -2102,8 +2152,9 @@ footer {
       <span class="logo-name">Compliant<span>UK</span></span>
     </div>
     <ul class="footer-links">
-      <li><a href="privacy.html">Privacy Policy</a></li>
-      <li><a href="terms.html">Terms of Service</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a href="terms.html">Terms</a></li>
       <li><a href="contact.html">Contact</a></li>
       <li><a href="login.html">Log in</a></li>
     </ul>
