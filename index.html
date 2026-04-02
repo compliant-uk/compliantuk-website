@@ -429,6 +429,23 @@ h1.hero-h .outline {
 .s21-icon { font-size:14px; flex-shrink:0; margin-top:1px; }
 .s21-text { font-size:12px; color:var(--amber2); line-height:1.55; font-weight:500; }
 
+.plan-toggle { display:grid; grid-template-columns:1fr 1fr; border-bottom:1px solid var(--border); }
+.plan-btn { padding:13px 15px; background:none; border:none; cursor:pointer; font-family:var(--font); text-align:left; border-bottom:2px solid transparent; transition:all 0.2s; position:relative; }
+.plan-btn:first-child { border-right:1px solid var(--border); }
+.plan-btn:hover { background:rgba(255,255,255,0.03); }
+.plan-btn.active { background:rgba(59,130,246,0.07); border-bottom-color:var(--blue); }
+.plan-btn.bundle-active { background:rgba(99,102,241,0.08) !important; border-bottom-color:#818cf8 !important; }
+.pb-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:3px; }
+.pb-name { font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; }
+.plan-btn.active .pb-name { color:var(--text); }
+.pb-price { font-size:16px; font-weight:800; color:var(--blue2); font-family:var(--mono); letter-spacing:-0.5px; }
+.pb-price-wrap { display:flex; align-items:baseline; gap:5px; }
+.pb-was { font-size:11px; color:var(--text3); text-decoration:line-through; font-family:var(--mono); }
+.pb-desc { font-size:11.5px; color:var(--text3); line-height:1.4; }
+.plan-btn.active .pb-desc { color:var(--text2); }
+.pb-badge { position:absolute; top:7px; right:8px; font-size:10px; font-weight:700; background:rgba(99,102,241,0.15); color:#c4b5fd; border:1px solid rgba(99,102,241,0.25); padding:1px 7px; border-radius:20px; font-family:var(--mono); }
+.price-includes { font-size:11px; color:var(--text3); margin-top:2px; }
+
 .hero-card {
   background: var(--bg1);
   border: 1px solid var(--border2);
@@ -1518,180 +1535,76 @@ footer {
     <!-- CHECKOUT CARD -->
     <div class="hero-card" id="get-compliant">
 
-      <!-- Card header -->
       <div class="card-top">
-        <div class="card-logo">
-          <div class="card-logo-mark">✓</div>
-          CompliantUK
-        </div>
-        <div class="card-status">
-          <span class="bar-dot"></span>
-          31 MAY DEADLINE
-        </div>
+        <div class="card-logo"><div class="card-logo-mark">✓</div>CompliantUK</div>
+        <div class="card-status"><span class="bar-dot"></span>31 MAY DEADLINE</div>
       </div>
 
-      <!-- Tabs -->
-      <div class="card-tabs">
-        <button class="card-tab active" onclick="switchTab('starter',this)">
-          <span class="ct-icon">📋</span>
-          <span class="ct-label">Information Sheet</span>
-          <span class="ct-price">£49</span>
+      <!-- Plan selector -->
+      <div class="plan-toggle">
+        <button class="plan-btn active" id="btn-starter" onclick="selectPlan('starter')">
+          <div class="pb-top"><span class="pb-name">Starter</span><span class="pb-price">£49</span></div>
+          <div class="pb-desc">Information Sheet + proof certificate</div>
         </button>
-        <button class="card-tab" onclick="switchTab('tenancy',this)">
-          <span class="ct-icon">📄</span>
-          <span class="ct-label">+ Tenancy Agreement</span>
-          <span class="ct-price ct-upsell">£89</span>
+        <button class="plan-btn" id="btn-bundle" onclick="selectPlan('bundle')">
+          <div class="pb-top">
+            <span class="pb-name">Bundle</span>
+            <div class="pb-price-wrap"><span class="pb-was">£98</span><span class="pb-price" style="color:#a5b4fc">£89</span></div>
+          </div>
+          <div class="pb-desc">+ Updated tenancy agreement</div>
+          <div class="pb-badge">⭐ Save £9</div>
         </button>
       </div>
 
-      <!-- Tab content -->
       <div class="card-body">
+        <div id="form-error" style="display:none;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:#fca5a5;"></div>
 
-        <!-- Starter tab -->
-        <div id="tab-starter">
-          <div class="card-title">Get compliant in minutes</div>
-          <div class="card-sub">Fill in your details — we handle everything else.</div>
-          <div id="form-error" style="display:none;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:#fca5a5;"></div>
-          <div class="field-row">
-            <div class="field">
-              <label>First name *</label>
-              <input type="text" id="f-firstname" placeholder="John" autocomplete="given-name" />
-            </div>
-            <div class="field">
-              <label>Last name *</label>
-              <input type="text" id="f-lastname" placeholder="Smith" autocomplete="family-name" />
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field full">
-              <label>Your email *</label>
-              <input type="email" id="f-email" placeholder="you@email.com" autocomplete="email" />
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field full">
-              <label>Property address *</label>
-              <input type="text" id="f-address" placeholder="12 Oak St, Birmingham, B1 1AA" autocomplete="street-address" />
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label>Tenant full name *</label>
-              <input type="text" id="f-tenant-name" placeholder="Jane Smith" />
-            </div>
-            <div class="field">
-              <label>Tenant email *</label>
-              <input type="email" id="f-tenant-email" placeholder="tenant@email.com" />
-            </div>
-          </div>
-          <div class="price-summary">
-            <div>
-              <div class="price-label">Starter compliance pack</div>
-              <div class="price-includes">Information Sheet + proof certificate + tracking</div>
-            </div>
-            <span class="price-val">£49</span>
-          </div>
-          <button class="submit-btn" id="checkout-btn" onclick="handleCheckout(this)">
-            Pay £49 — Become compliant instantly
-          </button>
-          <div class="card-footer">
-            <span>🔒 SSL</span>
-            <span>✓ Stripe</span>
-            <span>🛡️ Guarantee</span>
-            <span>⚡ Instant</span>
-          </div>
+        <div id="bundle-notice" style="display:none;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.18);border-radius:9px;padding:11px 14px;margin-bottom:12px;">
+          <div style="font-size:12.5px;font-weight:700;color:#c4b5fd;margin-bottom:3px">✓ What's included in the bundle</div>
+          <div style="font-size:12px;color:rgba(196,181,253,0.75);line-height:1.6">Official Information Sheet + proof certificate · Updated Section 21-compliant tenancy agreement · Both delivered to tenant with proof of service</div>
         </div>
 
-        <!-- Tenancy Agreement upsell tab -->
-        <div id="tab-tenancy" style="display:none">
-          <div class="upsell-badge">⭐ Best value — save £9 vs buying separately</div>
-          <div class="card-title">Complete compliance bundle</div>
-          <div class="card-sub">Everything in the Starter pack plus a new Section 21-compliant tenancy agreement delivered to your tenant.</div>
-
-          <!-- What's included -->
-          <div class="bundle-includes">
-            <div class="bi-item">
-              <div class="bi-check">✓</div>
-              <div class="bi-text">
-                <div class="bi-title">Official Information Sheet</div>
-                <div class="bi-desc">Delivered to tenant with proof of service certificate</div>
-              </div>
-            </div>
-            <div class="bi-item">
-              <div class="bi-check bi-check-new">+</div>
-              <div class="bi-text">
-                <div class="bi-title">Updated tenancy agreement</div>
-                <div class="bi-desc">Section 21-compliant agreement reflecting the Renters Rights Act 2025 — personalised with your property details and delivered directly to your tenant</div>
-              </div>
-            </div>
-            <div class="bi-item">
-              <div class="bi-check">✓</div>
-              <div class="bi-text">
-                <div class="bi-title">Full proof of delivery</div>
-                <div class="bi-desc">Timestamped certificate for both documents</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="s21-notice">
-            <div class="s21-icon">⚠️</div>
-            <div class="s21-text">Section 21 has been abolished. New tenancies must use an updated agreement that complies with the Renters Rights Act 2025. Using an old tenancy agreement may invalidate possession proceedings.</div>
-          </div>
-
-          <div class="field-row" style="margin-top:14px">
-            <div class="field">
-              <label>First name *</label>
-              <input type="text" id="b-firstname" placeholder="John" autocomplete="given-name" />
-            </div>
-            <div class="field">
-              <label>Last name *</label>
-              <input type="text" id="b-lastname" placeholder="Smith" autocomplete="family-name" />
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field full">
-              <label>Your email *</label>
-              <input type="email" id="b-email" placeholder="you@email.com" autocomplete="email" />
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field full">
-              <label>Property address *</label>
-              <input type="text" id="b-address" placeholder="12 Oak St, Birmingham, B1 1AA" autocomplete="street-address" />
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label>Tenant full name *</label>
-              <input type="text" id="b-tenant-name" placeholder="Jane Smith" />
-            </div>
-            <div class="field">
-              <label>Tenant email *</label>
-              <input type="email" id="b-tenant-email" placeholder="tenant@email.com" />
-            </div>
-          </div>
-
-          <div class="price-summary" style="background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.2)">
-            <div>
-              <div class="price-label">Complete compliance bundle</div>
-              <div class="price-includes">Info Sheet + Tenancy Agreement + proof certificates</div>
-            </div>
-            <div style="text-align:right">
-              <div style="font-size:11px;color:var(--text3);text-decoration:line-through;font-family:var(--mono)">£98</div>
-              <span class="price-val" style="color:#a5b4fc">£89</span>
-            </div>
-          </div>
-          <button class="submit-btn" style="background:linear-gradient(135deg,#4f46e5,#6366f1)" onclick="handleBundleCheckout(this)">
-            Pay £89 — Complete compliance bundle
-          </button>
-          <div class="card-footer">
-            <span>🔒 SSL</span>
-            <span>✓ Stripe</span>
-            <span>🛡️ Guarantee</span>
-            <span>⚡ Instant</span>
-          </div>
+        <div id="s21-warning" style="display:none;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.18);border-radius:8px;padding:9px 13px;margin-bottom:12px;align-items:flex-start;gap:8px;">
+          <span style="font-size:13px;flex-shrink:0">⚠️</span>
+          <span style="font-size:12px;color:var(--amber2);line-height:1.55;font-weight:500">Section 21 is abolished. New tenancies must use an updated agreement — using an old one can invalidate possession proceedings.</span>
         </div>
 
+        <div class="field-row">
+          <div class="field"><label>First name *</label><input type="text" id="f-firstname" placeholder="John" autocomplete="given-name" /></div>
+          <div class="field"><label>Last name *</label><input type="text" id="f-lastname" placeholder="Smith" autocomplete="family-name" /></div>
+        </div>
+        <div class="field-row">
+          <div class="field full"><label>Your email *</label><input type="email" id="f-email" placeholder="you@email.com" autocomplete="email" /></div>
+        </div>
+        <div class="field-row">
+          <div class="field full"><label>Property address *</label><input type="text" id="f-address" placeholder="12 Oak St, Birmingham, B1 1AA" autocomplete="street-address" /></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Tenant name *</label><input type="text" id="f-tenant-name" placeholder="Jane Smith" /></div>
+          <div class="field"><label>Tenant email *</label><input type="email" id="f-tenant-email" placeholder="tenant@email.com" /></div>
+        </div>
+
+        <div class="price-summary">
+          <div>
+            <div class="price-label" id="price-label">Starter compliance pack</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px" id="price-includes">Info Sheet · Proof certificate · Tracking</div>
+          </div>
+          <span class="price-val" id="price-display">£49</span>
+        </div>
+
+        <button class="submit-btn" id="checkout-btn" onclick="handleCheckout(this)">Pay £49 — Become compliant instantly</button>
+
+        <div class="card-footer">
+          <span>🔒 SSL</span><span>✓ Stripe</span><span>🛡️ Guarantee</span><span>⚡ Instant</span>
+        </div>
+
+        <div id="upsell-nudge" onclick="selectPlan('bundle')" style="margin-top:10px;background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.15);border-radius:8px;padding:9px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#c4b5fd">Also need a new tenancy agreement?</div>
+            <div style="font-size:11.5px;color:rgba(196,181,253,0.6);margin-top:1px">Section 21 abolished — upgrade to bundle for £40 more</div>
+          </div>
+          <span style="font-size:13px;font-weight:700;color:#a5b4fc;white-space:nowrap">+ £40 →</span>
+        </div>
       </div>
     </div>
   </div>
@@ -2324,6 +2237,27 @@ function validateEmail(email) {
   return email.indexOf('@') > 0 && email.indexOf('.') > email.indexOf('@');
 }
 
+var currentPlan = 'starter';
+var STRIPE_STARTER = 'https://buy.stripe.com/cNi8wHeBx3EwfUc41N9bO00';
+var STRIPE_BUNDLE  = 'https://buy.stripe.com/cNi8wHeBx3EwfUc41N9bO00'; // Replace with £89 link
+
+function selectPlan(plan) {
+  currentPlan = plan;
+  var isBundle = plan === 'bundle';
+  document.getElementById('btn-starter').classList.toggle('active', !isBundle);
+  document.getElementById('btn-bundle').classList.toggle('active', isBundle);
+  document.getElementById('btn-bundle').classList.toggle('bundle-active', isBundle);
+  document.getElementById('bundle-notice').style.display = isBundle ? 'block' : 'none';
+  document.getElementById('s21-warning').style.display = isBundle ? 'flex' : 'none';
+  document.getElementById('upsell-nudge').style.display = isBundle ? 'none' : 'flex';
+  document.getElementById('price-label').textContent = isBundle ? 'Complete compliance bundle' : 'Starter compliance pack';
+  document.getElementById('price-includes').textContent = isBundle ? 'Info Sheet · Tenancy agreement · Both with proof' : 'Info Sheet · Proof certificate · Tracking';
+  document.getElementById('price-display').textContent = isBundle ? '£89' : '£49';
+  document.getElementById('price-display').style.color = isBundle ? '#a5b4fc' : 'var(--emerald2)';
+  document.getElementById('checkout-btn').textContent = isBundle ? 'Pay £89 — Complete compliance bundle' : 'Pay £49 — Become compliant instantly';
+  document.getElementById('checkout-btn').style.background = isBundle ? 'linear-gradient(135deg,#4f46e5,#6366f1)' : 'linear-gradient(135deg,var(--blue3),var(--blue))';
+}
+
 function handleCheckout(btn) {
   hideError();
 
@@ -2358,7 +2292,7 @@ function handleCheckout(btn) {
   btn.disabled = true;
   btn.style.opacity = '0.8';
 
-  var STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/cNi8wHeBx3EwfUc41N9bO00';
+  var STRIPE_PAYMENT_LINK = currentPlan === 'bundle' ? STRIPE_BUNDLE : STRIPE_STARTER;
   var stripeUrl = STRIPE_PAYMENT_LINK + '?prefilled_email=' + encodeURIComponent(email) + '&client_reference_id=' + encodeURIComponent(address.substring(0, 50));
 
   setTimeout(function() {

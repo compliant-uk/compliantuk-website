@@ -61,25 +61,25 @@ footer a:hover{color:var(--text2)}
       <div class="cc-icon">📧</div>
       <div class="cc-title">Email us</div>
       <div class="cc-desc">For general enquiries, order questions, or compliance guidance. We aim to respond within 4 hours during business hours.</div>
-      <a href="mailto:huseyin.turkay@compliantuk.co.uk" class="cc-link">huseyin.turkay@compliantuk.co.uk →</a>
+      <a href="mailto:support@compliantuk.co.uk" class="cc-link">support@compliantuk.co.uk →</a>
     </div>
     <div class="contact-card">
       <div class="cc-icon">⚡</div>
       <div class="cc-title">Urgent support</div>
       <div class="cc-desc">If you have an urgent compliance issue — for example the 31 May deadline is imminent — email us with "URGENT" in the subject line.</div>
-      <a href="mailto:huseyin.turkay@compliantuk.co.uk?subject=URGENT" class="cc-link">Send urgent message →</a>
+      <a href="mailto:support@compliantuk.co.uk?subject=URGENT" class="cc-link">Send urgent message →</a>
     </div>
     <div class="contact-card">
       <div class="cc-icon">🏘️</div>
       <div class="cc-title">Portfolio & agent enquiries</div>
       <div class="cc-desc">Managing multiple properties or a letting agency? Ask about our portfolio discounts and monthly retainer options.</div>
-      <a href="mailto:huseyin.turkay@compliantuk.co.uk?subject=Portfolio enquiry" class="cc-link">Enquire about portfolio pricing →</a>
+      <a href="mailto:support@compliantuk.co.uk?subject=Portfolio enquiry" class="cc-link">Enquire about portfolio pricing →</a>
     </div>
     <div class="contact-card">
       <div class="cc-icon">🛡️</div>
       <div class="cc-title">Compliance expertise</div>
       <div class="cc-desc">Our founder has 10+ years in HHSRS, Awaab's Law, and housing compliance. We can help with more than just the Information Sheet.</div>
-      <a href="mailto:huseyin.turkay@compliantuk.co.uk?subject=Compliance question" class="cc-link">Ask a compliance question →</a>
+      <a href="mailto:support@compliantuk.co.uk?subject=Compliance question" class="cc-link">Ask a compliance question →</a>
     </div>
   </div>
 
@@ -131,7 +131,7 @@ function sendMessage(btn) {
   // Opens email client as fallback — replace with proper form handler when backend is ready
   var subject = document.getElementById('c-subject').value || 'Website enquiry';
   var body = 'Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message;
-  window.location.href = 'mailto:huseyin.turkay@compliantuk.co.uk?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  window.location.href = 'mailto:support@compliantuk.co.uk?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
   setTimeout(function() {
     document.getElementById('success-msg').style.display = 'block';
     btn.textContent = 'Send message →';

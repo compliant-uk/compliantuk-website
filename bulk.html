@@ -320,7 +320,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:36px 5%}
             <li><span class="tick">✓</span> Section 8 guidance access (V2)</li>
             <li><span class="tick">✓</span> Cancel anytime</li>
           </ul>
-          <a href="mailto:huseyin.turkay@compliantuk.co.uk?subject=Agency Pro enquiry" class="tier-btn indigo">Enquire about Agency Pro →</a>
+          <a href="mailto:support@compliantuk.co.uk?subject=Agency Pro enquiry" class="tier-btn indigo">Enquire about Agency Pro →</a>
         </div>
       </div>
     </div>
@@ -433,7 +433,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:36px 5%}
     <div class="eyebrow" style="justify-content:center">Agents — let's talk</div>
     <h2>Managing 50+ properties?<br><span class="serif">We'll set you up personally.</span></h2>
     <p>For larger agencies and portfolio landlords we offer white-label certificates, dedicated onboarding, and a monthly retainer that covers everything — including all future compliance requirements as legislation evolves.</p>
-    <a href="mailto:huseyin.turkay@compliantuk.co.uk?subject=Agency Pro enquiry" class="btn-primary" style="margin:0 auto">Talk to us about Agency Pro →</a>
+    <a href="mailto:support@compliantuk.co.uk?subject=Agency Pro enquiry" class="btn-primary" style="margin:0 auto">Talk to us about Agency Pro →</a>
   </div>
 </section>
 
@@ -518,7 +518,7 @@ function processFile(file) {
     // For Excel files - show demo data since we can't parse xlsx without a library
     var demoData = [
       {address: file.name + ' — Row 2', tenantName: 'Loaded from Excel', tenantEmail: 'tenant@example.com'},
-      {address: 'Please use CSV format for instant preview', tenantName: 'Or contact us', tenantEmail: 'huseyin.turkay@compliantuk.co.uk'},
+      {address: 'Please use CSV format for instant preview', tenantName: 'Or contact us', tenantEmail: 'support@compliantuk.co.uk'},
     ];
     document.getElementById('upload-sub').textContent = 'Excel file detected — use CSV for instant preview';
     showPreview(demoData, file.name);
@@ -571,7 +571,7 @@ function proceedToPayment() {
   var count = uploadedData.length;
   if (count === 0) return;
   if (count > 50) {
-    window.location.href = 'mailto:huseyin.turkay@compliantuk.co.uk?subject=Agency Pro enquiry - ' + count + ' properties';
+    window.location.href = 'mailto:support@compliantuk.co.uk?subject=Agency Pro enquiry - ' + count + ' properties';
     return;
   }
   // Store bulk order data
