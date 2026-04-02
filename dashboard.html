@@ -238,6 +238,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
   </div>
 </aside>
 
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
 <!-- MAIN -->
 <div class="main">
   <header class="topbar">
@@ -483,6 +486,11 @@ function handleLogout() {
 }
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
 }
 function closeModal() {
   document.getElementById('add-modal').classList.remove('open');
