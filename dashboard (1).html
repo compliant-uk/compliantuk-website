@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Dashboard — CompliantUK</title>
+<meta name="theme-color" content="#080c14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CompliantUK">
+<link rel="manifest" href="manifest.json">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist+Mono:wght@400;500&display=swap');
+:root{--bg:#080c14;--bg1:#0d1220;--bg2:#111827;--bg3:#1a2235;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--blue:#3b82f6;--blue2:#60a5fa;--blue3:#1d4ed8;--indigo:#6366f1;--emerald:#10b981;--emerald2:#34d399;--amber:#f59e0b;--amber2:#fbbf24;--red:#ef4444;--red2:#fca5a5;--font:'Bricolage Grotesque',sans-serif;--mono:'Geist Mono',monospace;--radius:12px;--sidebar:240px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar);flex-shrink:0;background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;position:fixed;left:0;top:0;z-index:50;transition:transform 0.3s}
+.sidebar-logo{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-mark{width:30px;height:30px;background:linear-gradient(135deg,var(--blue3),var(--blue));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:white;flex-shrink:0}
+.logo-name{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.3px}
+.logo-name span{color:var(--blue2)}
+.sidebar-nav{flex:1;padding:12px 0;overflow-y:auto}
+.nav-section{padding:4px 12px 8px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 14px;margin:1px 8px;border-radius:9px;text-decoration:none;color:var(--text2);font-size:13.5px;font-weight:500;transition:all 0.15s;cursor:pointer;border:none;background:none;width:calc(100% - 16px);text-align:left}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:var(--text)}
+.nav-item.active{background:rgba(59,130,246,0.12);color:var(--blue2)}
+.nav-item .ni-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.nav-item .ni-badge{margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;font-family:var(--mono)}
+.sidebar-footer{padding:14px 12px;border-top:1px solid var(--border)}
+.user-pill{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid var(--border)}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--blue3),var(--indigo));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:white;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-role{font-size:10px;color:var(--text3)}
+.logout-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;padding:3px;transition:color 0.15s}
+.logout-btn:hover{color:var(--red2)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar);flex:1;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.topbar{padding:0 28px;height:60px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg1);flex-shrink:0}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.page-title{font-size:17px;font-weight:800;letter-spacing:-0.4px}
+.live-indicator{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--emerald2);font-weight:600;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15);padding:4px 10px;border-radius:20px;font-family:var(--mono)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--emerald2);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.top-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;text-decoration:none;font-family:var(--font);border:none}
+.top-btn.primary{background:var(--blue);color:white}
+.top-btn.primary:hover{background:#2563eb}
+.top-btn.ghost{background:rgba(255,255,255,0.05);color:var(--text2);border:1px solid var(--border2)}
+.top-btn.ghost:hover{background:rgba(255,255,255,0.09);color:var(--text)}
+.mobile-menu-btn{display:none;background:none;border:none;color:var(--text2);cursor:pointer;padding:6px;font-size:18px}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;padding:24px 28px}
+
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden;transition:all 0.2s}
+.stat-card:hover{border-color:rgba(59,130,246,0.2);transform:translateY(-1px)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0}
+.stat-card.blue::before{background:linear-gradient(90deg,var(--blue3),var(--blue))}
+.stat-card.green::before{background:linear-gradient(90deg,var(--emerald),var(--emerald2))}
+.stat-card.amber::before{background:linear-gradient(90deg,var(--amber),var(--amber2))}
+.stat-card.red::before{background:linear-gradient(90deg,#dc2626,var(--red))}
+.stat-label{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px}
+.stat-val{font-size:2rem;font-weight:800;letter-spacing:-1px;line-height:1;margin-bottom:4px}
+.stat-val.blue{color:var(--blue2)}
+.stat-val.green{color:var(--emerald2)}
+.stat-val.amber{color:var(--amber2)}
+.stat-val.red{color:var(--red2)}
+.stat-meta{font-size:12px;color:var(--text3)}
+.stat-meta span{color:var(--emerald2)}
+
+/* Section headers */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-size:15px;font-weight:800;letter-spacing:-0.3px}
+.section-action{font-size:13px;color:var(--blue2);text-decoration:none;font-weight:600;cursor:pointer;background:none;border:none;font-family:var(--font)}
+.section-action:hover{text-decoration:underline}
+
+/* Urgent actions */
+.urgent-card{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:var(--radius);padding:14px 18px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.urgent-left{display:flex;align-items:center;gap:10px}
+.urgent-icon{width:32px;height:32px;background:rgba(239,68,68,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.urgent-title{font-size:13.5px;font-weight:700;color:var(--red2);margin-bottom:2px}
+.urgent-sub{font-size:12px;color:rgba(252,165,165,0.7)}
+.urgent-btn{background:var(--red);color:white;border:none;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;transition:all 0.15s}
+.urgent-btn:hover{background:#dc2626}
+
+/* Properties table */
+.properties-card{background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+.prop-filters{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.filter-btn{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid var(--border2);background:transparent;color:var(--text3);font-family:var(--font)}
+.filter-btn:hover{color:var(--text);border-color:var(--border2)}
+.filter-btn.active{background:rgba(59,130,246,0.1);color:var(--blue2);border-color:rgba(59,130,246,0.25)}
+.search-input{margin-left:auto;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:13px;font-family:var(--font);color:var(--text);outline:none;width:200px}
+.search-input:focus{border-color:var(--blue)}
+.search-input::placeholder{color:var(--text3)}
+.prop-table{width:100%;border-collapse:collapse}
+.prop-table th{padding:11px 18px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;text-align:left;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02)}
+.prop-table td{padding:13px 18px;border-bottom:1px solid var(--border);font-size:13.5px;color:var(--text2);vertical-align:middle}
+.prop-table tr:last-child td{border-bottom:none}
+.prop-table tr:hover td{background:rgba(255,255,255,0.02)}
+.prop-address{color:var(--text);font-weight:600;font-size:13.5px}
+.prop-tenant{font-size:12.5px;color:var(--text3);margin-top:2px}
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;font-family:var(--mono);white-space:nowrap}
+.status-pill.read{background:rgba(16,185,129,0.1);color:var(--emerald2);border:1px solid rgba(16,185,129,0.2)}
+.status-pill.opened{background:rgba(59,130,246,0.1);color:var(--blue2);border:1px solid rgba(59,130,246,0.2)}
+.status-pill.sent{background:rgba(245,158,11,0.1);color:var(--amber2);border:1px solid rgba(245,158,11,0.2)}
+.status-pill.pending{background:rgba(255,255,255,0.05);color:var(--text3);border:1px solid var(--border)}
+.status-pill.overdue{background:rgba(239,68,68,0.1);color:var(--red2);border:1px solid rgba(239,68,68,0.2)}
+.status-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.pulse-dot{animation:pulse 2s infinite}
+.time-meta{font-size:12px;color:var(--text3);font-family:var(--mono)}
+.action-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:7px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text2);font-family:var(--font);transition:all 0.15s;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.action-btn:hover{background:rgba(255,255,255,0.09);color:var(--text)}
+.action-btn.cert{color:var(--emerald2);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.06)}
+.action-btn.cert:hover{background:rgba(16,185,129,0.12)}
+.empty-state{text-align:center;padding:48px 20px}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.empty-sub{font-size:13.5px;color:var(--text2);margin-bottom:20px;line-height:1.6}
+
+/* Progress bar */
+.compliance-bar{background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius);padding:18px 20px;margin-bottom:24px}
+.cb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cb-title{font-size:13.5px;font-weight:700}
+.cb-pct{font-size:13px;font-family:var(--mono);color:var(--emerald2);font-weight:600}
+.cb-track{height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden}
+.cb-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--emerald),var(--emerald2));transition:width 1s ease}
+.cb-labels{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--text3)}
+
+/* Recent activity */
+.activity-card{background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden}
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:13px 18px;border-bottom:1px solid var(--border);transition:background 0.15s}
+.activity-item:last-child{border-bottom:none}
+.activity-item:hover{background:rgba(255,255,255,0.02)}
+.act-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.act-icon.green{background:rgba(16,185,129,0.1)}
+.act-icon.blue{background:rgba(59,130,246,0.1)}
+.act-icon.amber{background:rgba(245,158,11,0.1)}
+.act-icon.red{background:rgba(239,68,68,0.1)}
+.act-body{flex:1;min-width:0}
+.act-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.act-sub{font-size:12px;color:var(--text3)}
+.act-time{font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap;margin-top:2px}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:13px 18px;display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:999;transform:translateY(80px);opacity:0;transition:all 0.3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-icon{font-size:16px}
+
+/* Modal overlay */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg1);border:1px solid var(--border2);border-radius:20px;width:100%;max-width:480px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.6)}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:17px;font-weight:800;letter-spacing:-0.3px}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;transition:color 0.15s}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:24px}
+.modal-field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.modal-field label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px}
+.modal-field input{background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:8px;padding:11px 13px;font-size:14px;font-family:var(--font);color:var(--text);outline:none;transition:all 0.15s}
+.modal-field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.1)}
+.modal-field input::placeholder{color:var(--text3)}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+.modal-btn{padding:10px 20px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;border:none}
+.modal-btn.primary{background:var(--blue);color:white}
+.modal-btn.primary:hover{background:#2563eb}
+.modal-btn.cancel{background:rgba(255,255,255,0.05);color:var(--text2);border:1px solid var(--border2)}
+.modal-btn.cancel:hover{background:rgba(255,255,255,0.09)}
+
+/* Responsive */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .mobile-menu-btn{display:block}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .prop-table th:nth-child(3),.prop-table td:nth-child(3),.prop-table th:nth-child(4),.prop-table td:nth-child(4){display:none}
+  .content{padding:16px}
+}
+@media(max-width:500px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .topbar{padding:0 16px}
+  .top-btn span{display:none}
+  .search-input{width:120px}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <a href="index.html" class="sidebar-logo">
+    <div class="logo-mark">✓</div>
+    <span class="logo-name">Compliant<span>UK</span></span>
+  </a>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <button class="nav-item active" onclick="showPage('overview')">
+      <span class="ni-icon">📊</span> Overview
+    </button>
+    <button class="nav-item" onclick="showPage('properties')">
+      <span class="ni-icon">🏠</span> Properties
+      <span class="ni-badge" id="urgent-count" style="display:none">0</span>
+    </button>
+    <button class="nav-item" onclick="showPage('certificates')">
+      <span class="ni-icon">🛡️</span> Certificates
+    </button>
+    <button class="nav-item" onclick="showPage('activity')">
+      <span class="ni-icon">⚡</span> Activity
+    </button>
+    <div class="nav-section" style="margin-top:8px">Account</div>
+    <a href="bulk.html" class="nav-item">
+      <span class="ni-icon">📊</span> Bulk upload
+    </a>
+    <button class="nav-item" onclick="showPage('settings')">
+      <span class="ni-icon">⚙️</span> Settings
+    </button>
+    <a href="index.html#get-compliant" class="nav-item">
+      <span class="ni-icon">➕</span> Add property
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-pill">
+      <div class="user-avatar" id="user-avatar">H</div>
+      <div class="user-info">
+        <div class="user-name" id="user-name">Loading...</div>
+        <div class="user-role">Landlord</div>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()" title="Log out">⎋</button>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="page-title" id="page-title">Overview</div>
+      <div class="live-indicator"><span class="live-dot"></span>Live</div>
+    </div>
+    <div class="topbar-right">
+      <button class="top-btn ghost" onclick="refreshData()">↻ <span>Refresh</span></button>
+      <a href="index.html#get-compliant" class="top-btn primary">+ <span>Add property</span></a>
+    </div>
+  </header>
+
+  <div class="content" id="main-content">
+    <!-- Content injected by JS -->
+  </div>
+</div>
+
+<!-- ADD PROPERTY MODAL -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add property manually</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field"><label>Property address *</label><input type="text" id="m-address" placeholder="12 Oak Street, Birmingham, B1 1AA" /></div>
+      <div class="modal-field"><label>Tenant full name *</label><input type="text" id="m-tenant-name" placeholder="Jane Smith" /></div>
+      <div class="modal-field"><label>Tenant email *</label><input type="email" id="m-tenant-email" placeholder="tenant@email.com" /></div>
+      <div style="font-size:12.5px;color:var(--text3);margin-top:4px;line-height:1.6">Adding this property will initiate an order. You will be redirected to pay £49 via Stripe.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="addProperty()">Proceed to payment →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="toast-icon" id="toast-icon">✓</span><span id="toast-msg"></span></div>
+
+<script>
+var SUPABASE_URL = 'YOUR_SUPABASE_URL';
+var SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+// ── AUTH CHECK ────────────────────────────────────────────────────────────
+var currentUser = null;
+try {
+  var stored = localStorage.getItem('sb_user');
+  if (stored) currentUser = JSON.parse(stored);
+} catch(e) {}
+if (!currentUser) { window.location.href = 'login.html'; }
+
+// Set user info
+var name = (currentUser && currentUser.user_metadata && currentUser.user_metadata.full_name) ? currentUser.user_metadata.full_name : (currentUser ? currentUser.email : 'User');
+document.getElementById('user-name').textContent = name.split(' ')[0] + (name.split(' ')[1] ? ' ' + name.split(' ')[1][0] + '.' : '');
+document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
+
+// ── DEMO DATA ────────────────────────────────────────────────────────────
+var properties = [
+  {id:1, address:'14 Maple Avenue, Birmingham, B15 2TT', tenant:'James Wilson', tenantEmail:'j.wilson@email.com', status:'read', sentAt:'01 Apr 2026, 09:14', readAt:'01 Apr 2026, 11:32', cert:true},
+  {id:2, address:'7 Birch Close, Coventry, CV2 4PL', tenant:'Sarah Ahmed', tenantEmail:'s.ahmed@email.com', status:'opened', sentAt:'01 Apr 2026, 09:14', readAt:null, cert:false},
+  {id:3, address:'91 Cedar Drive, Wolverhampton, WV3 9HJ', tenant:'Michael Brown', tenantEmail:'mbrown@email.com', status:'sent', sentAt:'01 Apr 2026, 09:14', readAt:null, cert:false},
+  {id:4, address:'33 Oak Street, Birmingham, B4 7RS', tenant:'Emma Davis', tenantEmail:'e.davis@email.com', status:'read', sentAt:'31 Mar 2026, 14:22', readAt:'31 Mar 2026, 18:05', cert:true},
+  {id:5, address:'15 Elm Road, Solihull, B91 3DQ', tenant:'Robert Chen', tenantEmail:'r.chen@email.com', status:'overdue', sentAt:'29 Mar 2026, 10:00', readAt:null, cert:false},
+];
+
+var activities = [
+  {icon:'✓', type:'green', title:'Certificate issued', sub:'14 Maple Avenue — James Wilson read the document', time:'Today, 11:32'},
+  {icon:'👁', type:'blue', title:'Document opened', sub:'7 Birch Close — Sarah Ahmed opened the email', time:'Today, 10:48'},
+  {icon:'📨', type:'amber', title:'Documents sent', sub:'3 properties — Information Sheet delivered to tenants', time:'Today, 09:14'},
+  {icon:'✓', type:'green', title:'Certificate issued', sub:'33 Oak Street — Emma Davis read the document', time:'Yesterday, 18:05'},
+  {icon:'⚠️', type:'red', title:'Reminder sent', sub:'15 Elm Road — Robert Chen has not opened after 48hrs', time:'Yesterday, 10:00'},
+];
+
+var currentFilter = 'all';
+
+function statusPill(status) {
+  var map = {
+    read: '<span class="status-pill read"><span class="status-dot"></span>Read</span>',
+    opened: '<span class="status-pill opened"><span class="status-dot pulse-dot"></span>Opened</span>',
+    sent: '<span class="status-pill sent"><span class="status-dot"></span>Sent</span>',
+    overdue: '<span class="status-pill overdue"><span class="status-dot"></span>Overdue</span>',
+    pending: '<span class="status-pill pending"><span class="status-dot"></span>Pending</span>',
+  };
+  return map[status] || map.pending;
+}
+
+// ── PAGES ─────────────────────────────────────────────────────────────────
+function showPage(page) {
+  document.querySelectorAll('.nav-item').forEach(function(i){i.classList.remove('active')});
+  event && event.target && event.target.classList.add('active');
+  var titles = {overview:'Overview',properties:'Properties',certificates:'Certificates',activity:'Activity',settings:'Settings'};
+  document.getElementById('page-title').textContent = titles[page] || page;
+  var content = document.getElementById('main-content');
+
+  if (page === 'overview') renderOverview(content);
+  else if (page === 'properties') renderProperties(content, 'all');
+  else if (page === 'certificates') renderCertificates(content);
+  else if (page === 'activity') renderActivity(content);
+  else if (page === 'settings') renderSettings(content);
+}
+
+function renderOverview(content) {
+  var total = properties.length;
+  var read = properties.filter(function(p){return p.status==='read'}).length;
+  var overdue = properties.filter(function(p){return p.status==='overdue'}).length;
+  var pct = Math.round((read/total)*100);
+
+  // Update urgent badge
+  if (overdue > 0) {
+    document.getElementById('urgent-count').textContent = overdue;
+    document.getElementById('urgent-count').style.display = 'block';
+  }
+
+  content.innerHTML =
+    (overdue > 0 ? '<div class="urgent-card"><div class="urgent-left"><div class="urgent-icon">⚠️</div><div><div class="urgent-title">' + overdue + ' propert' + (overdue===1?'y':'ies') + ' overdue — tenant hasn\'t read after 48 hours</div><div class="urgent-sub">A reminder has been sent automatically. Consider following up directly.</div></div></div><button class="urgent-btn" onclick="showPage(\'properties\')">View now →</button></div>' : '') +
+
+    '<div class="stats-row">' +
+    '<div class="stat-card blue"><div class="stat-label">Total properties</div><div class="stat-val blue">' + total + '</div><div class="stat-meta">In your portfolio</div></div>' +
+    '<div class="stat-card green"><div class="stat-label">Fully compliant</div><div class="stat-val green">' + read + '</div><div class="stat-meta"><span>' + pct + '%</span> compliance rate</div></div>' +
+    '<div class="stat-card amber"><div class="stat-label">Awaiting read</div><div class="stat-val amber">' + properties.filter(function(p){return p.status==='sent'||p.status==='opened'}).length + '</div><div class="stat-meta">Document delivered</div></div>' +
+    '<div class="stat-card red"><div class="stat-label">Overdue</div><div class="stat-val red">' + overdue + '</div><div class="stat-meta">Over 48hrs unread</div></div>' +
+    '</div>' +
+
+    '<div class="compliance-bar"><div class="cb-header"><span class="cb-title">Portfolio compliance rate</span><span class="cb-pct">' + pct + '%</span></div><div class="cb-track"><div class="cb-fill" id="cb-fill" style="width:0%"></div></div><div class="cb-labels"><span>' + read + ' of ' + total + ' properties compliant</span><span>Target: 100% by 31 May 2026</span></div></div>' +
+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">' +
+
+    '<div><div class="section-header"><span class="section-title">Recent properties</span><button class="section-action" onclick="showPage(\'properties\')">View all →</button></div>' +
+    '<div class="properties-card"><table class="prop-table"><thead><tr><th>Property</th><th>Status</th><th>Actions</th></tr></thead><tbody>' +
+    properties.slice(0,4).map(function(p){
+      return '<tr><td><div class="prop-address">' + p.address.split(',')[0] + '</div><div class="prop-tenant">' + p.tenant + '</div></td><td>' + statusPill(p.status) + '</td><td>' + (p.cert ? '<a class="action-btn cert" href="#">⬇ Cert</a>' : '<span style="font-size:12px;color:var(--text3)">Pending</span>') + '</td></tr>';
+    }).join('') +
+    '</tbody></table></div></div>' +
+
+    '<div><div class="section-header"><span class="section-title">Recent activity</span><button class="section-action" onclick="showPage(\'activity\')">View all →</button></div>' +
+    '<div class="activity-card">' +
+    activities.slice(0,4).map(function(a){
+      return '<div class="activity-item"><div class="act-icon ' + a.type + '">' + a.icon + '</div><div class="act-body"><div class="act-title">' + a.title + '</div><div class="act-sub">' + a.sub + '</div><div class="act-time">' + a.time + '</div></div></div>';
+    }).join('') +
+    '</div></div></div>';
+
+  // Animate compliance bar
+  setTimeout(function(){ document.getElementById('cb-fill').style.width = pct + '%'; }, 100);
+}
+
+function renderProperties(content, filter) {
+  currentFilter = filter || 'all';
+  var filtered = currentFilter === 'all' ? properties : properties.filter(function(p){return p.status===currentFilter});
+
+  content.innerHTML =
+    '<div class="properties-card"><div class="prop-filters">' +
+    ['all','read','opened','sent','overdue'].map(function(f){
+      return '<button class="filter-btn' + (currentFilter===f?' active':'') + '" onclick="filterProps(\'' + f + '\')">' + (f==='all'?'All ('+properties.length+')':f.charAt(0).toUpperCase()+f.slice(1)+' ('+properties.filter(function(p){return p.status===f}).length+')') + '</button>';
+    }).join('') +
+    '<input class="search-input" placeholder="Search address..." oninput="searchProps(this.value)" id="search-input" />' +
+    '</div><table class="prop-table"><thead><tr><th>Property &amp; Tenant</th><th>Status</th><th>Sent</th><th>Read</th><th>Actions</th></tr></thead><tbody id="props-tbody">' +
+    renderPropRows(filtered) +
+    '</tbody></table>' +
+    (filtered.length === 0 ? '<div class="empty-state"><div class="empty-icon">🏠</div><div class="empty-title">No properties found</div><div class="empty-sub">No properties match this filter.</div></div>' : '') +
+    '</div>';
+}
+
+function renderPropRows(props) {
+  return props.map(function(p){
+    return '<tr><td><div class="prop-address">' + p.address + '</div><div class="prop-tenant">' + p.tenant + ' · ' + p.tenantEmail + '</div></td>' +
+    '<td>' + statusPill(p.status) + '</td>' +
+    '<td><div class="time-meta">' + (p.sentAt || '—') + '</div></td>' +
+    '<td><div class="time-meta">' + (p.readAt || '—') + '</div></td>' +
+    '<td style="display:flex;gap:6px;flex-wrap:wrap;">' +
+    (p.cert ? '<a class="action-btn cert" href="#">⬇ Certificate</a>' : '') +
+    '<button class="action-btn" onclick="resend(' + p.id + ')">↻ Resend</button>' +
+    '</td></tr>';
+  }).join('');
+}
+
+function filterProps(f) {
+  renderProperties(document.getElementById('main-content'), f);
+}
+
+function searchProps(q) {
+  var filtered = properties.filter(function(p){
+    return p.address.toLowerCase().includes(q.toLowerCase()) || p.tenant.toLowerCase().includes(q.toLowerCase());
+  });
+  document.getElementById('props-tbody').innerHTML = renderPropRows(filtered);
+}
+
+function renderCertificates(content) {
+  var certs = properties.filter(function(p){return p.cert});
+  content.innerHTML =
+    '<div class="section-header"><span class="section-title">' + certs.length + ' certificate' + (certs.length!==1?'s':'') + ' available</span></div>' +
+    '<div class="properties-card"><table class="prop-table"><thead><tr><th>Property</th><th>Tenant</th><th>Read at</th><th>Download</th></tr></thead><tbody>' +
+    certs.map(function(p){
+      return '<tr><td><div class="prop-address">' + p.address + '</div></td><td><div class="prop-tenant">' + p.tenant + '</div></td><td><div class="time-meta">' + p.readAt + '</div></td><td><a class="action-btn cert" href="#" onclick="downloadCert(' + p.id + ')">⬇ Download PDF</a></td></tr>';
+    }).join('') +
+    '</tbody></table></div>';
+}
+
+function renderActivity(content) {
+  content.innerHTML =
+    '<div class="section-header"><span class="section-title">All activity</span></div>' +
+    '<div class="activity-card">' +
+    activities.map(function(a){
+      return '<div class="activity-item"><div class="act-icon ' + a.type + '">' + a.icon + '</div><div class="act-body"><div class="act-title">' + a.title + '</div><div class="act-sub">' + a.sub + '</div><div class="act-time">' + a.time + '</div></div></div>';
+    }).join('') +
+    '</div>';
+}
+
+function renderSettings(content) {
+  content.innerHTML =
+    '<div style="max-width:500px">' +
+    '<div style="background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius);padding:24px;margin-bottom:16px">' +
+    '<div style="font-size:15px;font-weight:800;margin-bottom:16px;letter-spacing:-0.3px">Account details</div>' +
+    '<div style="font-size:13.5px;color:var(--text2);margin-bottom:8px">Name: <span style="color:var(--text);font-weight:600">' + name + '</span></div>' +
+    '<div style="font-size:13.5px;color:var(--text2);margin-bottom:16px">Email: <span style="color:var(--text);font-weight:600">' + (currentUser ? currentUser.email : '') + '</span></div>' +
+    '<button class="action-btn" style="font-size:13px">Change password</button>' +
+    '</div>' +
+    '<div style="background:var(--bg1);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius);padding:24px">' +
+    '<div style="font-size:15px;font-weight:800;margin-bottom:8px;color:var(--red2)">Danger zone</div>' +
+    '<div style="font-size:13.5px;color:var(--text2);margin-bottom:14px">Log out of your account on this device.</div>' +
+    '<button onclick="handleLogout()" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:var(--red2);padding:9px 18px;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:var(--font)">Log out</button>' +
+    '</div></div>';
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────
+function resend(id) {
+  showToast('↻ Reminder sent to tenant', '📨');
+}
+function downloadCert(id) {
+  showToast('Certificate downloading...', '⬇');
+}
+function refreshData() {
+  showToast('Dashboard refreshed', '✓');
+  simulateRealtime();
+}
+function handleLogout() {
+  localStorage.removeItem('sb_access_token');
+  localStorage.removeItem('sb_refresh_token');
+  localStorage.removeItem('sb_user');
+  window.location.href = 'login.html';
+}
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+function closeModal() {
+  document.getElementById('add-modal').classList.remove('open');
+}
+function addProperty() {
+  var addr = document.getElementById('m-address').value.trim();
+  var tn = document.getElementById('m-tenant-name').value.trim();
+  var te = document.getElementById('m-tenant-email').value.trim();
+  if (!addr || !tn || !te) { alert('Please fill in all fields.'); return; }
+  window.location.href = 'index.html#get-compliant';
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────
+function showToast(msg, icon) {
+  var t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  document.getElementById('toast-icon').textContent = icon || '✓';
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+
+// ── SIMULATED REALTIME ────────────────────────────────────────────────────
+function simulateRealtime() {
+  // In production this uses Supabase Realtime subscriptions
+  // For now simulates a live update
+  var pending = properties.filter(function(p){return p.status==='sent'});
+  if (pending.length > 0) {
+    setTimeout(function(){
+      var p = pending[Math.floor(Math.random()*pending.length)];
+      if (p && p.status === 'sent') {
+        p.status = 'opened';
+        showToast(p.address.split(',')[0] + ' — tenant opened the document', '👁');
+        // Re-render current page
+        renderOverview(document.getElementById('main-content'));
+      }
+    }, 2000);
+  }
+}
+
+// ── SUPABASE REALTIME (production) ────────────────────────────────────────
+// Uncomment and configure when Supabase is connected:
+/*
+async function connectRealtime() {
+  const ws = new WebSocket(SUPABASE_URL.replace('https','wss') + '/realtime/v1/websocket?apikey=' + SUPABASE_ANON_KEY + '&vsn=1.0.0');
+  ws.onmessage = function(event) {
+    const msg = JSON.parse(event.data);
+    if (msg.event === 'INSERT' && msg.topic === 'realtime:public:delivery_events') {
+      const ev = msg.payload.record;
+      updatePropertyStatus(ev.property_id, ev.event_type);
+      showToast(ev.event_type === 'read' ? 'Certificate issued!' : 'Document opened', ev.event_type === 'read' ? '✓' : '👁');
+    }
+  };
+}
+*/
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+renderOverview(document.getElementById('main-content'));
+// Auto simulate a live update after 8 seconds for demo
+setTimeout(simulateRealtime, 8000);
+</script>
+</body>
+</html>

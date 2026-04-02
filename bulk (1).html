@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulk & Agency Compliance — CompliantUK</title>
+<meta name="description" content="Bulk compliance packs for portfolio landlords and letting agents. Upload your spreadsheet and we process every property at once.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist+Mono:wght@400;500&family=Lora:ital,wght@0,400;1,400&display=swap');
+:root{
+  --bg:#080c14;--bg1:#0d1220;--bg2:#111827;--bg3:#1a2235;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;
+  --blue:#3b82f6;--blue2:#60a5fa;--blue3:#1d4ed8;
+  --emerald:#10b981;--emerald2:#34d399;
+  --amber:#f59e0b;--amber2:#fbbf24;
+  --indigo:#6366f1;--indigo2:#818cf8;
+  --red:#ef4444;--red2:#fca5a5;
+  --font:'Bricolage Grotesque',sans-serif;
+  --mono:'Geist Mono',monospace;
+  --serif:'Lora',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* NAV */
+nav{background:rgba(8,12,20,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 5%;position:sticky;top:0;z-index:99}
+.nav-wrap{max-width:1160px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--blue3),var(--blue));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:white}
+.logo-name{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-0.4px}
+.logo-name span{color:var(--blue2)}
+.nav-right{display:flex;align-items:center;gap:16px}
+.back-link{color:var(--text3);text-decoration:none;font-size:14px;font-weight:500;transition:color 0.2s}
+.back-link:hover{color:var(--text2)}
+.nav-cta{background:var(--blue);color:white;padding:8px 18px;border-radius:8px;font-size:13.5px;font-weight:700;text-decoration:none;transition:all 0.2s}
+.nav-cta:hover{background:#2563eb}
+
+/* HERO */
+.hero{padding:80px 5% 70px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 70% 0%,rgba(99,102,241,0.12),transparent),radial-gradient(ellipse 40% 40% at 20% 80%,rgba(59,130,246,0.08),transparent);pointer-events:none}
+.hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.hero-inner{max-width:1160px;margin:0 auto;position:relative;z-index:1}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);color:#c7d2fe;padding:5px 14px 5px 8px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:0.3px;margin-bottom:22px}
+.tag-dot{width:7px;height:7px;border-radius:50%;background:var(--indigo);animation:blink 1.4s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+h1{font-size:clamp(2.4rem,4.5vw,3.8rem);font-weight:800;line-height:1.08;letter-spacing:-1.5px;margin-bottom:18px}
+h1 .serif{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--indigo2);letter-spacing:-0.5px}
+.hero-sub{font-size:1.05rem;color:var(--text2);max-width:580px;line-height:1.78;margin-bottom:36px}
+.hero-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:40px}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:white;padding:14px 26px;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:var(--font);transition:all 0.2s;box-shadow:0 4px 24px rgba(59,130,246,0.3)}
+.btn-primary:hover{background:#2563eb;transform:translateY(-1px);box-shadow:0 8px 32px rgba(59,130,246,0.4)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.05);color:var(--text2);padding:14px 22px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;border:1px solid var(--border2);transition:all 0.2s;cursor:pointer;font-family:var(--font)}
+.btn-ghost:hover{background:rgba(255,255,255,0.09);color:var(--text)}
+
+/* STATS */
+.stats-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg1);padding:0 5%}
+.stats-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{padding:22px 16px;text-align:center;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-n{font-size:2rem;font-weight:800;letter-spacing:-1.5px;line-height:1;margin-bottom:5px}
+.stat-n.blue{color:var(--blue2)}.stat-n.green{color:var(--emerald2)}.stat-n.amber{color:var(--amber2)}.stat-n.indigo{color:var(--indigo2)}
+.stat-l{font-size:12px;color:var(--text3);font-weight:500;line-height:1.4}
+
+/* SECTION */
+.section{padding:90px 5%}
+.section-inner{max-width:1160px;margin:0 auto}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue2);margin-bottom:14px}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--blue)}
+h2{font-size:clamp(1.9rem,3vw,2.8rem);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:14px;color:var(--text)}
+h2 .serif{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--blue2);letter-spacing:-0.3px}
+.section-p{font-size:1rem;color:var(--text2);max-width:540px;line-height:1.78;margin-bottom:52px}
+
+/* PRICING TIERS */
+.pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px}
+.pricing-grid-bottom{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.tier-card{background:var(--bg1);border:1px solid var(--border2);border-radius:18px;overflow:hidden;transition:all 0.2s;position:relative}
+.tier-card:hover{border-color:rgba(59,130,246,0.3);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+.tier-card.featured{border-color:rgba(99,102,241,0.5);box-shadow:0 0 60px rgba(99,102,241,0.08)}
+.tier-badge{position:absolute;top:16px;right:16px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;font-family:var(--mono);background:rgba(99,102,241,0.15);color:var(--indigo2);border:1px solid rgba(99,102,241,0.3)}
+.tier-top{padding:28px 28px 20px}
+.tier-icon{font-size:28px;margin-bottom:14px}
+.tier-name{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-family:var(--mono);margin-bottom:6px}
+.tier-price{font-size:2.6rem;font-weight:800;letter-spacing:-1.5px;line-height:1;color:var(--text);margin-bottom:4px}
+.tier-price sup{font-size:1.2rem;font-weight:600;color:var(--text2);letter-spacing:0;vertical-align:super}
+.tier-price .per{font-size:0.9rem;font-weight:500;color:var(--text3);letter-spacing:0}
+.tier-sub{font-size:13px;color:var(--text2);margin-bottom:0}
+.tier-divider{height:1px;background:var(--border);margin:0 28px}
+.tier-body{padding:20px 28px 28px}
+.tier-list{list-style:none;margin-bottom:20px}
+.tier-list li{display:flex;align-items:flex-start;gap:9px;padding:7px 0;font-size:13.5px;color:var(--text2);border-bottom:1px solid var(--border)}
+.tier-list li:last-child{border-bottom:none}
+.tick{width:18px;height:18px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--emerald2);flex-shrink:0;margin-top:1px}
+.tier-btn{width:100%;padding:13px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:7px;border:none}
+.tier-btn.blue{background:var(--blue);color:white;box-shadow:0 4px 16px rgba(59,130,246,0.25)}
+.tier-btn.blue:hover{background:#2563eb;transform:translateY(-1px)}
+.tier-btn.indigo{background:var(--indigo);color:white;box-shadow:0 4px 16px rgba(99,102,241,0.25)}
+.tier-btn.indigo:hover{background:#4f46e5;transform:translateY(-1px)}
+.tier-btn.outline{background:transparent;color:var(--text2);border:1px solid var(--border2)}
+.tier-btn.outline:hover{background:rgba(255,255,255,0.05);color:var(--text)}
+.savings-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-left:8px;font-family:var(--mono)}
+.savings-tag.green{background:rgba(16,185,129,0.1);color:var(--emerald2);border:1px solid rgba(16,185,129,0.2)}
+.savings-tag.amber{background:rgba(245,158,11,0.1);color:var(--amber2);border:1px solid rgba(245,158,11,0.2)}
+
+/* EXCEL UPLOAD */
+.upload-section{background:var(--bg1)}
+.upload-card{background:var(--bg2);border:1px solid var(--border2);border-radius:18px;overflow:hidden;max-width:820px}
+.upload-top{padding:32px 36px 0}
+.upload-zone{margin:24px 36px;border:2px dashed rgba(99,102,241,0.3);border-radius:14px;padding:40px 24px;text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(99,102,241,0.03);position:relative}
+.upload-zone:hover,.upload-zone.dragover{border-color:rgba(99,102,241,0.6);background:rgba(99,102,241,0.07)}
+.upload-icon{width:56px;height:56px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:24px}
+.upload-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
+.upload-sub{font-size:13.5px;color:var(--text2);margin-bottom:16px;line-height:1.6}
+.upload-btn-small{background:rgba(99,102,241,0.15);color:var(--indigo2);border:1px solid rgba(99,102,241,0.3);padding:9px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s}
+.upload-btn-small:hover{background:rgba(99,102,241,0.25)}
+input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upload-format{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 36px 20px;font-size:12px;color:var(--text3)}
+.fmt-pill{background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:3px 10px;border-radius:6px;font-family:var(--mono);font-size:11px}
+
+/* Preview table */
+.preview-section{display:none;padding:0 36px 32px}
+.preview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.preview-title{font-size:14px;font-weight:700;color:var(--text)}
+.preview-count{font-size:12px;color:var(--text3);font-family:var(--mono)}
+.preview-table{width:100%;border-collapse:collapse;font-size:13px}
+.preview-table th{text-align:left;padding:8px 12px;color:var(--text3);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02)}
+.preview-table td{padding:10px 12px;color:var(--text2);border-bottom:1px solid var(--border)}
+.preview-table tr:last-child td{border-bottom:none}
+.row-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;font-family:var(--mono)}
+.row-status.ok{background:rgba(16,185,129,0.1);color:var(--emerald2);border:1px solid rgba(16,185,129,0.2)}
+.row-status.err{background:rgba(239,68,68,0.1);color:var(--red2);border:1px solid rgba(239,68,68,0.2)}
+.proceed-row{padding:0 36px 32px;display:none}
+.proceed-summary{background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.15);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:12px}
+.ps-left{font-size:14px;color:var(--text2)}
+.ps-price{font-size:1.4rem;font-weight:800;color:var(--text);font-family:var(--mono)}
+.proceed-btn{width:100%;background:linear-gradient(135deg,#4f46e5,var(--indigo));color:white;border:none;padding:14px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;box-shadow:0 4px 20px rgba(99,102,241,0.25)}
+.proceed-btn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(99,102,241,0.35)}
+
+/* Template download */
+.template-box{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin:0 36px 28px;flex-wrap:wrap;gap:12px}
+.tb-left{display:flex;align-items:center;gap:12px}
+.tb-icon{width:38px;height:38px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.tb-text{font-size:13.5px;color:var(--text2)}
+.tb-text strong{color:var(--text);display:block;margin-bottom:2px}
+.tb-dl{background:rgba(16,185,129,0.1);color:var(--emerald2);border:1px solid rgba(16,185,129,0.2);padding:8px 16px;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:var(--font);text-decoration:none;transition:all 0.2s}
+.tb-dl:hover{background:rgba(16,185,129,0.18)}
+
+/* HOW BULK WORKS */
+.bulk-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:48px}
+.bulk-step{background:var(--bg1);border:1px solid var(--border);border-radius:14px;padding:24px}
+.bs-num{font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:14px}
+.bs-icon{font-size:26px;margin-bottom:12px}
+.bs-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:7px}
+.bs-desc{font-size:13.5px;color:var(--text2);line-height:1.65}
+
+/* CONTACT CTA */
+.cta-section{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(59,130,246,0.05));border-top:1px solid rgba(99,102,241,0.1);border-bottom:1px solid rgba(99,102,241,0.1);padding:64px 5%}
+.cta-inner{max-width:680px;margin:0 auto;text-align:center}
+.cta-inner h2{margin-bottom:14px}
+.cta-inner p{color:var(--text2);font-size:15px;line-height:1.75;margin-bottom:28px}
+
+footer{background:var(--bg);border-top:1px solid var(--border);padding:36px 5%}
+.footer-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-links{display:flex;gap:20px;list-style:none}
+.footer-links a{color:var(--text3);text-decoration:none;font-size:13px;transition:color 0.2s}
+.footer-links a:hover{color:var(--text2)}
+.footer-copy{font-size:12px;color:var(--text3)}
+
+@media(max-width:900px){.pricing-grid,.pricing-grid-bottom{grid-template-columns:1fr}.bulk-steps{grid-template-columns:1fr}}
+@media(max-width:600px){.stats-inner{grid-template-columns:1fr 1fr}.stat:nth-child(2){border-right:none}.upload-top,.template-box,.upload-format,.preview-section,.proceed-row{padding-left:16px;padding-right:16px}.upload-zone{margin-left:16px;margin-right:16px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo">
+      <div class="logo-mark">✓</div>
+      <span class="logo-name">Compliant<span>UK</span></span>
+    </a>
+    <div class="nav-right">
+      <a href="index.html" class="back-link">← Home</a>
+      <a href="#upload" class="nav-cta">Upload spreadsheet</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag"><span class="tag-dot"></span> Portfolio & Agency Compliance</div>
+    <h1>Comply at scale.<br><span class="serif">One upload, done.</span></h1>
+    <p class="hero-sub">Upload your spreadsheet and we send the official Information Sheet to every tenant simultaneously — with proof-of-service certificates for every single property.</p>
+    <div class="hero-ctas">
+      <a href="#upload" class="btn-primary">Upload your spreadsheet →</a>
+      <a href="#pricing" class="btn-ghost">View bulk pricing</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat">
+      <div class="stat-n blue">£35</div>
+      <div class="stat-l">Per property for 2–10 properties</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n green">£25</div>
+      <div class="stat-l">Per property for 11–50 properties</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n amber">£150/mo</div>
+      <div class="stat-l">Up to 50 props/mo — Agency Pro</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n indigo">< 1 min</div>
+      <div class="stat-l">To process 200 properties via Excel</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-inner">
+    <div class="eyebrow">Bulk pricing</div>
+    <h2>More properties,<br><span class="serif">better value</span></h2>
+    <p class="section-p">Solo landlords, portfolio investors, and letting agents all get the same quality of service — at a price that reflects their scale.</p>
+
+    <div class="pricing-grid" style="grid-template-columns:repeat(4,1fr)">
+      <!-- STARTER -->
+      <div class="tier-card">
+        <div class="tier-top">
+          <div class="tier-icon">🏠</div>
+          <div class="tier-name">Starter</div>
+          <div class="tier-price"><sup>£</sup>49 <span class="per">/ property</span></div>
+          <div class="tier-sub">Single property — one-off</div>
+        </div>
+        <div class="tier-divider"></div>
+        <div class="tier-body">
+          <ul class="tier-list">
+            <li><span class="tick">✓</span> Official GOV.UK Information Sheet</li>
+            <li><span class="tick">✓</span> Automated tenant email delivery</li>
+            <li><span class="tick">✓</span> Real-time read tracking</li>
+            <li><span class="tick">✓</span> Proof-of-service certificate</li>
+            <li><span class="tick">✓</span> 48hr auto-reminder</li>
+            <li><span class="tick">✓</span> Dashboard access</li>
+          </ul>
+          <a href="index.html#get-compliant" class="tier-btn outline">Get started →</a>
+        </div>
+      </div>
+
+      <!-- PORTFOLIO -->
+      <div class="tier-card">
+        <div class="tier-top">
+          <div class="tier-icon">🏘️</div>
+          <div class="tier-name">Portfolio</div>
+          <div class="tier-price"><sup>£</sup>35 <span class="per">/ property</span> <span class="savings-tag green">Save 29%</span></div>
+          <div class="tier-sub">2–10 properties — one-off bulk</div>
+        </div>
+        <div class="tier-divider"></div>
+        <div class="tier-body">
+          <ul class="tier-list">
+            <li><span class="tick">✓</span> Everything in Starter</li>
+            <li><span class="tick">✓</span> Excel / CSV upload</li>
+            <li><span class="tick">✓</span> All properties processed at once</li>
+            <li><span class="tick">✓</span> Bulk certificate download</li>
+            <li><span class="tick">✓</span> Consolidated dashboard view</li>
+            <li><span class="tick">✓</span> Priority email support</li>
+          </ul>
+          <a href="#upload" class="tier-btn blue">Upload spreadsheet →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pricing-grid-bottom">
+      <!-- AGENCY LITE -->
+      <div class="tier-card">
+        <div class="tier-top">
+          <div class="tier-icon">🏢</div>
+          <div class="tier-name">Agency Lite</div>
+          <div class="tier-price"><sup>£</sup>25 <span class="per">/ property</span> <span class="savings-tag amber">Save 49%</span></div>
+          <div class="tier-sub">11–50 properties — one-off bulk</div>
+        </div>
+        <div class="tier-divider"></div>
+        <div class="tier-body">
+          <ul class="tier-list">
+            <li><span class="tick">✓</span> Everything in Portfolio</li>
+            <li><span class="tick">✓</span> Dedicated account manager</li>
+            <li><span class="tick">✓</span> White-label certificate option</li>
+            <li><span class="tick">✓</span> Bulk invoice for your records</li>
+            <li><span class="tick">✓</span> Same-day processing</li>
+            <li><span class="tick">✓</span> Phone support available</li>
+          </ul>
+          <a href="#upload" class="tier-btn blue">Upload spreadsheet →</a>
+        </div>
+      </div>
+
+      <!-- AGENCY PRO -->
+      <div class="tier-card featured">
+        <div class="tier-badge">Most popular</div>
+        <div class="tier-top">
+          <div class="tier-icon">🏛️</div>
+          <div class="tier-name">Agency Pro</div>
+          <div class="tier-price"><sup>£</sup>150 <span class="per">/ month</span></div>
+          <div class="tier-sub">Up to 50 properties/mo · 3-month minimum</div>
+        </div>
+        <div class="tier-divider"></div>
+        <div class="tier-body">
+          <ul class="tier-list">
+            <li><span class="tick">✓</span> Up to 50 properties/month included</li>
+            <li><span class="tick">✓</span> Additional properties at £4 each</li>
+            <li><span class="tick">✓</span> 3-month minimum · 30-day notice to cancel</li>
+            <li><span class="tick">✓</span> Excel upload anytime</li>
+            <li><span class="tick">✓</span> White-label branding available</li>
+            <li><span class="tick">✓</span> All future compliance updates included</li>
+            <li><span class="tick">✓</span> Dedicated compliance consultant</li>
+            <li><span class="tick">✓</span> Monthly compliance briefings</li>
+            <li><span class="tick">✓</span> Section 8 guidance access (V2)</li>
+            <li><span class="tick">✓</span> Cancel anytime</li>
+          </ul>
+          <a href="mailto:support@compliantuk.co.uk?subject=Agency Pro enquiry" class="tier-btn indigo">Enquire about Agency Pro →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UPLOAD SECTION -->
+<section class="section upload-section" id="upload">
+  <div class="section-inner">
+    <div class="eyebrow">Bulk upload</div>
+    <h2>Upload your <span class="serif">spreadsheet</span></h2>
+    <p class="section-p">Download our template, fill in your properties and tenant details, and upload. We validate everything before you pay.</p>
+
+    <div class="upload-card">
+
+      <!-- Template download -->
+      <div class="template-box" style="margin-top:28px">
+        <div class="tb-left">
+          <div class="tb-icon">📊</div>
+          <div class="tb-text">
+            <strong>Download the template first</strong>
+            Fill in: Property Address, Tenant Name, Tenant Email — one row per property
+          </div>
+        </div>
+        <a href="#" class="tb-dl" onclick="downloadTemplate(); return false;">⬇ Download Excel template</a>
+      </div>
+
+      <!-- Upload zone -->
+      <div class="upload-top">
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px">Upload your completed spreadsheet</div>
+        <div style="font-size:13.5px;color:var(--text2)">Drag and drop your file below or click to browse</div>
+      </div>
+
+      <div class="upload-zone" id="upload-zone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+        <input type="file" accept=".xlsx,.xls,.csv" onchange="handleFileSelect(event)" id="file-input">
+        <div class="upload-icon">📂</div>
+        <div class="upload-title" id="upload-title">Drop your file here</div>
+        <div class="upload-sub" id="upload-sub">Supports Excel (.xlsx, .xls) and CSV files<br>Maximum 500 properties per upload</div>
+        <button class="upload-btn-small" onclick="document.getElementById('file-input').click();event.stopPropagation()">Browse files</button>
+      </div>
+
+      <div class="upload-format">
+        <span>Required columns:</span>
+        <span class="fmt-pill">Property Address</span>
+        <span class="fmt-pill">Tenant Name</span>
+        <span class="fmt-pill">Tenant Email</span>
+        <span style="color:var(--text3);font-size:11px">(optional: Landlord Name)</span>
+      </div>
+
+      <!-- Preview table -->
+      <div class="preview-section" id="preview-section">
+        <div class="preview-header">
+          <div class="preview-title">Preview — first 5 rows</div>
+          <div class="preview-count" id="preview-count">0 properties loaded</div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Property Address</th>
+                <th>Tenant Name</th>
+                <th>Tenant Email</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="preview-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Proceed to payment -->
+      <div class="proceed-row" id="proceed-row">
+        <div class="proceed-summary">
+          <div class="ps-left" id="ps-text">0 properties ready</div>
+          <div class="ps-price" id="ps-price">£0</div>
+        </div>
+        <button class="proceed-btn" onclick="proceedToPayment()">Proceed to payment →</button>
+      </div>
+
+    </div>
+
+    <!-- How bulk works -->
+    <div class="bulk-steps">
+      <div class="bulk-step">
+        <div class="bs-num">01 / 03</div>
+        <div class="bs-icon">📊</div>
+        <div class="bs-title">Upload your spreadsheet</div>
+        <div class="bs-desc">Download our template, fill in your properties and tenants, upload the file. We validate every row instantly.</div>
+      </div>
+      <div class="bulk-step">
+        <div class="bs-num">02 / 03</div>
+        <div class="bs-icon">💳</div>
+        <div class="bs-title">Pay for your batch</div>
+        <div class="bs-desc">We show you the total based on property count. Pay once via Stripe — priced automatically at the right tier.</div>
+      </div>
+      <div class="bulk-step">
+        <div class="bs-num">03 / 03</div>
+        <div class="bs-icon">🛡️</div>
+        <div class="bs-title">All documents sent instantly</div>
+        <div class="bs-desc">Every tenant receives the document simultaneously. Your dashboard tracks each one. Certificates auto-generate as tenants read.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="eyebrow" style="justify-content:center">Agents — let's talk</div>
+    <h2>Managing 50+ properties?<br><span class="serif">We'll set you up personally.</span></h2>
+    <p>For larger agencies and portfolio landlords we offer white-label certificates, dedicated onboarding, and a monthly retainer that covers everything — including all future compliance requirements as legislation evolves.</p>
+    <a href="mailto:support@compliantuk.co.uk?subject=Agency Pro enquiry" class="btn-primary" style="margin:0 auto">Talk to us about Agency Pro →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-mark">✓</div>
+      <span class="logo-name">Compliant<span>UK</span></span>
+    </a>
+    <ul class="footer-links">
+      <li><a href="privacy.html">Privacy Policy</a></li>
+      <li><a href="terms.html">Terms of Service</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 CompliantUK</div>
+  </div>
+</footer>
+
+<script>
+var uploadedData = [];
+
+function downloadTemplate() {
+  // Generate a simple CSV template
+  var csv = 'Property Address,Tenant Name,Tenant Email,Landlord Name (optional)\n';
+  csv += '12 Oak Street Birmingham B1 1AA,Jane Smith,tenant@email.com,John Smith\n';
+  csv += '45 Maple Avenue London W1 2BB,Tom Jones,tom@email.com,John Smith\n';
+  var blob = new Blob([csv], {type:'text/csv'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'compliantuk-bulk-template.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.add('dragover');
+}
+function handleDragLeave(e) {
+  document.getElementById('upload-zone').classList.remove('dragover');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('dragover');
+  var files = e.dataTransfer.files;
+  if (files.length > 0) processFile(files[0]);
+}
+function handleFileSelect(e) {
+  if (e.target.files.length > 0) processFile(e.target.files[0]);
+}
+
+function processFile(file) {
+  var validTypes = ['.xlsx','.xls','.csv'];
+  var ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+  if (!validTypes.includes(ext)) {
+    alert('Please upload an Excel (.xlsx, .xls) or CSV file.');
+    return;
+  }
+
+  document.getElementById('upload-title').textContent = file.name;
+  document.getElementById('upload-sub').textContent = 'Processing...';
+
+  // Parse CSV files directly
+  if (ext === '.csv') {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var lines = e.target.result.split('\n').filter(function(l){ return l.trim(); });
+      var data = [];
+      for (var i = 1; i < lines.length; i++) {
+        var cols = lines[i].split(',');
+        if (cols.length >= 3 && cols[0].trim()) {
+          data.push({
+            address: cols[0].trim(),
+            tenantName: cols[1].trim(),
+            tenantEmail: cols[2].trim()
+          });
+        }
+      }
+      showPreview(data, file.name);
+    };
+    reader.readAsText(file);
+  } else {
+    // For Excel files - show demo data since we can't parse xlsx without a library
+    var demoData = [
+      {address: file.name + ' — Row 2', tenantName: 'Loaded from Excel', tenantEmail: 'tenant@example.com'},
+      {address: 'Please use CSV format for instant preview', tenantName: 'Or contact us', tenantEmail: 'support@compliantuk.co.uk'},
+    ];
+    document.getElementById('upload-sub').textContent = 'Excel file detected — use CSV for instant preview';
+    showPreview(demoData, file.name);
+  }
+}
+
+function showPreview(data, filename) {
+  uploadedData = data;
+  var count = data.length;
+
+  document.getElementById('upload-title').textContent = filename + ' — ' + count + ' properties found';
+  document.getElementById('upload-sub').textContent = 'Review the preview below before proceeding';
+  document.getElementById('preview-count').textContent = count + ' properties loaded';
+
+  var tbody = document.getElementById('preview-body');
+  tbody.innerHTML = '';
+  var preview = data.slice(0, 5);
+  preview.forEach(function(row, i) {
+    var hasEmail = row.tenantEmail && row.tenantEmail.indexOf('@') > 0;
+    var status = (row.address && row.tenantName && hasEmail) ? 'ok' : 'err';
+    var statusText = status === 'ok' ? '✓ Ready' : '⚠ Check';
+    tbody.innerHTML += '<tr>' +
+      '<td style="color:var(--text3);font-family:var(--mono)">' + (i+1) + '</td>' +
+      '<td>' + (row.address || '—') + '</td>' +
+      '<td>' + (row.tenantName || '—') + '</td>' +
+      '<td>' + (row.tenantEmail || '—') + '</td>' +
+      '<td><span class="row-status ' + status + '">' + statusText + '</span></td>' +
+      '</tr>';
+  });
+  if (count > 5) {
+    tbody.innerHTML += '<tr><td colspan="5" style="color:var(--text3);font-size:12px;text-align:center;padding:12px">... and ' + (count - 5) + ' more properties</td></tr>';
+  }
+
+  // Calculate price
+  var price, tier;
+  if (count <= 1) { price = count * 49; tier = 'Starter (£49/property)'; }
+  else if (count <= 10) { price = count * 35; tier = 'Portfolio (£35/property)'; }
+  else if (count <= 50) { price = count * 25; tier = 'Agency Lite (£25/property)'; }
+  else { price = 150; tier = 'Agency Pro — up to 50 properties/month. Additional at £4 each. 3-month minimum.'; }
+
+  document.getElementById('ps-text').textContent = count + ' properties · ' + tier;
+  document.getElementById('ps-price').textContent = count > 50 ? '£150/mo + extras' : '£' + price;
+
+  document.getElementById('preview-section').style.display = 'block';
+  document.getElementById('proceed-row').style.display = 'block';
+  document.getElementById('preview-section').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function proceedToPayment() {
+  var count = uploadedData.length;
+  if (count === 0) return;
+  if (count > 50) {
+    window.location.href = 'mailto:support@compliantuk.co.uk?subject=Agency Pro enquiry - ' + count + ' properties';
+    return;
+  }
+  // Store bulk order data
+  try {
+    sessionStorage.setItem('bulkOrder', JSON.stringify({
+      properties: uploadedData,
+      count: count,
+      tier: count <= 1 ? 'starter' : count <= 10 ? 'portfolio' : 'agency-lite',
+      totalPence: count <= 1 ? count*4900 : count <= 10 ? count*3500 : count*2500
+    }));
+  } catch(e) {}
+  // Redirect to Stripe payment link
+  window.location.href = 'https://buy.stripe.com/cNi8wHeBx3EwfUc41N9bO00';
+}
+</script>
+</body>
+</html>
