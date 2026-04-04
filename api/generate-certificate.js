@@ -88,7 +88,7 @@ export async function generateComplianceCertificate({
   // ── Green confirmation banner ────────────────────────────────────────────
   page.drawRectangle({ x: 40, y: height - 215, width: width - 80, height: 36, color: rgb(0.240, 0.918, 0.494, 0.15), borderRadius: 4 });
   page.drawRectangle({ x: 40, y: height - 215, width: 4, height: 36, color: BRAND_GREEN });
-  page.drawText('✓  The Renters Rights Act Information Sheet has been issued for the property below.', {
+  page.drawText('CONFIRMED:  The Renters Rights Act Information Sheet has been issued for the property below.', {
     x: 54, y: height - 193,
     size: 9, font: fontBold, color: rgb(0.067, 0.400, 0.169),
   });
@@ -216,4 +216,3 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Failed to generate certificate' });
   }
 }
-
