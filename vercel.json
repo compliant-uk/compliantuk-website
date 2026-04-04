@@ -3,16 +3,16 @@
   "trailingSlash": false,
   "functions": {
     "api/send-documents.js": {
-      "memory": 256,
-      "maxDuration": 10
+      "memory": 512,
+      "maxDuration": 30
     },
     "api/stripe-webhook.js": {
       "memory": 256,
       "maxDuration": 10
     },
     "api/generate-certificate.js": {
-      "memory": 256,
-      "maxDuration": 10
+      "memory": 512,
+      "maxDuration": 30
     }
   }
 }
