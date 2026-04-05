@@ -1237,10 +1237,10 @@ footer {
   .bento-grid { grid-template-columns: 1fr 1fr; }
   
 }
-@media (max-width: 700px) {
+@media (max-width: 900px) {
   .bar { font-size: 11.5px; }
   .nav-links { display: none; }
-    .hamburger { display: flex; }
+  .hamburger { display: flex; }
 
 
   .hero { padding: 60px max(5%,16px) 60px; }
@@ -1593,7 +1593,7 @@ footer {
       </div>
 
       <!-- Plan selector -->
-      <div class="plan-toggle">
+      <div class="plan-toggle" style="display:none">
         <button class="plan-btn active" id="btn-starter" onclick="selectPlan('starter')">
           <div class="pb-top"><span class="pb-name">Starter</span><span class="pb-price">£49</span></div>
           <div class="pb-desc">Information Sheet + proof certificate</div>
