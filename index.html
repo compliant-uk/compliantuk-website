@@ -1599,42 +1599,17 @@ footer {
     </div>
 
     <!-- CHECKOUT CARD -->
+    <!-- CHECKOUT CARD -->
     <div class="hero-card" id="get-compliant">
-
       <div class="card-top">
         <div class="card-logo"><div class="card-logo-mark">✓</div>CompliantUK</div>
         <div class="card-status"><span class="bar-dot"></span>31 MAY DEADLINE</div>
       </div>
 
-      <!-- Plan selector -->
-      <div class="plan-toggle" style="display:none">
-        <button class="plan-btn active" id="btn-starter" onclick="selectPlan('starter')">
-          <div class="pb-top"><span class="pb-name">Starter</span><span class="pb-price">£49</span></div>
-          <div class="pb-desc">Information Sheet + proof certificate</div>
-        </button>
-        <button class="plan-btn" id="btn-bundle" onclick="selectPlan('bundle')">
-          <div class="pb-top">
-            <span class="pb-name">Bundle</span>
-            <div class="pb-price-wrap"><span class="pb-was">£98</span><span class="pb-price" style="color:#a5b4fc">£89</span></div>
-          </div>
-          <div class="pb-desc">+ Updated tenancy agreement</div>
-          <div class="pb-badge">⭐ Save £9</div>
-        </button>
-      </div>
-
       <div class="card-body">
         <div id="form-error" style="display:none;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:#fca5a5;"></div>
 
-        <div id="bundle-notice" style="display:none;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.18);border-radius:9px;padding:11px 14px;margin-bottom:12px;">
-          <div style="font-size:12.5px;font-weight:700;color:#c4b5fd;margin-bottom:3px">✓ What's included in the bundle</div>
-          <div style="font-size:12px;color:rgba(196,181,253,0.75);line-height:1.6">Official Information Sheet + proof certificate · Updated Section 21-compliant tenancy agreement · Both delivered to tenant with proof of service</div>
-        </div>
-
-        <div id="s21-warning" style="display:none;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.18);border-radius:8px;padding:9px 13px;margin-bottom:12px;align-items:flex-start;gap:8px;">
-          <span style="font-size:13px;flex-shrink:0">⚠️</span>
-          <span style="font-size:12px;color:var(--amber2);line-height:1.55;font-weight:500">Section 21 is abolished. New tenancies must use an updated agreement — using an old one can invalidate possession proceedings.</span>
-        </div>
-
+        <!-- Landlord details -->
         <div class="field-row">
           <div class="field"><label>First name *</label><input type="text" id="f-firstname" placeholder="John" autocomplete="given-name" /></div>
           <div class="field"><label>Last name *</label><input type="text" id="f-lastname" placeholder="Smith" autocomplete="family-name" /></div>
@@ -1645,15 +1620,39 @@ footer {
         <div class="field-row">
           <div class="field full"><label>Property address *</label><input type="text" id="f-address" placeholder="12 Oak St, Birmingham, B1 1AA" autocomplete="street-address" /></div>
         </div>
-        <div class="field-row">
-          <div class="field"><label>Tenant name *</label><input type="text" id="f-tenant-name" placeholder="Jane Smith" /></div>
-          <div class="field"><label>Tenant email *</label><input type="email" id="f-tenant-email" placeholder="tenant@email.com" /></div>
+
+        <!-- Tenant count selector -->
+        <div style="margin-bottom:14px;">
+          <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;display:block;margin-bottom:8px;">Number of tenants on this tenancy *</label>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+            <button type="button" class="tenant-count-btn active" onclick="setTenantCount(1,this)">
+              <span style="font-size:18px;font-weight:800;color:var(--text);display:block;">1</span>
+              <span style="font-size:10px;color:var(--emerald2);font-family:var(--mono);font-weight:700;">£49</span>
+            </button>
+            <button type="button" class="tenant-count-btn" onclick="setTenantCount(2,this)">
+              <span style="font-size:18px;font-weight:800;color:var(--text);display:block;">2</span>
+              <span style="font-size:10px;color:var(--blue2);font-family:var(--mono);font-weight:700;">£78</span>
+            </button>
+            <button type="button" class="tenant-count-btn" onclick="setTenantCount(3,this)">
+              <span style="font-size:18px;font-weight:800;color:var(--text);display:block;">3</span>
+              <span style="font-size:10px;color:var(--blue2);font-family:var(--mono);font-weight:700;">£97</span>
+            </button>
+            <button type="button" class="tenant-count-btn" onclick="setTenantCount(4,this)">
+              <span style="font-size:18px;font-weight:800;color:var(--text);display:block;">4</span>
+              <span style="font-size:10px;color:var(--blue2);font-family:var(--mono);font-weight:700;">£116</span>
+            </button>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-top:7px;">Max 4 tenants per tenancy agreement under current legislation</div>
         </div>
 
+        <!-- Dynamic tenant fields -->
+        <div id="tenant-fields"></div>
+
+        <!-- Price summary -->
         <div class="price-summary">
           <div>
-            <div class="price-label" id="price-label">Starter compliance pack</div>
-            <div style="font-size:11px;color:var(--text3);margin-top:2px" id="price-includes">Info Sheet · Proof certificate · Tracking</div>
+            <div class="price-label" id="price-label">1 tenant — Starter compliance pack</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px" id="price-includes">Info Sheet · Proof certificate · Each tenant emailed individually</div>
           </div>
           <span class="price-val" id="price-display">£49</span>
         </div>
@@ -1663,8 +1662,9 @@ footer {
         <div class="card-footer">
           <span>🔒 SSL</span><span>✓ Stripe</span><span>🛡️ Guarantee</span><span>⚡ Instant</span>
         </div>
+      </div>
+    </div>
 
-    
 </section>
 
 <!-- STATS STRIP -->
