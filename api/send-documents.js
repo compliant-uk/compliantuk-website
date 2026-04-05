@@ -1,97 +1,230 @@
-// api/stripe-webhook.js
-import Stripe from 'stripe';
+// api/send-documents.js
+import { generateComplianceCertificate } from './generate-certificate.js';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+const INFO_SHEET_URL = 'https://raw.githubusercontent.com/compliant-uk/compliantuk-website/main/The_Renters__Rights_Act_Information_Sheet_2026.pdf';
 
-async function getRawBody(req) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    req.on('data', (chunk) => chunks.push(chunk));
-    req.on('end', () => resolve(Buffer.concat(chunks)));
-    req.on('error', reject);
-  });
+async function fetchPdfAsBase64(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`Failed to fetch ${url}: ${r.status}`);
+  const buf = await r.arrayBuffer();
+  return Buffer.from(buf).toString('base64');
 }
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-  const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
-
-  if (!STRIPE_SECRET_KEY || !STRIPE_WEBHOOK_SECRET) {
-    console.error('Stripe env vars not set');
-    return res.status(500).json({ error: 'Payment service not configured' });
-  }
-
-  const stripe = new Stripe(STRIPE_SECRET_KEY);
-  let event;
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  if (!RESEND_API_KEY) return res.status(500).json({ error: 'Email service not configured' });
 
   try {
-    const rawBody = await getRawBody(req);
-    const signature = req.headers['stripe-signature'];
-    event = stripe.webhooks.constructEvent(rawBody, signature, STRIPE_WEBHOOK_SECRET);
-  } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
-    return res.status(400).json({ error: `Webhook error: ${err.message}` });
-  }
+    const { customerEmail, customerName, propertyAddress, tenantName, tenantEmail, plan, paymentReference } = req.body;
+    if (!customerEmail || !propertyAddress) return res.status(400).json({ error: 'Missing required fields' });
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
+    // 1. Generate compliance certificate
+    const { pdfBytes, referenceNumber } = await generateComplianceCertificate({
+      landlordName: customerName,
+      propertyAddress,
+      tenantName: tenantName || null,
+      plan,
+      paymentReference,
+    });
+    const certificateBase64 = Buffer.from(pdfBytes).toString('base64');
 
-    const customerEmail = session.customer_details?.email;
-    const customerName = session.customer_details?.name || 'Landlord';
-    const customFields = session.custom_fields || [];
+    // 2. Fetch Information Sheet
+    let infoSheetBase64 = null;
+    try {
+      infoSheetBase64 = await fetchPdfAsBase64(INFO_SHEET_URL);
+    } catch(e) { console.error('Info sheet fetch failed:', e.message); }
 
-    // Extract all three custom fields
-    const addressField = customFields.find(f =>
-      f.key === 'propertyaddress' || f.key === 'property_address'
-    );
-    const tenantNameField = customFields.find(f =>
-      f.key === 'tenantname' || f.key === 'tenant_name'
-    );
-    const tenantEmailField = customFields.find(f =>
-      f.key === 'tenantemail' || f.key === 'tenant_email'
-    );
+    // ── LANDLORD EMAIL ────────────────────────────────────────────────────
+    const landlordAttachments = [
+      { filename: `CompliantUK-Certificate-${referenceNumber}.pdf`, content: certificateBase64 }
+    ];
+    if (infoSheetBase64) {
+      landlordAttachments.push({ filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf', content: infoSheetBase64 });
+    }
 
-    const propertyAddress = addressField?.text?.value || 'your property';
-    const tenantName = tenantNameField?.text?.value || null;
-    const tenantEmail = tenantEmailField?.text?.value || null;
+    const landlordHtml = `<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+body{font-family:Arial,sans-serif;color:#1a1a2e;background:#f5f5f5;margin:0;padding:0}
+.container{max-width:600px;margin:40px auto;background:#fff;border-radius:8px;overflow:hidden}
+.header{background:linear-gradient(135deg,#1a1a2e,#3b82f6);padding:40px 32px;text-align:center}
+.header h1{color:#fff;margin:0;font-size:22px}
+.header p{color:#93c5fd;margin:8px 0 0;font-size:13px}
+.body{padding:32px}
+.ref-box{background:#eff6ff;border:1px solid #3b82f6;border-radius:6px;padding:12px 16px;margin:0 0 20px}
+.ref-box span{color:#1d4ed8;font-size:13px;font-weight:bold;display:block;margin-bottom:4px}
+.alert-box{background:#fefce8;border:1px solid #eab308;border-radius:6px;padding:16px;margin:20px 0}
+.alert-box p{margin:0;color:#713f12;font-size:13px}
+.doc-list{background:#f8fafc;border-radius:6px;padding:20px;margin:20px 0}
+.doc-item{padding:10px 0;border-bottom:1px solid #e2e8f0}
+.doc-item:last-child{border-bottom:none}
+.doc-name{font-weight:bold;color:#1a1a2e;font-size:13px}
+.doc-desc{color:#64748b;font-size:12px;margin-top:3px}
+.step{margin-bottom:12px;font-size:13px;color:#1a1a2e;padding-left:8px;border-left:3px solid #3b82f6}
+.btn{display:inline-block;background:#3b82f6;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:bold;margin:8px 0;font-size:14px}
+.footer{background:#f8fafc;padding:24px 32px;text-align:center;border-top:1px solid #e2e8f0}
+.footer p{color:#64748b;font-size:12px;margin:4px 0}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Your Compliance Documents Are Ready</h1>
+    <p>CompliantUK — Renters Rights Act Compliance</p>
+  </div>
+  <div class="body">
+    <p>Dear ${customerName || 'Landlord'},</p>
+    <div class="ref-box">
+      <span>Reference: ${referenceNumber}</span>
+      <span>Property: ${propertyAddress}</span>
+      ${tenantName ? `<span>Tenant: ${tenantName}</span>` : ''}
+    </div>
+    <p>Your compliance documents are <strong>attached to this email as PDFs</strong>. Please download and keep them safely.</p>
+    <div class="alert-box">
+      <p><strong>Important deadline:</strong> The Renters Rights Act comes into force May 2026. You must serve the Information Sheet on your tenant before this date to avoid fines of up to <strong>£7,000 per tenant</strong>.</p>
+    </div>
+    <div class="doc-list">
+      <p style="margin:0 0 12px;font-weight:bold;color:#1a1a2e">Documents attached:</p>
+      <div class="doc-item">
+        <div class="doc-name">1. Proof of Compliance Certificate</div>
+        <div class="doc-desc">Your legal record — get your tenant to sign and date this. Keep the signed copy safely.</div>
+      </div>
+      <div class="doc-item">
+        <div class="doc-name">2. Renters Rights Act Information Sheet (Official Government Document)</div>
+        <div class="doc-desc">${tenantName && tenantEmail ? `This has also been sent directly to your tenant (${tenantName}) by email.` : 'Please forward or print and hand to your tenant.'}</div>
+      </div>
+    </div>
+    <p style="font-weight:bold;margin-bottom:12px">What to do now:</p>
+    <div class="step">1. Ask your tenant to sign and date the <strong>Proof of Service Certificate</strong></div>
+    <div class="step">2. Keep the signed certificate safely — you will need it as legal proof if challenged</div>
+    ${tenantEmail ? `<div class="step">3. The Information Sheet has been emailed directly to ${tenantName || 'your tenant'} — confirm they have received it</div>` : `<div class="step">3. Forward the Information Sheet to your tenant or hand it to them in person</div>`}
+    <br>
+    <a href="https://www.compliantuk.co.uk/dashboard.html" class="btn">View Your Dashboard</a>
+    <p style="color:#64748b;font-size:13px;margin-top:24px">Questions? Contact <a href="mailto:support@compliantuk.co.uk">support@compliantuk.co.uk</a></p>
+  </div>
+  <div class="footer">
+    <p><strong>CompliantUK</strong> — The UK landlord compliance platform</p>
+    <p>compliantuk.co.uk | support@compliantuk.co.uk</p>
+    <p style="margin-top:8px;font-size:11px">Ref: ${referenceNumber}</p>
+  </div>
+</div>
+</body></html>`;
 
-    // Detect plan from amount
-    const amountTotal = session.amount_total || 0;
-    const plan = amountTotal >= 8900 ? 'bundle' : 'starter';
+    // Send landlord email
+    const landlordResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'CompliantUK Documents <documents@compliantuk.co.uk>',
+        to: [customerEmail],
+        bcc: ['huseyin.turkay@compliantuk.co.uk'],
+        subject: `Your Compliance Documents — ${propertyAddress} [${referenceNumber}]`,
+        html: landlordHtml,
+        attachments: landlordAttachments,
+      }),
+    });
 
-    if (customerEmail) {
+    const landlordData = await landlordResponse.json();
+    if (!landlordResponse.ok) {
+      console.error('Resend landlord error:', landlordData);
+      return res.status(500).json({ error: 'Failed to send landlord email', details: landlordData });
+    }
+
+    // ── TENANT EMAIL ──────────────────────────────────────────────────────
+    if (tenantEmail) {
+      const tenantAttachments = [];
+      if (infoSheetBase64) {
+        tenantAttachments.push({ filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf', content: infoSheetBase64 });
+      }
+
+      const tenantHtml = `<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+body{font-family:Arial,sans-serif;color:#1a1a2e;background:#f5f5f5;margin:0;padding:0}
+.container{max-width:600px;margin:40px auto;background:#fff;border-radius:8px;overflow:hidden}
+.header{background:linear-gradient(135deg,#1a1a2e,#10b981);padding:40px 32px;text-align:center}
+.header h1{color:#fff;margin:0;font-size:22px}
+.header p{color:#a7f3d0;margin:8px 0 0;font-size:13px}
+.body{padding:32px}
+.info-box{background:#f0fdf4;border:1px solid #10b981;border-radius:6px;padding:16px;margin:20px 0}
+.info-box p{margin:0;color:#065f46;font-size:13px;line-height:1.7}
+.rights-box{background:#f8fafc;border-radius:6px;padding:20px;margin:20px 0}
+.rights-box h3{font-size:14px;color:#1a1a2e;margin:0 0 12px}
+.right-item{padding:8px 0;border-bottom:1px solid #e2e8f0;font-size:13px;color:#334155}
+.right-item:last-child{border-bottom:none}
+.footer{background:#f8fafc;padding:24px 32px;text-align:center;border-top:1px solid #e2e8f0}
+.footer p{color:#64748b;font-size:12px;margin:4px 0}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Important: Your Renters Rights Information</h1>
+    <p>Renters Rights Act 2025 — Official Government Document</p>
+  </div>
+  <div class="body">
+    <p>Dear ${tenantName || 'Tenant'},</p>
+    <p>Your landlord has arranged for you to receive the official <strong>Renters Rights Act 2025 Information Sheet</strong>, which is attached to this email as a PDF.</p>
+
+    <div class="info-box">
+      <p><strong>What is this?</strong> The Renters Rights Act 2025 is new legislation that significantly strengthens your rights as a tenant in England. Your landlord is legally required to provide you with this Information Sheet before 1 May 2026. Please read it carefully and keep it safely.</p>
+    </div>
+
+    <div class="rights-box">
+      <h3>Key rights the Act gives you:</h3>
+      <div class="right-item"><strong>No more Section 21 evictions</strong> — your landlord can no longer evict you without a valid legal reason</div>
+      <div class="right-item"><strong>Protection against unfair rent increases</strong> — rent can only be increased once per year via a formal statutory process</div>
+      <div class="right-item"><strong>Right to request a pet</strong> — landlords cannot unreasonably refuse a pet request</div>
+      <div class="right-item"><strong>Awaab's Law</strong> — landlords must address damp and mould hazards within strict legal timeframes</div>
+      <div class="right-item"><strong>Right to a written tenancy agreement</strong> — you are entitled to a written record of all your tenancy terms</div>
+      <div class="right-item"><strong>Protection from discrimination</strong> — landlords cannot refuse to rent based on benefits status or having children</div>
+    </div>
+
+    <p style="font-size:13px;color:#334155;margin-bottom:8px">If you have any questions about your rights as a tenant, contact:</p>
+    <ul style="font-size:13px;color:#334155;line-height:2;margin:0 0 20px">
+      <li><strong>Citizens Advice</strong> — citizensadvice.org.uk</li>
+      <li><strong>Shelter</strong> — shelter.org.uk or 0808 800 4444</li>
+      <li><strong>Your local council</strong> — housing department</li>
+    </ul>
+
+    <p style="font-size:12px;color:#64748b">Property: ${propertyAddress}<br>Reference: ${referenceNumber}</p>
+  </div>
+  <div class="footer">
+    <p>This email was sent on behalf of your landlord via CompliantUK</p>
+    <p>compliantuk.co.uk — Renters Rights Act Compliance Platform</p>
+  </div>
+</div>
+</body></html>`;
+
       try {
-        const emailResponse = await fetch('https://www.compliantuk.co.uk/api/send-documents', {
+        const tenantResponse = await fetch('https://api.resend.com/emails', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            customerEmail,
-            customerName,
-            propertyAddress,
-            tenantName,
-            tenantEmail,
-            plan,
+            from: 'CompliantUK <documents@compliantuk.co.uk>',
+            to: [tenantEmail],
+            subject: `Important: Your Renters Rights Act Information Sheet — ${propertyAddress}`,
+            html: tenantHtml,
+            attachments: tenantAttachments,
           }),
         });
-
-        if (!emailResponse.ok) {
-          console.error('Failed to send document email');
+        if (!tenantResponse.ok) {
+          const td = await tenantResponse.json();
+          console.error('Tenant email error:', td);
         } else {
-          console.log(`Documents sent to ${customerEmail} for ${propertyAddress}`);
+          console.log(`Tenant email sent to ${tenantEmail}`);
         }
-      } catch (emailError) {
-        console.error('Email send error:', emailError);
+      } catch(e) {
+        console.error('Tenant email failed:', e.message);
       }
     }
-  }
 
-  return res.status(200).json({ received: true });
+    return res.status(200).json({ success: true, emailId: landlordData.id, referenceNumber });
+
+  } catch (error) {
+    console.error('Handler error:', error);
+    return res.status(500).json({ error: 'Internal server error', message: error.message });
+  }
 }
