@@ -1441,6 +1441,13 @@ footer {
 .mm-link:hover { background:rgba(255,255,255,0.06); color:var(--text); }
 .mm-link.primary { background:var(--blue); color:white; margin-top:8px; justify-content:center; }
 .mm-link.primary:hover { background:#2563eb; }
+  .tenant-count-btn{background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tenant-count-btn:hover{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.3)}
+.tenant-count-btn.active{background:rgba(59,130,246,0.12);border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.1)}
+.tenant-count-btn.active span:first-child{color:var(--blue2)}
+.tenant-group{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.tenant-group-label{font-size:11px;font-weight:700;color:var(--blue2);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.tenant-group-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue2);flex-shrink:0}
 </style>
 <script type="application/ld+json">
 {
