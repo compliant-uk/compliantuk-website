@@ -2295,68 +2295,90 @@ function validateEmail(email) {
   return email.indexOf('@') > 0 && email.indexOf('.') > email.indexOf('@');
 }
 
-var currentPlan = 'starter';
-var STRIPE_STARTER = 'https://buy.stripe.com/cNi8wHeBx3EwfUc41N9bO00';
-var STRIPE_BUNDLE  = 'https://buy.stripe.com/bJe14f8d93Ew0ZigOz9bO01'; // Replace with £89 link
+// ── STRIPE LINKS & PRICING ──
+var STRIPE_LINKS = {
+  1: 'https://buy.stripe.com/14A5kv9hdfne7nG8i39bO02',
+  2: 'https://buy.stripe.com/8x26oz50Xdf6cI00PB9bO05',
+  3: 'https://buy.stripe.com/8x2cMXfFBcb2azSgOz9bO04',
+  4: 'https://buy.stripe.com/cNieV5bpl7UM4budCn9bO03'
+};
+var PRICES = {1:49, 2:78, 3:97, 4:116};
+var currentTenantCount = 1;
 
-function selectPlan(plan) {
-  currentPlan = plan;
-  var isBundle = plan === 'bundle';
-  document.getElementById('btn-starter').classList.toggle('active', !isBundle);
-  document.getElementById('btn-bundle').classList.toggle('active', isBundle);
-  document.getElementById('btn-bundle').classList.toggle('bundle-active', isBundle);
-  document.getElementById('bundle-notice').style.display = isBundle ? 'block' : 'none';
-  document.getElementById('s21-warning').style.display = isBundle ? 'flex' : 'none';
-  document.getElementById('upsell-nudge').style.display = isBundle ? 'none' : 'flex';
-  document.getElementById('price-label').textContent = isBundle ? 'Complete compliance bundle' : 'Starter compliance pack';
-  document.getElementById('price-includes').textContent = isBundle ? 'Info Sheet · Tenancy agreement · Both with proof' : 'Info Sheet · Proof certificate · Tracking';
-  document.getElementById('price-display').textContent = isBundle ? '£89' : '£49';
-  document.getElementById('price-display').style.color = isBundle ? '#a5b4fc' : 'var(--emerald2)';
-  document.getElementById('checkout-btn').textContent = isBundle ? 'Pay £89 — Complete compliance bundle' : 'Pay £49 — Become compliant instantly';
-  document.getElementById('checkout-btn').style.background = isBundle ? 'linear-gradient(135deg,#4f46e5,#6366f1)' : 'linear-gradient(135deg,var(--blue3),var(--blue))';
+// ── TENANT SELECTOR ──
+function setTenantCount(count, btn) {
+  currentTenantCount = count;
+  document.querySelectorAll('.tenant-count-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  var price = PRICES[count];
+  document.getElementById('price-display').textContent = '£' + price;
+  document.getElementById('price-label').textContent = count + ' tenant' + (count > 1 ? 's' : '') + ' — Compliance pack';
+  document.getElementById('price-includes').textContent = count > 1 ? 'Info Sheet · Proof certificate · Each tenant emailed individually' : 'Info Sheet · Proof certificate · Tracking';
+  document.getElementById('checkout-btn').textContent = 'Pay £' + price + ' — Become compliant instantly';
+  renderTenantFields(count);
+}
+
+function renderTenantFields(count) {
+  var container = document.getElementById('tenant-fields');
+  var html = '';
+  for (var i = 1; i <= count; i++) {
+    var label = count === 1 ? 'Tenant' : 'Tenant ' + i;
+    html += '<div class="tenant-group">';
+    html += '<div class="tenant-group-label">' + label + '</div>';
+    html += '<div class="field-row">';
+    html += '<div class="field"><label>Name *</label><input type="text" id="f-tenant-name-' + i + '" placeholder="Jane Smith" /></div>';
+    html += '<div class="field"><label>Email *</label><input type="email" id="f-tenant-email-' + i + '" placeholder="tenant@email.com" /></div>';
+    html += '</div></div>';
+  }
+  container.innerHTML = html;
+}
+
+// ── VALIDATION & CHECKOUT ──
+function showError(msg) {
+  var el = document.getElementById('form-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function hideError() {
+  var el = document.getElementById('form-error');
+  if (el) el.style.display = 'none';
+}
+function validateEmail(email) {
+  return email.indexOf('@') > 0 && email.indexOf('.') > email.indexOf('@');
 }
 
 function handleCheckout(btn) {
   hideError();
-
-  var firstName   = document.getElementById('f-firstname').value.trim();
-  var lastName    = document.getElementById('f-lastname').value.trim();
-  var email       = document.getElementById('f-email').value.trim();
-  var address     = document.getElementById('f-address').value.trim();
-  var tenantName  = document.getElementById('f-tenant-name').value.trim();
-  var tenantEmail = document.getElementById('f-tenant-email').value.trim();
-
+  var firstName = document.getElementById('f-firstname').value.trim();
+  var lastName  = document.getElementById('f-lastname').value.trim();
+  var email     = document.getElementById('f-email').value.trim();
+  var address   = document.getElementById('f-address').value.trim();
   if (!firstName || !lastName) { showError('Please enter your full name.'); return; }
   if (!email || !validateEmail(email)) { showError('Please enter a valid email address.'); return; }
   if (!address) { showError('Please enter the property address.'); return; }
-  if (!tenantName) { showError('Please enter your tenant name.'); return; }
-  if (!tenantEmail || !validateEmail(tenantEmail)) { showError('Please enter a valid tenant email address.'); return; }
-  if (email.toLowerCase() === tenantEmail.toLowerCase()) { showError('Your email and tenant email cannot be the same.'); return; }
-
-  var orderData = {
-    landlordName: firstName + ' ' + lastName,
-    landlordEmail: email,
-    propertyAddress: address,
-    tenantName: tenantName,
-    tenantEmail: tenantEmail,
-    timestamp: new Date().toISOString(),
-    plan: 'starter',
-    amount: 4900
-  };
-
-  try { sessionStorage.setItem('pendingOrder', JSON.stringify(orderData)); } catch(e) {}
-
+  var tenants = [];
+  for (var i = 1; i <= currentTenantCount; i++) {
+    var tName  = document.getElementById('f-tenant-name-' + i).value.trim();
+    var tEmail = document.getElementById('f-tenant-email-' + i).value.trim();
+    if (!tName) { showError('Please enter the name for Tenant ' + i + '.'); return; }
+    if (!tEmail || !validateEmail(tEmail)) { showError('Please enter a valid email for Tenant ' + i + '.'); return; }
+    if (tEmail.toLowerCase() === email.toLowerCase()) { showError('Tenant ' + i + ' email cannot be the same as your email.'); return; }
+    for (var j = 0; j < tenants.length; j++) {
+      if (tenants[j].email.toLowerCase() === tEmail.toLowerCase()) { showError('Tenant ' + i + ' has the same email as Tenant ' + (j+1) + '.'); return; }
+    }
+    tenants.push({ name: tName, email: tEmail });
+  }
+  try { sessionStorage.setItem('pendingOrder', JSON.stringify({ landlordName: firstName+' '+lastName, landlordEmail: email, propertyAddress: address, tenants: tenants, tenantCount: currentTenantCount, amount: PRICES[currentTenantCount]*100 })); } catch(e) {}
   btn.textContent = 'Redirecting to secure checkout...';
   btn.disabled = true;
   btn.style.opacity = '0.8';
-
-  var STRIPE_PAYMENT_LINK = currentPlan === 'bundle' ? STRIPE_BUNDLE : STRIPE_STARTER;
-  var stripeUrl = STRIPE_PAYMENT_LINK + '?prefilled_email=' + encodeURIComponent(email) + '&client_reference_id=' + encodeURIComponent(address.substring(0, 50));
-
-  setTimeout(function() {
-    window.location.href = stripeUrl;
-  }, 800);
+  var stripeUrl = STRIPE_LINKS[currentTenantCount] + '?prefilled_email=' + encodeURIComponent(email) + '&client_reference_id=' + encodeURIComponent(address.substring(0,50));
+  setTimeout(function(){ window.location.href = stripeUrl; }, 800);
 }
+
+// Initialise tenant fields on load
+renderTenantFields(1);
 
 // ── NAV ACTIVE STATE ──────────────────────────────────────────────────────
 window.addEventListener('scroll', () => {
