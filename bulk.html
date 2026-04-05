@@ -3,175 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bulk & Agency Compliance — CompliantUK</title>
-<meta name="description" content="Bulk compliance packs for portfolio landlords and letting agents. Upload your spreadsheet and we process every property at once.">
+<title>Landlord Compliance Blog — Renters Rights Act 2025 News &amp; Guides | CompliantUK</title>
+<meta name="description" content="Expert guides and news on the Renters Rights Act 2025, Section 21 abolition, landlord Information Sheet requirements, Section 8 notices, and UK landlord compliance. Updated regularly.">
+<meta name="keywords" content="renters rights act 2025 landlord guide, section 21 abolished what landlords do, landlord information sheet proof of delivery, landlord compliance checklist 2026, section 8 notice landlord UK, awaab's law landlord, PRS database registration, renters rights act news">
+<meta property="og:title" content="Landlord Compliance Blog | CompliantUK">
+<meta property="og:description" content="Expert guides on the Renters Rights Act 2025, Section 21 abolition, and landlord compliance requirements.">
+<link rel="canonical" href="https://compliantuk.co.uk/blog.html">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist+Mono:wght@400;500&family=Lora:ital,wght@0,400;1,400&display=swap');
-:root{
-  --bg:#080c14;--bg1:#0d1220;--bg2:#111827;--bg3:#1a2235;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
-  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;
-  --blue:#3b82f6;--blue2:#60a5fa;--blue3:#1d4ed8;
-  --emerald:#10b981;--emerald2:#34d399;
-  --amber:#f59e0b;--amber2:#fbbf24;
-  --indigo:#6366f1;--indigo2:#818cf8;
-  --red:#ef4444;--red2:#fca5a5;
-  --font:'Bricolage Grotesque',sans-serif;
-  --mono:'Geist Mono',monospace;
-  --serif:'Lora',serif;
-}
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Geist+Mono:wght@400;500&display=swap');
+:root{--bg:#080c14;--bg1:#0d1220;--bg2:#111827;--bg3:#1a2235;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--blue:#3b82f6;--blue2:#60a5fa;--blue3:#1d4ed8;--emerald:#10b981;--emerald2:#34d399;--amber:#f59e0b;--amber2:#fbbf24;--red:#ef4444;--font:'Bricolage Grotesque',sans-serif;--serif:'Lora',serif;--mono:'Geist Mono',monospace;--radius:14px}
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-
-/* NAV */
-nav{background:rgba(8,12,20,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 5%;position:sticky;top:0;z-index:99}
-.nav-wrap{max-width:1160px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bg3)}
+nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 5%}
+.nav-wrap{max-width:1160px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;gap:20px}
 .logo{display:flex;align-items:center;gap:9px;text-decoration:none}
 .logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--blue3),var(--blue));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:white}
 .logo-name{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-0.4px}
 .logo-name span{color:var(--blue2)}
-.nav-right{display:flex;align-items:center;gap:16px}
-.back-link{color:var(--text3);text-decoration:none;font-size:14px;font-weight:500;transition:color 0.2s}
-.back-link:hover{color:var(--text2)}
-.nav-cta{background:var(--blue);color:white;padding:8px 18px;border-radius:8px;font-size:13.5px;font-weight:700;text-decoration:none;transition:all 0.2s}
-.nav-cta:hover{background:#2563eb}
-
+.nav-right{display:flex;align-items:center;gap:14px}
+.nav-link{color:var(--text2);text-decoration:none;font-size:14px;font-weight:500;transition:color 0.15s}
+.nav-link:hover{color:var(--text)}
+.nav-btn{background:var(--blue);color:white;padding:8px 18px;border-radius:8px;font-size:13.5px;font-weight:600;text-decoration:none;transition:all 0.15s}
+.nav-btn:hover{background:#2563eb}
+/* HAMBURGER */
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:10px;min-width:44px;min-height:44px;align-items:center;justify-content:center}
+.hamburger span{display:block;width:24px;height:2.5px;background:#f1f5f9;border-radius:2px;transition:all 0.3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mobile-menu{display:none;position:fixed;top:60px;left:0;right:0;background:rgba(8,12,20,0.98);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.08);z-index:998;padding:8px 0 16px}
+.mobile-menu.open{display:block}
+.mm-inner{max-width:1160px;margin:0 auto;padding:0 5%}
+.mm-link{display:flex;align-items:center;justify-content:space-between;padding:13px 0;font-size:15px;font-weight:600;color:#94a3b8;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.05);transition:color 0.15s}
+.mm-link:last-of-type{border-bottom:none}
+.mm-link:hover{color:#f1f5f9}
+.mm-link-arrow{font-size:11px;color:#64748b}
+.mm-cta{display:flex;align-items:center;justify-content:center;background:#3b82f6;color:white;padding:13px;border-radius:9px;font-size:15px;font-weight:700;text-decoration:none;margin:14px 0 0;transition:background 0.15s}
+.mm-cta:hover{background:#2563eb}
+@media(max-width:900px){.nav-right .nav-link{display:none!important}.hamburger{display:flex}}
 /* HERO */
-.hero{padding:80px 5% 70px;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 70% 0%,rgba(99,102,241,0.12),transparent),radial-gradient(ellipse 40% 40% at 20% 80%,rgba(59,130,246,0.08),transparent);pointer-events:none}
-.hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
-.hero-inner{max-width:1160px;margin:0 auto;position:relative;z-index:1}
-.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);color:#c7d2fe;padding:5px 14px 5px 8px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:0.3px;margin-bottom:22px}
-.tag-dot{width:7px;height:7px;border-radius:50%;background:var(--indigo);animation:blink 1.4s ease infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
-h1{font-size:clamp(2.4rem,4.5vw,3.8rem);font-weight:800;line-height:1.08;letter-spacing:-1.5px;margin-bottom:18px}
-h1 .serif{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--indigo2);letter-spacing:-0.5px}
-.hero-sub{font-size:1.05rem;color:var(--text2);max-width:580px;line-height:1.78;margin-bottom:36px}
-.hero-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:40px}
-.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:white;padding:14px 26px;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:var(--font);transition:all 0.2s;box-shadow:0 4px 24px rgba(59,130,246,0.3)}
-.btn-primary:hover{background:#2563eb;transform:translateY(-1px);box-shadow:0 8px 32px rgba(59,130,246,0.4)}
-.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.05);color:var(--text2);padding:14px 22px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;border:1px solid var(--border2);transition:all 0.2s;cursor:pointer;font-family:var(--font)}
-.btn-ghost:hover{background:rgba(255,255,255,0.09);color:var(--text)}
-
-/* STATS */
-.stats-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg1);padding:0 5%}
-.stats-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
-.stat{padding:22px 16px;text-align:center;border-right:1px solid var(--border)}
-.stat:last-child{border-right:none}
-.stat-n{font-size:2rem;font-weight:800;letter-spacing:-1.5px;line-height:1;margin-bottom:5px}
-.stat-n.blue{color:var(--blue2)}.stat-n.green{color:var(--emerald2)}.stat-n.amber{color:var(--amber2)}.stat-n.indigo{color:var(--indigo2)}
-.stat-l{font-size:12px;color:var(--text3);font-weight:500;line-height:1.4}
-
-/* SECTION */
-.section{padding:90px 5%}
-.section-inner{max-width:1160px;margin:0 auto}
-.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue2);margin-bottom:14px}
-.eyebrow::before{content:'';width:20px;height:1px;background:var(--blue)}
-h2{font-size:clamp(1.9rem,3vw,2.8rem);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:14px;color:var(--text)}
-h2 .serif{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--blue2);letter-spacing:-0.3px}
-.section-p{font-size:1rem;color:var(--text2);max-width:540px;line-height:1.78;margin-bottom:52px}
-
-/* PRICING TIERS */
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
-.pricing-grid-bottom{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.tier-card{background:var(--bg1);border:1px solid var(--border2);border-radius:18px;overflow:hidden;transition:all 0.2s;position:relative}
-.tier-card:hover{border-color:rgba(59,130,246,0.3);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
-.tier-card.featured{border-color:rgba(99,102,241,0.5);box-shadow:0 0 60px rgba(99,102,241,0.08)}
-.tier-badge{position:absolute;top:16px;right:16px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;font-family:var(--mono);background:rgba(99,102,241,0.15);color:var(--indigo2);border:1px solid rgba(99,102,241,0.3)}
-.tier-top{padding:28px 28px 20px}
-.tier-icon{font-size:28px;margin-bottom:14px}
-.tier-name{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-family:var(--mono);margin-bottom:6px}
-.tier-price{font-size:2.6rem;font-weight:800;letter-spacing:-1.5px;line-height:1;color:var(--text);margin-bottom:4px}
-.tier-price sup{font-size:1.2rem;font-weight:600;color:var(--text2);letter-spacing:0;vertical-align:super}
-.tier-price .per{font-size:0.9rem;font-weight:500;color:var(--text3);letter-spacing:0}
-.tier-sub{font-size:13px;color:var(--text2);margin-bottom:0}
-.tier-divider{height:1px;background:var(--border);margin:0 28px}
-.tier-body{padding:20px 28px 28px}
-.tier-list{list-style:none;margin-bottom:20px}
-.tier-list li{display:flex;align-items:flex-start;gap:9px;padding:7px 0;font-size:13.5px;color:var(--text2);border-bottom:1px solid var(--border)}
-.tier-list li:last-child{border-bottom:none}
-.tick{width:18px;height:18px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--emerald2);flex-shrink:0;margin-top:1px}
-.tier-btn{width:100%;padding:13px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:7px;border:none}
-.tier-btn.blue{background:var(--blue);color:white;box-shadow:0 4px 16px rgba(59,130,246,0.25)}
-.tier-btn.blue:hover{background:#2563eb;transform:translateY(-1px)}
-.tier-btn.indigo{background:var(--indigo);color:white;box-shadow:0 4px 16px rgba(99,102,241,0.25)}
-.tier-btn.indigo:hover{background:#4f46e5;transform:translateY(-1px)}
-.tier-btn.outline{background:transparent;color:var(--text2);border:1px solid var(--border2)}
-.tier-btn.outline:hover{background:rgba(255,255,255,0.05);color:var(--text)}
-.savings-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-left:8px;font-family:var(--mono)}
-.savings-tag.green{background:rgba(16,185,129,0.1);color:var(--emerald2);border:1px solid rgba(16,185,129,0.2)}
-.savings-tag.amber{background:rgba(245,158,11,0.1);color:var(--amber2);border:1px solid rgba(245,158,11,0.2)}
-
-/* EXCEL UPLOAD */
-.upload-section{background:var(--bg1)}
-.upload-card{background:var(--bg2);border:1px solid var(--border2);border-radius:18px;overflow:hidden;max-width:820px}
-.upload-top{padding:32px 36px 0}
-.upload-zone{margin:24px 36px;border:2px dashed rgba(99,102,241,0.3);border-radius:14px;padding:40px 24px;text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(99,102,241,0.03);position:relative}
-.upload-zone:hover,.upload-zone.dragover{border-color:rgba(99,102,241,0.6);background:rgba(99,102,241,0.07)}
-.upload-icon{width:56px;height:56px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:24px}
-.upload-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
-.upload-sub{font-size:13.5px;color:var(--text2);margin-bottom:16px;line-height:1.6}
-.upload-btn-small{background:rgba(99,102,241,0.15);color:var(--indigo2);border:1px solid rgba(99,102,241,0.3);padding:9px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s}
-.upload-btn-small:hover{background:rgba(99,102,241,0.25)}
-input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer}
-.upload-format{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 36px 20px;font-size:12px;color:var(--text3)}
-.fmt-pill{background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:3px 10px;border-radius:6px;font-family:var(--mono);font-size:11px}
-
-/* Preview table */
-.preview-section{display:none;padding:0 36px 32px}
-.preview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.preview-title{font-size:14px;font-weight:700;color:var(--text)}
-.preview-count{font-size:12px;color:var(--text3);font-family:var(--mono)}
-.preview-table{width:100%;border-collapse:collapse;font-size:13px}
-.preview-table th{text-align:left;padding:8px 12px;color:var(--text3);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02)}
-.preview-table td{padding:10px 12px;color:var(--text2);border-bottom:1px solid var(--border)}
-.preview-table tr:last-child td{border-bottom:none}
-.row-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;font-family:var(--mono)}
-.row-status.ok{background:rgba(16,185,129,0.1);color:var(--emerald2);border:1px solid rgba(16,185,129,0.2)}
-.row-status.err{background:rgba(239,68,68,0.1);color:var(--red2);border:1px solid rgba(239,68,68,0.2)}
-.proceed-row{padding:0 36px 32px;display:none}
-.proceed-summary{background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.15);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:12px}
-.ps-left{font-size:14px;color:var(--text2)}
-.ps-price{font-size:1.4rem;font-weight:800;color:var(--text);font-family:var(--mono)}
-.proceed-btn{width:100%;background:linear-gradient(135deg,#4f46e5,var(--indigo));color:white;border:none;padding:14px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;box-shadow:0 4px 20px rgba(99,102,241,0.25)}
-.proceed-btn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(99,102,241,0.35)}
-
-/* Template download */
-.template-box{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin:0 36px 28px;flex-wrap:wrap;gap:12px}
-.tb-left{display:flex;align-items:center;gap:12px}
-.tb-icon{width:38px;height:38px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.tb-text{font-size:13.5px;color:var(--text2)}
-.tb-text strong{color:var(--text);display:block;margin-bottom:2px}
-.tb-dl{background:rgba(16,185,129,0.1);color:var(--emerald2);border:1px solid rgba(16,185,129,0.2);padding:8px 16px;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:var(--font);text-decoration:none;transition:all 0.2s}
-.tb-dl:hover{background:rgba(16,185,129,0.18)}
-
-/* HOW BULK WORKS */
-.bulk-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:48px}
-.bulk-step{background:var(--bg1);border:1px solid var(--border);border-radius:14px;padding:24px}
-.bs-num{font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:14px}
-.bs-icon{font-size:26px;margin-bottom:12px}
-.bs-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:7px}
-.bs-desc{font-size:13.5px;color:var(--text2);line-height:1.65}
-
-/* CONTACT CTA */
-.cta-section{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(59,130,246,0.05));border-top:1px solid rgba(99,102,241,0.1);border-bottom:1px solid rgba(99,102,241,0.1);padding:64px 5%}
-.cta-inner{max-width:680px;margin:0 auto;text-align:center}
-.cta-inner h2{margin-bottom:14px}
-.cta-inner p{color:var(--text2);font-size:15px;line-height:1.75;margin-bottom:28px}
-
-footer{background:var(--bg);border-top:1px solid var(--border);padding:36px 5%}
+.blog-hero{padding:60px 5% 48px;border-bottom:1px solid var(--border);background:var(--bg1);position:relative;overflow:hidden}
+.blog-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.blog-hero-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 380px;gap:48px;align-items:center;position:relative;z-index:1}
+.blog-eyebrow{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue2);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.blog-eyebrow::before{content:'';width:20px;height:1px;background:var(--blue)}
+.blog-h1{font-size:clamp(2rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:12px}
+.blog-h1 .serif{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--blue2)}
+.blog-sub{font-size:15px;color:var(--text2);line-height:1.75;max-width:480px}
+.alert-box{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:22px;position:relative;overflow:hidden}
+.alert-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue3),var(--blue),var(--emerald))}
+.alert-title{font-size:14px;font-weight:800;margin-bottom:4px;letter-spacing:-0.2px}
+.alert-sub{font-size:12.5px;color:var(--text2);margin-bottom:14px;line-height:1.5}
+.alert-form{display:flex;gap:8px;flex-wrap:wrap}
+.alert-input{flex:1;min-width:160px;background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:8px;padding:10px 13px;font-size:13.5px;font-family:var(--font);color:var(--text);outline:none;transition:border-color 0.15s}
+.alert-input:focus{border-color:var(--blue)}
+.alert-input::placeholder{color:var(--text3)}
+.alert-btn{background:var(--blue);color:white;border:none;padding:10px 18px;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;transition:all 0.15s}
+.alert-btn:hover{background:#2563eb}
+.alert-note{font-size:11px;color:var(--text3);margin-top:8px}
+.alert-success{display:none;font-size:13px;color:var(--emerald2);font-weight:600;margin-top:8px}
+.alert-banner{background:rgba(239,68,68,0.08);border-bottom:1px solid rgba(239,68,68,0.15);padding:12px 5%}
+.alert-banner-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ab-badge{background:var(--red);color:white;font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;font-family:var(--mono);white-space:nowrap}
+.ab-text{font-size:13.5px;color:#fca5a5;font-weight:500}
+.ab-link{color:var(--blue2);text-decoration:none;font-weight:700;font-size:13.5px;margin-left:auto;white-space:nowrap}
+.ab-link:hover{text-decoration:underline}
+.filter-bar{padding:20px 5%;border-bottom:1px solid var(--border);background:var(--bg1)}
+.filter-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cat-btn{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text3);font-family:var(--font);transition:all 0.15s}
+.cat-btn:hover{color:var(--text);border-color:var(--border2)}
+.cat-btn.active{background:rgba(59,130,246,0.1);color:var(--blue2);border-color:rgba(59,130,246,0.25)}
+.filter-count{font-size:12px;color:var(--text3);margin-left:auto;font-family:var(--mono)}
+.blog-layout{max-width:1160px;margin:0 auto;padding:40px 5%;display:grid;grid-template-columns:1fr 300px;gap:40px;align-items:start}
+.posts-grid{display:flex;flex-direction:column;gap:0}
+.post-card{border-bottom:1px solid var(--border);padding:28px 0;transition:all 0.2s;display:grid;grid-template-columns:1fr 200px;gap:24px;align-items:start}
+.post-card:first-child{padding-top:0}
+.post-card:last-child{border-bottom:none}
+.post-card:hover .post-title{color:var(--blue2)}
+.post-meta{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.post-cat{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:0.3px;font-family:var(--mono)}
+.post-cat.rra{background:rgba(239,68,68,0.1);color:#fca5a5;border:1px solid rgba(239,68,68,0.2)}
+.post-cat.s21{background:rgba(245,158,11,0.1);color:var(--amber2);border:1px solid rgba(245,158,11,0.2)}
+.post-cat.guide{background:rgba(59,130,246,0.1);color:var(--blue2);border:1px solid rgba(59,130,246,0.2)}
+.post-cat.news{background:rgba(16,185,129,0.1);color:var(--emerald2);border:1px solid rgba(16,185,129,0.2)}
+.post-cat.hhsrs{background:rgba(99,102,241,0.1);color:#a5b4fc;border:1px solid rgba(99,102,241,0.2)}
+.post-date{font-size:12px;color:var(--text3);font-family:var(--mono)}
+.post-read{font-size:12px;color:var(--text3)}
+.post-title{font-size:1.15rem;font-weight:800;letter-spacing:-0.4px;line-height:1.3;margin-bottom:8px;color:var(--text);text-decoration:none;display:block;transition:color 0.15s}
+.post-excerpt{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:12px}
+.post-tags{display:flex;gap:6px;flex-wrap:wrap}
+.post-tag{font-size:11px;color:var(--text3);background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:2px 8px;border-radius:4px}
+.post-img{background:var(--bg2);border:1px solid var(--border);border-radius:10px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0}
+.post-cta{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--blue2);text-decoration:none;font-weight:700;margin-top:8px}
+.post-cta:hover{text-decoration:underline}
+.featured-badge{background:linear-gradient(90deg,var(--blue3),var(--blue));color:white;font-size:10px;font-weight:800;padding:2px 10px;border-radius:20px;letter-spacing:0.5px}
+.sidebar{display:flex;flex-direction:column;gap:20px;position:sticky;top:80px}
+.sidebar-card{background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden}
+.sc-header{padding:14px 18px;border-bottom:1px solid var(--border);font-size:13px;font-weight:800;letter-spacing:-0.2px}
+.sc-body{padding:14px 18px}
+.hot-kw{display:flex;flex-direction:column;gap:6px}
+.kw-item{display:flex;align-items:center;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid var(--border)}
+.kw-item:last-child{border-bottom:none}
+.kw-text{color:var(--text2);font-size:12.5px}
+.kw-vol{font-family:var(--mono);font-size:11px;color:var(--emerald2);font-weight:600}
+.kw-vol.medium{color:var(--amber2)}
+.related-posts{display:flex;flex-direction:column;gap:0}
+.related-item{padding:11px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start}
+.related-item:last-child{border-bottom:none}
+.ri-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+.ri-title{font-size:13px;font-weight:600;color:var(--text);text-decoration:none;line-height:1.4;transition:color 0.15s}
+.ri-title:hover{color:var(--blue2)}
+.ri-date{font-size:11px;color:var(--text3);margin-top:2px}
+.cta-card{background:linear-gradient(135deg,rgba(37,99,235,0.15),rgba(99,102,241,0.08));border:1px solid rgba(59,130,246,0.2);border-radius:var(--radius);padding:20px}
+.cta-card-title{font-size:15px;font-weight:800;margin-bottom:6px;letter-spacing:-0.3px}
+.cta-card-sub{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px}
+.cta-card-btn{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--blue);color:white;padding:11px;border-radius:9px;font-size:13.5px;font-weight:700;text-decoration:none;transition:all 0.2s}
+.cta-card-btn:hover{background:#2563eb;transform:translateY(-1px)}
+.deadline-widget{text-align:center}
+.dw-label{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px}
+.dw-countdown{font-family:var(--mono);font-size:1.6rem;font-weight:500;color:#fca5a5;letter-spacing:-0.5px;margin-bottom:4px}
+.dw-sub{font-size:11.5px;color:var(--text3)}
+.pagination{display:flex;align-items:center;justify-content:center;gap:8px;padding:32px 0}
+.page-btn{padding:8px 14px;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text3);font-family:var(--font);transition:all 0.15s}
+.page-btn:hover{color:var(--text);background:rgba(255,255,255,0.05)}
+.page-btn.active{background:var(--blue);color:white;border-color:var(--blue)}
+footer{border-top:1px solid var(--border);padding:32px 5%;background:var(--bg)}
 .footer-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
 .footer-links{display:flex;gap:20px;list-style:none}
-.footer-links a{color:var(--text3);text-decoration:none;font-size:13px;transition:color 0.2s}
+.footer-links a{color:var(--text3);text-decoration:none;font-size:13px;transition:color 0.15s}
 .footer-links a:hover{color:var(--text2)}
 .footer-copy{font-size:12px;color:var(--text3)}
-
-@media(max-width:1100px){.pricing-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:900px){.pricing-grid,.pricing-grid-bottom{grid-template-columns:1fr 1fr}.bulk-steps{grid-template-columns:1fr}}
-@media(max-width:600px){.pricing-grid,.pricing-grid-bottom{grid-template-columns:1fr}.stats-inner{grid-template-columns:1fr 1fr}.stat:nth-child(2){border-right:none}.upload-top,.template-box,.upload-format,.preview-section,.proceed-row{padding-left:16px;padding-right:16px}.upload-zone{margin-left:16px;margin-right:16px}}
-@media(max-width:600px){.stats-inner{grid-template-columns:1fr 1fr}.stat:nth-child(2){border-right:none}.upload-top,.template-box,.upload-format,.preview-section,.proceed-row{padding-left:16px;padding-right:16px}.upload-zone{margin-left:16px;margin-right:16px}}
+@media(max-width:900px){.blog-hero-inner{grid-template-columns:1fr}.blog-layout{grid-template-columns:1fr}.sidebar{position:static}.post-card{grid-template-columns:1fr}.post-img{display:none}}
 </style>
 </head>
 <body>
@@ -183,317 +147,122 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:36px 5%}
       <span class="logo-name">Compliant<span>UK</span></span>
     </a>
     <div class="nav-right">
-      <a href="index.html" class="back-link">← Home</a>
-      <a href="#upload" class="nav-cta">Upload spreadsheet</a>
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="bulk.html" class="nav-link">Portfolio</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+      <a href="index.html#get-compliant" class="nav-btn">Get compliant — £49</a>
     </div>
+    <button class="hamburger" id="hb" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-tag"><span class="tag-dot"></span> Portfolio & Agency Compliance</div>
-    <h1>Comply at scale.<br><span class="serif">One upload, done.</span></h1>
-    <p class="hero-sub">Upload your spreadsheet and we send the official Information Sheet to every tenant simultaneously — with proof-of-service certificates for every single property.</p>
-    <div class="hero-ctas">
-      <a href="#upload" class="btn-primary">Upload your spreadsheet →</a>
-      <a href="#pricing" class="btn-ghost">View bulk pricing</a>
-    </div>
-  </div>
-</section>
-
-<!-- STATS -->
-<div class="stats-strip">
-  <div class="stats-inner">
-    <div class="stat">
-      <div class="stat-n blue">£35</div>
-      <div class="stat-l">Per tenant for 2–10 tenants</div>
-    </div>
-    <div class="stat">
-      <div class="stat-n green">£25</div>
-      <div class="stat-l">Per tenant for 11–50 tenants</div>
-    </div>
-    <div class="stat">
-      <div class="stat-n amber">£150/mo</div>
-      <div class="stat-l">Up to 50 props/mo — Agency Pro</div>
-    </div>
-    <div class="stat">
-      <div class="stat-n indigo">£7,000</div>
-      <div class="stat-l">To process 200 properties via Excel</div>
-    </div>
+<div class="mobile-menu" id="mm">
+  <div class="mm-inner">
+    <a href="index.html" class="mm-link" onclick="closeMobileMenu()">Home <span class="mm-link-arrow">›</span></a>
+    <a href="bulk.html" class="mm-link" onclick="closeMobileMenu()">Portfolio &amp; Agency <span class="mm-link-arrow">›</span></a>
+    <a href="about.html" class="mm-link" onclick="closeMobileMenu()">About <span class="mm-link-arrow">›</span></a>
+    <a href="contact.html" class="mm-link" onclick="closeMobileMenu()">Contact <span class="mm-link-arrow">›</span></a>
+    <a href="index.html#get-compliant" class="mm-cta" onclick="closeMobileMenu()">Get compliant — £49</a>
   </div>
 </div>
 
-<!-- PRICING -->
-<section class="section" id="pricing">
-  <div class="section-inner">
-    <div class="eyebrow">Bulk pricing</div>
-    <h2>More properties,<br><span class="serif">better value</span></h2>
-    <p class="section-p">Solo landlords, portfolio investors, and letting agents all get the same quality of service — at a price that reflects their scale.</p>
+<div class="alert-banner">
+  <div class="alert-banner-inner">
+    <span class="ab-badge">LIVE</span>
+    <span class="ab-text">Renters Rights Act 2025 Phase 1 is now in force — 31 May 2026 deadline for Information Sheet delivery</span>
+    <a href="index.html#get-compliant" class="ab-link">Get compliant now →</a>
+  </div>
+</div>
 
-    <div class="pricing-grid">
-      <!-- STARTER -->
-      <div class="tier-card">
-        <div class="tier-top">
-          <div class="tier-icon">🏠</div>
-          <div class="tier-name">Starter</div>
-          <div class="tier-price"><sup>£</sup>49 <span class="per">/ property</span></div>
-          <div class="tier-sub">Single property — one-off</div>
-        </div>
-        <div class="tier-divider"></div>
-        <div class="tier-body">
-          <ul class="tier-list">
-            <li><span class="tick">✓</span> Official GOV.UK Information Sheet</li>
-            <li><span class="tick">✓</span> Automated tenant email delivery</li>
-            <li><span class="tick">✓</span> Real-time read tracking</li>
-            <li><span class="tick">✓</span> Proof-of-service certificate</li>
-            <li><span class="tick">✓</span> 48hr auto-reminder</li>
-            <li><span class="tick">✓</span> Dashboard access</li>
-          </ul>
-          <a href="index.html#get-compliant" class="tier-btn outline">Get started →</a>
-        </div>
-      </div>
-
-      <!-- PORTFOLIO -->
-      <div class="tier-card">
-        <div class="tier-top">
-          <div class="tier-icon">🏘️</div>
-          <div class="tier-name">Portfolio</div>
-          <div class="tier-price"><sup>£</sup>35 <span class="per">/ property</span> <span class="savings-tag green">Save 29%</span></div>
-          <div class="tier-sub">2–10 properties — one-off bulk</div>
-        </div>
-        <div class="tier-divider"></div>
-        <div class="tier-body">
-          <ul class="tier-list">
-            <li><span class="tick">✓</span> Everything in Starter</li>
-            <li><span class="tick">✓</span> Excel / CSV upload</li>
-            <li><span class="tick">✓</span> All properties processed at once</li>
-            <li><span class="tick">✓</span> Bulk certificate download</li>
-            <li><span class="tick">✓</span> Consolidated dashboard view</li>
-            <li><span class="tick">✓</span> Priority email support</li>
-          </ul>
-          <a href="#upload" class="tier-btn blue">Upload spreadsheet →</a>
-        </div>
-      </div>
+<section class="blog-hero">
+  <div class="blog-hero-inner">
+    <div>
+      <div class="blog-eyebrow">Landlord Compliance Hub</div>
+      <h1 class="blog-h1">News, guides &amp; updates for<br><span class="serif">landlords in England</span></h1>
+      <p class="blog-sub">Expert analysis of the Renters Rights Act 2025, Section 21 abolition, Information Sheet requirements, and everything private landlords need to stay legally compliant.</p>
     </div>
-
-    <div class="pricing-grid-bottom">
-      <!-- AGENCY LITE -->
-      <div class="tier-card">
-        <div class="tier-top">
-          <div class="tier-icon">🏢</div>
-          <div class="tier-name">Agency Lite</div>
-          <div class="tier-price"><sup>£</sup>25 <span class="per">/ property</span> <span class="savings-tag amber">Save 49%</span></div>
-          <div class="tier-sub">11–50 properties — one-off bulk</div>
-        </div>
-        <div class="tier-divider"></div>
-        <div class="tier-body">
-          <ul class="tier-list">
-            <li><span class="tick">✓</span> Everything in Portfolio</li>
-            <li><span class="tick">✓</span> Dedicated account manager</li>
-            <li><span class="tick">✓</span> White-label certificate option</li>
-            <li><span class="tick">✓</span> Bulk invoice for your records</li>
-            <li><span class="tick">✓</span> Same-day processing</li>
-          </ul>
-          <a href="#upload" class="tier-btn blue">Upload spreadsheet →</a>
-        </div>
+    <div class="alert-box">
+      <div class="alert-title">Get compliance alerts</div>
+      <div class="alert-sub">New legislation, deadline reminders, and compliance guides — straight to your inbox. Free.</div>
+      <div class="alert-form">
+        <input type="email" class="alert-input" id="alert-email" placeholder="your@email.com" />
+        <button class="alert-btn" onclick="subscribeAlerts()">Subscribe</button>
       </div>
-
-      <!-- AGENCY PRO -->
-      <div class="tier-card featured">
-        <div class="tier-badge">Most popular</div>
-        <div class="tier-top">
-          <div class="tier-icon">🏛️</div>
-          <div class="tier-name">Agency Pro</div>
-          <div class="tier-price"><sup>£</sup>150 <span class="per">/ month</span></div>
-          <div class="tier-sub">Up to 50 properties/mo · 3-month minimum</div>
-        </div>
-        <div class="tier-divider"></div>
-        <div class="tier-body">
-          <ul class="tier-list">
-            <li><span class="tick">✓</span> Up to 50 properties/month included</li>
-            <li><span class="tick">✓</span> Additional properties at £4 each</li>
-            <li><span class="tick">✓</span> 3-month minimum · 30-day notice to cancel</li>
-            <li><span class="tick">✓</span> Excel upload anytime</li>
-            <li><span class="tick">✓</span> White-label branding available</li>
-            <li><span class="tick">✓</span> All future compliance updates included</li>
-            <li><span class="tick">✓</span> Dedicated compliance consultant</li>
-            <li><span class="tick">✓</span> Monthly compliance briefings</li>
-            <li><span class="tick">✓</span> Section 8 guidance access (V2)</li>
-            <li><span class="tick">✓</span> Cancel anytime</li>
-          </ul>
-          <a href="mailto:support@compliantuk.co.uk?subject=Agency Pro enquiry" class="tier-btn indigo">Enquire about Agency Pro →</a>
-        </div>
-      </div>
-
-      <!-- AGENCY PRO+ -->
-      <div class="tier-card">
-        <div class="tier-top">
-          <div class="tier-icon">🏆</div>
-          <div class="tier-name">Agency Pro+</div>
-          <div class="tier-price"><sup>£</sup>350 <span class="per">/ month</span></div>
-          <div class="tier-sub">Up to 150 properties/mo · 3-month minimum</div>
-        </div>
-        <div class="tier-divider"></div>
-        <div class="tier-body">
-          <ul class="tier-list">
-            <li><span class="tick">✓</span> Up to 150 properties/month included</li>
-            <li><span class="tick">✓</span> Additional properties at £3 each</li>
-            <li><span class="tick">✓</span> Everything in Agency Pro</li>
-            <li><span class="tick">✓</span> Priority onboarding &amp; setup</li>
-            <li><span class="tick">✓</span> Dedicated phone support</li>
-            <li><span class="tick">✓</span> Quarterly compliance review</li>
-          </ul>
-          <a href="mailto:support@compliantuk.co.uk?subject=Agency Pro Plus enquiry" class="tier-btn" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);color:white">Enquire about Pro+ →</a>
-        </div>
-      </div>
-
-      <!-- ENTERPRISE -->
-      <div class="tier-card">
-        <div class="tier-top">
-          <div class="tier-icon">🌐</div>
-          <div class="tier-name">Enterprise</div>
-          <div class="tier-price" style="font-size:1.4rem">Bespoke</div>
-          <div class="tier-sub">200+ properties · Custom pricing</div>
-        </div>
-        <div class="tier-divider"></div>
-        <div class="tier-body">
-          <ul class="tier-list">
-            <li><span class="tick">✓</span> Unlimited properties</li>
-            <li><span class="tick">✓</span> Fully bespoke pricing</li>
-            <li><span class="tick">✓</span> API integration available</li>
-            <li><span class="tick">✓</span> White-label platform option</li>
-            <li><span class="tick">✓</span> Dedicated phone &amp; account support</li>
-            <li><span class="tick">✓</span> SLA guaranteed response times</li>
-            <li><span class="tick">✓</span> Custom compliance workflows</li>
-          </ul>
-          <a href="mailto:support@compliantuk.co.uk?subject=Enterprise enquiry" class="tier-btn" style="background:var(--text);color:var(--bg)">Contact us →</a>
-        </div>
-      </div>
-
+      <div class="alert-note">No spam. Unsubscribe anytime. We email when it matters.</div>
+      <div class="alert-success" id="alert-success">Subscribed — we'll alert you to important updates.</div>
     </div>
   </div>
 </section>
 
-<!-- UPLOAD SECTION -->
-<section class="section upload-section" id="upload">
-  <div class="section-inner">
-    <div class="eyebrow">Bulk upload</div>
-    <h2>Upload your <span class="serif">spreadsheet</span></h2>
-    <p class="section-p">Download our template, fill in your properties and tenant details, and upload. We validate everything before you pay.</p>
+<div class="filter-bar">
+  <div class="filter-inner">
+    <button class="cat-btn active" onclick="filterPosts('all',this)">All posts</button>
+    <button class="cat-btn" onclick="filterPosts('rra',this)">Renters Rights Act</button>
+    <button class="cat-btn" onclick="filterPosts('s21',this)">Section 21 &amp; 8</button>
+    <button class="cat-btn" onclick="filterPosts('guide',this)">How-to guides</button>
+    <button class="cat-btn" onclick="filterPosts('news',this)">News &amp; updates</button>
+    <button class="cat-btn" onclick="filterPosts('hhsrs',this)">HHSRS &amp; Awaab's</button>
+    <span class="filter-count" id="filter-count">10 articles</span>
+  </div>
+</div>
 
-    <div class="upload-card">
-
-      <!-- Template download -->
-      <div class="template-box" style="margin-top:28px">
-        <div class="tb-left">
-          <div class="tb-icon">📊</div>
-          <div class="tb-text">
-            <strong>Download the template first</strong>
-            Fill in: Property Address, Tenant Name, Tenant Email — one row per property
-          </div>
-        </div>
-        <a href="#" class="tb-dl" onclick="downloadTemplate(); return false;">⬇ Download Excel template</a>
-      </div>
-
-      <!-- Upload zone -->
-      <div class="upload-top">
-        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px">Upload your completed spreadsheet</div>
-        <div style="font-size:13.5px;color:var(--text2)">Drag and drop your file below or click to browse</div>
-      </div>
-
-      <div class="upload-zone" id="upload-zone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-        <input type="file" accept=".xlsx,.xls,.csv" onchange="handleFileSelect(event)" id="file-input">
-        <div class="upload-icon">📂</div>
-        <div class="upload-title" id="upload-title">Drop your file here</div>
-        <div class="upload-sub" id="upload-sub">Supports Excel (.xlsx, .xls) and CSV files<br>Maximum 500 properties per upload</div>
-        <button class="upload-btn-small" onclick="document.getElementById('file-input').click();event.stopPropagation()">Browse files</button>
-      </div>
-
-      <div class="upload-format">
-        <span>Required columns:</span>
-        <span class="fmt-pill">Property Address</span>
-        <span class="fmt-pill">Tenant Name</span>
-        <span class="fmt-pill">Tenant Email</span>
-        <span style="color:var(--text3);font-size:11px">(optional: Landlord Name)</span>
-      </div>
-
-      <!-- Preview table -->
-      <div class="preview-section" id="preview-section">
-        <div class="preview-header">
-          <div class="preview-title">Preview — first 5 rows</div>
-          <div class="preview-count" id="preview-count">0 properties loaded</div>
-        </div>
-        <div style="overflow-x:auto">
-          <table class="preview-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Property Address</th>
-                <th>Tenant Name</th>
-                <th>Tenant Email</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="preview-body"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Proceed to payment -->
-      <div class="proceed-row" id="proceed-row">
-        <div class="proceed-summary">
-          <div class="ps-left" id="ps-text">0 properties ready</div>
-          <div class="ps-price" id="ps-price">£0</div>
-        </div>
-        <button class="proceed-btn" onclick="proceedToPayment()">Proceed to payment →</button>
-      </div>
-
+<div class="blog-layout">
+  <main>
+    <div class="posts-grid" id="posts-grid"></div>
+    <div class="pagination">
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3 →</button>
     </div>
-
-    <!-- How bulk works -->
-    <div class="bulk-steps">
-      <div class="bulk-step">
-        <div class="bs-num">01 / 03</div>
-        <div class="bs-icon">📊</div>
-        <div class="bs-title">Upload your spreadsheet</div>
-        <div class="bs-desc">Download our template, fill in your properties and tenants, upload the file. We validate every row instantly.</div>
-      </div>
-      <div class="bulk-step">
-        <div class="bs-num">02 / 03</div>
-        <div class="bs-icon">💳</div>
-        <div class="bs-title">Pay for your batch</div>
-        <div class="bs-desc">We show you the total based on property count. Pay once via Stripe — priced automatically at the right tier.</div>
-      </div>
-      <div class="bulk-step">
-        <div class="bs-num">03 / 03</div>
-        <div class="bs-icon">🛡️</div>
-        <div class="bs-title">All documents sent instantly</div>
-        <div class="bs-desc">Every tenant receives the document simultaneously. Your dashboard tracks each one. Certificates auto-generate as tenants read.</div>
+  </main>
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <div class="sc-header">Deadline countdown</div>
+      <div class="sc-body">
+        <div class="deadline-widget">
+          <div class="dw-label">Days until 31 May 2026</div>
+          <div class="dw-countdown" id="dw-days">--</div>
+          <div class="dw-sub">Information Sheet deadline</div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta-section">
-  <div class="cta-inner">
-    <div class="eyebrow" style="justify-content:center">Agents — let's talk</div>
-    <h2>Managing 50+ properties?<br><span class="serif">We'll set you up personally.</span></h2>
-    <p>For larger agencies and portfolio landlords we offer white-label certificates, dedicated onboarding, and a monthly retainer that covers everything — including all future compliance requirements as legislation evolves.</p>
-    <a href="mailto:support@compliantuk.co.uk?subject=Agency Pro enquiry" class="btn-primary" style="margin:0 auto">Talk to us about Agency Pro →</a>
-  </div>
-</section>
+    <div class="cta-card">
+      <div class="cta-card-title">Become compliant today</div>
+      <div class="cta-card-sub">Official Information Sheet delivered to your tenant with timestamped proof of service. From £49 per tenant.</div>
+      <a href="index.html#get-compliant" class="cta-card-btn">Get compliant — £49 →</a>
+    </div>
+    <div class="sidebar-card">
+      <div class="sc-header">Landlords are searching for</div>
+      <div class="sc-body">
+        <div class="hot-kw">
+          <div class="kw-item"><span class="kw-text">renters rights act information sheet</span><span class="kw-vol">22K/mo</span></div>
+          <div class="kw-item"><span class="kw-text">section 21 abolished landlord</span><span class="kw-vol">11.2K/mo</span></div>
+          <div class="kw-item"><span class="kw-text">landlord compliance 2026</span><span class="kw-vol">9.4K/mo</span></div>
+          <div class="kw-item"><span class="kw-text">how to serve information sheet</span><span class="kw-vol">6.2K/mo</span></div>
+          <div class="kw-item"><span class="kw-text">section 8 notice landlord UK</span><span class="kw-vol medium">8.9K/mo</span></div>
+          <div class="kw-item"><span class="kw-text">landlord information sheet proof</span><span class="kw-vol">3.8K/mo</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-card">
+      <div class="sc-header">Most read guides</div>
+      <div class="sc-body">
+        <div class="related-posts" id="related-posts"></div>
+      </div>
+    </div>
+  </aside>
+</div>
 
 <footer>
   <div class="footer-inner">
-    <a href="index.html" class="logo">
-      <div class="logo-mark">✓</div>
-      <span class="logo-name">Compliant<span>UK</span></span>
-    </a>
+    <a href="index.html" class="logo"><div class="logo-mark">✓</div><span class="logo-name">Compliant<span>UK</span></span></a>
     <ul class="footer-links">
-      <li><a href="privacy.html">Privacy Policy</a></li>
-      <li><a href="terms.html">Terms of Service</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="bulk.html">Portfolio pricing</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a href="terms.html">Terms</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <div class="footer-copy">© 2026 CompliantUK</div>
@@ -501,139 +270,26 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:36px 5%}
 </footer>
 
 <script>
-var uploadedData = [];
+function toggleMobileMenu(){var m=document.getElementById("mm");var b=document.getElementById("hb");var open=m.classList.contains("open");m.classList.toggle("open",!open);b.classList.toggle("open",!open)}
+function closeMobileMenu(){var m=document.getElementById("mm");var b=document.getElementById("hb");m.classList.remove("open");b.classList.remove("open")}
+document.addEventListener("click",function(e){var m=document.getElementById("mm");var b=document.getElementById("hb");if(m&&b&&!m.contains(e.target)&&!b.contains(e.target)){m.classList.remove("open");b.classList.remove("open")}});
 
-function downloadTemplate() {
-  // Generate a simple CSV template
-  var csv = 'Property Address,Tenant Name,Tenant Email,Landlord Name (optional)\n';
-  csv += '12 Oak Street Birmingham B1 1AA,Jane Smith,tenant@email.com,John Smith\n';
-  csv += '45 Maple Avenue London W1 2BB,Tom Jones,tom@email.com,John Smith\n';
-  var blob = new Blob([csv], {type:'text/csv'});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url; a.download = 'compliantuk-bulk-template.csv';
-  a.click(); URL.revokeObjectURL(url);
+var posts=[{id:1,cat:'rra',catLabel:'Renters Rights Act',featured:true,icon:'📋',title:'The Official Renters Rights Act 2025 Information Sheet: What Every Landlord Must Do Before 31 May 2026',excerpt:'The Renters Rights Act 2025 requires every private landlord in England to serve the official GOV.UK Information Sheet to their tenants. But there\'s a critical detail most landlords are missing: you can\'t just email a link. Here\'s exactly what the law requires, what counts as valid delivery, and how to get proof that protects you.',date:'2 Apr 2026',readTime:'8 min read',tags:['information sheet','renters rights act','proof of delivery','deadline'],slug:'official-renters-rights-act-information-sheet-landlord-guide'},{id:2,cat:'s21',catLabel:'Section 21 & 8',featured:false,icon:'⚠️',title:'Section 21 Is Abolished: What Landlords Must Do Now and How Section 8 Works in 2026',excerpt:'The no-fault eviction route is gone. Section 21 has been abolished under the Renters Rights Act 2025, meaning every landlord who needs to regain possession must now use Section 8. This guide explains every ground for possession, how to serve the notice correctly, and why your tenancy agreement needs updating urgently.',date:'1 Apr 2026',readTime:'12 min read',tags:['section 21','section 8','eviction','possession'],slug:'section-21-abolished-section-8-landlord-guide-2026'},{id:3,cat:'guide',catLabel:'How-to guide',featured:false,icon:'🛡️',title:'Landlord Information Sheet Proof of Delivery: Why a Standard Email Is Not Enough',excerpt:'Thousands of landlords are emailing the Information Sheet and believing they\'re covered. They\'re not. If a tenant disputes receipt, a standard email provides almost no legal protection. This guide explains exactly what proof of delivery looks like, what evidence courts and councils accept, and how to get watertight documentation in minutes.',date:'31 Mar 2026',readTime:'6 min read',tags:['proof of delivery','information sheet','legal protection','evidence'],slug:'landlord-information-sheet-proof-of-delivery-guide'},{id:4,cat:'news',catLabel:'News & updates',featured:false,icon:'📰',title:'Renters Rights Act Phase 1 Live: What Changed on 1 May 2026 and What\'s Still Coming',excerpt:'Phase 1 of the Renters Rights Act 2025 came into force on 1 May 2026. Here\'s a plain-English breakdown of every change that\'s now in effect — from Information Sheet requirements to the new tenancy regime — and what Phase 2 means for landlords in late 2026.',date:'1 May 2026',readTime:'7 min read',tags:['renters rights act','legislation update','phase 1','2026'],slug:'renters-rights-act-phase-1-live-what-changed'},{id:5,cat:'guide',catLabel:'How-to guide',featured:false,icon:'📄',title:'How to Serve the Renters Rights Act Information Sheet: Step-by-Step for Landlords',excerpt:'A complete practical walkthrough for private landlords. Exactly which document to serve, how to deliver it correctly, what a valid covering letter must say, how to handle tenants who won\'t open the email, and what to do if the deadline has passed.',date:'28 Mar 2026',readTime:'9 min read',tags:['how to serve','information sheet','step by step','deadline'],slug:'how-to-serve-renters-rights-act-information-sheet'},{id:6,cat:'rra',catLabel:'Renters Rights Act',featured:false,icon:'💰',title:'Renters Rights Act Fines: How Much Can Landlords Be Fined and How Councils Are Enforcing',excerpt:'The fines for non-compliance start at £4,000 and rise to £7,000 for a first breach. Repeated breaches carry penalties up to £40,000. Local authorities have been given new investigatory powers since December 2025. This post looks at how enforcement is actually working and what puts landlords most at risk.',date:'25 Mar 2026',readTime:'5 min read',tags:['fines','enforcement','council','penalties'],slug:'renters-rights-act-fines-landlord-enforcement-guide'},{id:7,cat:'hhsrs',catLabel:'HHSRS & Awaab\'s',featured:false,icon:'🏠',title:"Awaab's Law Explained: What Private Landlords Must Know as It Extends to the PRS",excerpt:"Awaab's Law — originally introduced for social housing — is extending to the private rented sector. Here's what response timelines apply to damp and mould complaints, what evidence landlords need to keep, and how to protect yourself from enforcement action.",date:'20 Mar 2026',readTime:'7 min read',tags:["awaab's law",'damp and mould','HHSRS','private rented sector'],slug:'awaabs-law-private-landlords-guide-2026'},{id:8,cat:'s21',catLabel:'Section 21 & 8',featured:false,icon:'📝',title:'Section 8 Notice: Every Ground for Possession, How to Serve It, and Common Mistakes',excerpt:'With Section 21 gone, Section 8 is now the only route to possession. This comprehensive guide covers all 18+ grounds, which are mandatory vs discretionary, the correct notice periods for each, how to serve the notice validly, and the most common mistakes that get claims thrown out of court.',date:'15 Mar 2026',readTime:'14 min read',tags:['section 8','possession','notice','grounds'],slug:'section-8-notice-complete-landlord-guide-2026'},{id:9,cat:'news',catLabel:'News & updates',featured:false,icon:'🗄️',title:'PRS Database: What It Is, When Registration Opens, and What Happens If You Don\'t Register',excerpt:'The Private Rented Sector Database is coming. Landlords will be required to register area by area through 2026-2027. Failure to register will block access to certain Section 8 grounds. This post covers the timeline, what information you\'ll need to provide, and how to prepare.',date:'10 Mar 2026',readTime:'6 min read',tags:['PRS database','registration','landlord register','2026'],slug:'prs-database-registration-landlord-guide'},{id:10,cat:'guide',catLabel:'How-to guide',featured:false,icon:'✅',title:'The Complete Landlord Compliance Checklist for 2026: Everything You Need to Do Right Now',excerpt:'A practical, prioritised checklist covering every compliance obligation private landlords face in 2026 — from the May Information Sheet deadline to Section 21 abolition, the new tenancy regime, Awaab\'s Law, EPC requirements, and PRS Database registration.',date:'5 Mar 2026',readTime:'10 min read',tags:['compliance checklist','landlord 2026','renters rights act','action plan'],slug:'complete-landlord-compliance-checklist-2026'}];
+
+var currentFilter='all';
+function renderPosts(filter){
+  var filtered=filter==='all'?posts:posts.filter(function(p){return p.cat===filter;});
+  document.getElementById('filter-count').textContent=filtered.length+' article'+(filtered.length!==1?'s':'');
+  var html=filtered.map(function(p){return'<article class="post-card" data-cat="'+p.cat+'"><div><div class="post-meta">'+(p.featured?'<span class="featured-badge">Featured</span>':'')+'<span class="post-cat '+p.cat+'">'+p.catLabel+'</span><span class="post-date">'+p.date+'</span><span class="post-read">'+p.readTime+'</span></div><a href="blog-post.html?slug='+p.slug+'" class="post-title">'+p.title+'</a><p class="post-excerpt">'+p.excerpt+'</p><div class="post-tags">'+p.tags.map(function(t){return'<span class="post-tag">'+t+'</span>';}).join('')+'</div><a href="blog-post.html?slug='+p.slug+'" class="post-cta">Read full guide →</a></div><div class="post-img">'+p.icon+'</div></article>';}).join('');
+  document.getElementById('posts-grid').innerHTML=html;
+  var related=posts.slice(0,5);
+  document.getElementById('related-posts').innerHTML=related.map(function(p){return'<div class="related-item"><div class="ri-icon">'+p.icon+'</div><div><a href="blog-post.html?slug='+p.slug+'" class="ri-title">'+p.title.substring(0,60)+'...</a><div class="ri-date">'+p.date+' · '+p.readTime+'</div></div></div>';}).join('');
 }
-
-function handleDragOver(e) {
-  e.preventDefault();
-  document.getElementById('upload-zone').classList.add('dragover');
-}
-function handleDragLeave(e) {
-  document.getElementById('upload-zone').classList.remove('dragover');
-}
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('upload-zone').classList.remove('dragover');
-  var files = e.dataTransfer.files;
-  if (files.length > 0) processFile(files[0]);
-}
-function handleFileSelect(e) {
-  if (e.target.files.length > 0) processFile(e.target.files[0]);
-}
-
-function processFile(file) {
-  var validTypes = ['.xlsx','.xls','.csv'];
-  var ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
-  if (!validTypes.includes(ext)) {
-    alert('Please upload an Excel (.xlsx, .xls) or CSV file.');
-    return;
-  }
-
-  document.getElementById('upload-title').textContent = file.name;
-  document.getElementById('upload-sub').textContent = 'Processing...';
-
-  // Parse CSV files directly
-  if (ext === '.csv') {
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var lines = e.target.result.split('\n').filter(function(l){ return l.trim(); });
-      var data = [];
-      for (var i = 1; i < lines.length; i++) {
-        var cols = lines[i].split(',');
-        if (cols.length >= 3 && cols[0].trim()) {
-          data.push({
-            address: cols[0].trim(),
-            tenantName: cols[1].trim(),
-            tenantEmail: cols[2].trim()
-          });
-        }
-      }
-      showPreview(data, file.name);
-    };
-    reader.readAsText(file);
-  } else {
-    // For Excel files - show demo data since we can't parse xlsx without a library
-    var demoData = [
-      {address: file.name + ' — Row 2', tenantName: 'Loaded from Excel', tenantEmail: 'tenant@example.com'},
-      {address: 'Please use CSV format for instant preview', tenantName: 'Or contact us', tenantEmail: 'support@compliantuk.co.uk'},
-    ];
-    document.getElementById('upload-sub').textContent = 'Excel file detected — use CSV for instant preview';
-    showPreview(demoData, file.name);
-  }
-}
-
-function showPreview(data, filename) {
-  uploadedData = data;
-  var count = data.length;
-
-  document.getElementById('upload-title').textContent = filename + ' — ' + count + ' properties found';
-  document.getElementById('upload-sub').textContent = 'Review the preview below before proceeding';
-  document.getElementById('preview-count').textContent = count + ' properties loaded';
-
-  var tbody = document.getElementById('preview-body');
-  tbody.innerHTML = '';
-  var preview = data.slice(0, 5);
-  preview.forEach(function(row, i) {
-    var hasEmail = row.tenantEmail && row.tenantEmail.indexOf('@') > 0;
-    var status = (row.address && row.tenantName && hasEmail) ? 'ok' : 'err';
-    var statusText = status === 'ok' ? '✓ Ready' : '⚠ Check';
-    tbody.innerHTML += '<tr>' +
-      '<td style="color:var(--text3);font-family:var(--mono)">' + (i+1) + '</td>' +
-      '<td>' + (row.address || '—') + '</td>' +
-      '<td>' + (row.tenantName || '—') + '</td>' +
-      '<td>' + (row.tenantEmail || '—') + '</td>' +
-      '<td><span class="row-status ' + status + '">' + statusText + '</span></td>' +
-      '</tr>';
-  });
-  if (count > 5) {
-    tbody.innerHTML += '<tr><td colspan="5" style="color:var(--text3);font-size:12px;text-align:center;padding:12px">... and ' + (count - 5) + ' more properties</td></tr>';
-  }
-
-  // Calculate price
-  var price, tier;
-  if (count <= 1) { price = count * 49; tier = 'Starter (£49/property)'; }
-  else if (count <= 10) { price = count * 35; tier = 'Portfolio (£35/property)'; }
-  else if (count <= 50) { price = count * 25; tier = 'Agency Lite (£25/property)'; }
-  else { price = 150; tier = 'Agency Pro — up to 50 properties/month. Additional at £4 each. 3-month minimum.'; }
-
-  document.getElementById('ps-text').textContent = count + ' properties · ' + tier;
-  document.getElementById('ps-price').textContent = count > 50 ? '£150/mo + extras' : '£' + price;
-
-  document.getElementById('preview-section').style.display = 'block';
-  document.getElementById('proceed-row').style.display = 'block';
-  document.getElementById('preview-section').scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-
-function proceedToPayment() {
-  var count = uploadedData.length;
-  if (count === 0) return;
-  if (count > 50) {
-    window.location.href = 'mailto:support@compliantuk.co.uk?subject=Agency Pro enquiry - ' + count + ' properties';
-    return;
-  }
-  // Store bulk order data
-  try {
-    sessionStorage.setItem('bulkOrder', JSON.stringify({
-      properties: uploadedData,
-      count: count,
-      tier: count <= 1 ? 'starter' : count <= 10 ? 'portfolio' : 'agency-lite',
-      totalPence: count <= 1 ? count*4900 : count <= 10 ? count*3500 : count*2500
-    }));
-  } catch(e) {}
-  // Redirect to Stripe payment link
-  window.location.href = 'https://buy.stripe.com/cNi8wHeBx3EwfUc41N9bO00';
-}
+function filterPosts(cat,btn){currentFilter=cat;document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');renderPosts(cat);}
+function subscribeAlerts(){var email=document.getElementById('alert-email').value.trim();if(!email||email.indexOf('@')<0){alert('Please enter a valid email address.');return;}document.getElementById('alert-success').style.display='block';document.getElementById('alert-email').value='';}
+function updateCountdown(){var deadline=new Date('2026-05-31T23:59:59');var diff=deadline-new Date();var days=Math.max(0,Math.floor(diff/(1000*60*60*24)));var el=document.getElementById('dw-days');if(el)el.textContent=days+'d';}
+updateCountdown();setInterval(updateCountdown,60000);
+renderPosts('all');
 </script>
 </body>
 </html>
