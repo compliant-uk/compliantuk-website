@@ -16,15 +16,33 @@ nav{background:rgba(8,12,20,0.95);backdrop-filter:blur(20px);border-bottom:1px s
 .logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--blue3),var(--blue));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:white}
 .logo-name{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-0.4px}
 .logo-name span{color:var(--blue2)}
+.nav-right{display:flex;align-items:center;gap:14px}
 .back-link{color:var(--text3);text-decoration:none;font-size:14px}
 .back-link:hover{color:var(--text2)}
+/* HAMBURGER */
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:10px;min-width:44px;min-height:44px;align-items:center;justify-content:center}
+.hamburger span{display:block;width:24px;height:2.5px;background:#f1f5f9;border-radius:2px;transition:all 0.3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mobile-menu{display:none;position:fixed;top:60px;left:0;right:0;background:rgba(8,12,20,0.98);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.08);z-index:998;padding:8px 0 16px}
+.mobile-menu.open{display:block}
+.mm-inner{max-width:1160px;margin:0 auto;padding:0 5%}
+.mm-link{display:flex;align-items:center;justify-content:space-between;padding:13px 0;font-size:15px;font-weight:600;color:#94a3b8;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.05);transition:color 0.15s}
+.mm-link:last-of-type{border-bottom:none}
+.mm-link:hover{color:#f1f5f9}
+.mm-link-arrow{font-size:11px;color:#64748b}
+.mm-cta{display:flex;align-items:center;justify-content:center;background:#3b82f6;color:white;padding:13px;border-radius:9px;font-size:15px;font-weight:700;text-decoration:none;margin:14px 0 0;transition:background 0.15s}
+.mm-cta:hover{background:#2563eb}
+@media(max-width:900px){.nav-right .back-link{display:none!important}.hamburger{display:flex}}
 .page-wrap{max-width:960px;margin:0 auto;padding:60px 20px 80px}
 .page-tag{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue2);margin-bottom:12px}
 h1{font-size:2.2rem;font-weight:800;letter-spacing:-1px;margin-bottom:12px}
 .sub{font-size:1rem;color:var(--text2);margin-bottom:48px;line-height:1.7}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px}
 .contact-card{background:var(--bg1);border:1px solid var(--border2);border-radius:14px;padding:24px}
-.cc-icon{font-size:24px;margin-bottom:12px}
+.cc-icon{width:40px;height:40px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.cc-icon svg{width:20px;height:20px;stroke:var(--blue2);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .cc-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
 .cc-desc{font-size:13.5px;color:var(--text2);line-height:1.6;margin-bottom:12px}
 .cc-link{display:inline-flex;align-items:center;gap:6px;color:var(--blue2);text-decoration:none;font-size:14px;font-weight:600}
@@ -50,7 +68,27 @@ footer a:hover{color:var(--text2)}
 </style>
 </head>
 <body>
-<nav><div class="nav-wrap"><a href="index.html" class="logo"><div class="logo-mark">✓</div><span class="logo-name">Compliant<span>UK</span></span></a><a href="index.html" class="back-link">← Back to home</a></div></nav>
+<nav>
+  <div class="nav-wrap">
+    <a href="index.html" class="logo"><div class="logo-mark">✓</div><span class="logo-name">Compliant<span>UK</span></span></a>
+    <div class="nav-right">
+      <a href="index.html" class="back-link">← Back to home</a>
+    </div>
+    <button class="hamburger" id="hb" onclick="toggleMobileMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mm">
+  <div class="mm-inner">
+    <a href="index.html" class="mm-link" onclick="closeMobileMenu()">Home <span class="mm-link-arrow">›</span></a>
+    <a href="blog.html" class="mm-link" onclick="closeMobileMenu()">Blog <span class="mm-link-arrow">›</span></a>
+    <a href="bulk.html" class="mm-link" onclick="closeMobileMenu()">Portfolio &amp; Agency <span class="mm-link-arrow">›</span></a>
+    <a href="about.html" class="mm-link" onclick="closeMobileMenu()">About <span class="mm-link-arrow">›</span></a>
+    <a href="index.html#get-compliant" class="mm-cta" onclick="closeMobileMenu()">Get compliant — £49</a>
+  </div>
+</div>
 
 <div class="page-wrap">
   <div class="page-tag">Support</div>
@@ -59,27 +97,27 @@ footer a:hover{color:var(--text2)}
 
   <div class="grid">
     <div class="contact-card">
-      <div class="cc-icon">📧</div>
+      <div class="cc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg></div>
       <div class="cc-title">Email us</div>
       <div class="cc-desc">For general enquiries, order questions, or compliance guidance. We aim to respond within 4 hours during business hours.</div>
       <a href="mailto:support@compliantuk.co.uk" class="cc-link">support@compliantuk.co.uk →</a>
     </div>
     <div class="contact-card">
-      <div class="cc-icon">⚡</div>
+      <div class="cc-icon"><svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
       <div class="cc-title">Urgent support</div>
       <div class="cc-desc">If you have an urgent compliance issue — for example the 31 May deadline is imminent — email us with "URGENT" in the subject line.</div>
       <a href="mailto:support@compliantuk.co.uk?subject=URGENT" class="cc-link">Send urgent message →</a>
     </div>
     <div class="contact-card">
-      <div class="cc-icon">🏘️</div>
-      <div class="cc-title">Portfolio & agent enquiries</div>
+      <div class="cc-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div>
+      <div class="cc-title">Portfolio &amp; agent enquiries</div>
       <div class="cc-desc">Managing multiple properties or a letting agency? Ask about our portfolio discounts and monthly retainer options.</div>
       <a href="mailto:support@compliantuk.co.uk?subject=Portfolio enquiry" class="cc-link">Enquire about portfolio pricing →</a>
     </div>
     <div class="contact-card">
-      <div class="cc-icon">📖</div>
+      <div class="cc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
       <div class="cc-title">About us</div>
-      <div class="cc-desc">Learn about our mission, our founder's background, and why we built CompliantUK to raise standards across the private rented sector.</div>
+      <div class="cc-desc">Learn about our mission and why we built CompliantUK to raise standards across the private rented sector.</div>
       <a href="about.html" class="cc-link">Read our story →</a>
     </div>
   </div>
@@ -87,17 +125,9 @@ footer a:hover{color:var(--text2)}
   <div class="form-card">
     <div class="form-title">Send us a message</div>
     <div class="form-sub">Fill in the form below and we'll get back to you shortly.</div>
-
-    <div class="field">
-      <label>Your name *</label>
-      <input type="text" id="c-name" placeholder="John Smith" />
-    </div>
-    <div class="field">
-      <label>Email address *</label>
-      <input type="email" id="c-email" placeholder="you@email.com" />
-    </div>
-    <div class="field">
-      <label>Subject</label>
+    <div class="field"><label>Your name *</label><input type="text" id="c-name" placeholder="John Smith" /></div>
+    <div class="field"><label>Email address *</label><input type="email" id="c-email" placeholder="you@email.com" /></div>
+    <div class="field"><label>Subject</label>
       <select id="c-subject">
         <option value="">Select a topic...</option>
         <option>Order question</option>
@@ -108,13 +138,9 @@ footer a:hover{color:var(--text2)}
         <option>Other</option>
       </select>
     </div>
-    <div class="field">
-      <label>Message *</label>
-      <textarea id="c-message" placeholder="Tell us how we can help..."></textarea>
-    </div>
-
+    <div class="field"><label>Message *</label><textarea id="c-message" placeholder="Tell us how we can help..."></textarea></div>
     <button class="submit-btn" onclick="sendMessage(this)">Send message →</button>
-    <div class="success-msg" id="success-msg">✓ Message sent — we'll be in touch shortly!</div>
+    <div class="success-msg" id="success-msg">Message sent — we'll be in touch shortly!</div>
     <p class="response-note">We typically respond within 4 hours Mon–Fri, 9am–6pm</p>
   </div>
 </div>
@@ -122,23 +148,10 @@ footer a:hover{color:var(--text2)}
 <footer>© 2026 CompliantUK · <a href="index.html">Home</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></footer>
 
 <script>
-function sendMessage(btn) {
-  var name = document.getElementById('c-name').value.trim();
-  var email = document.getElementById('c-email').value.trim();
-  var message = document.getElementById('c-message').value.trim();
-  if (!name || !email || !message) { alert('Please fill in your name, email, and message.'); return; }
-  btn.textContent = 'Sending...';
-  btn.disabled = true;
-  // Opens email client as fallback — replace with proper form handler when backend is ready
-  var subject = document.getElementById('c-subject').value || 'Website enquiry';
-  var body = 'Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message;
-  window.location.href = 'mailto:support@compliantuk.co.uk?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-  setTimeout(function() {
-    document.getElementById('success-msg').style.display = 'block';
-    btn.textContent = 'Send message →';
-    btn.disabled = false;
-  }, 1000);
-}
+function toggleMobileMenu(){var m=document.getElementById("mm");var b=document.getElementById("hb");var open=m.classList.contains("open");m.classList.toggle("open",!open);b.classList.toggle("open",!open)}
+function closeMobileMenu(){var m=document.getElementById("mm");var b=document.getElementById("hb");m.classList.remove("open");b.classList.remove("open")}
+document.addEventListener("click",function(e){var m=document.getElementById("mm");var b=document.getElementById("hb");if(m&&b&&!m.contains(e.target)&&!b.contains(e.target)){m.classList.remove("open");b.classList.remove("open")}});
+function sendMessage(btn){var name=document.getElementById('c-name').value.trim();var email=document.getElementById('c-email').value.trim();var message=document.getElementById('c-message').value.trim();if(!name||!email||!message){alert('Please fill in your name, email, and message.');return;}btn.textContent='Sending...';btn.disabled=true;var subject=document.getElementById('c-subject').value||'Website enquiry';var body='Name: '+name+'\nEmail: '+email+'\n\nMessage:\n'+message;window.location.href='mailto:support@compliantuk.co.uk?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);setTimeout(function(){document.getElementById('success-msg').style.display='block';btn.textContent='Send message →';btn.disabled=false;},1000);}
 </script>
 </body>
 </html>
