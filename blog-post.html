@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="meta-title">Landlord Compliance Guide | CompliantUK</title>
 <meta name="description" id="meta-desc" content="Expert landlord compliance guides covering the Renters Rights Act 2025, Information Sheet requirements, Section 21 abolition and more.">
-<link rel="canonical" id="meta-canonical" href="https://compliantuk.co.uk/blog.html">
+<link rel="canonical" id="meta-canonical" href="https://www.compliantuk.co.uk/blog">
 <script type="application/ld+json" id="article-schema"></script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <style>
@@ -89,6 +89,22 @@ footer{border-top:1px solid var(--border);padding:32px 5%;background:var(--bg)}
 .footer-copy{font-size:12px;color:var(--text3)}
 @media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{position:static}}
 @media(max-width:600px){nav .nav-right .nav-link{display:none}}
+
+.hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:10px; min-width:44px; min-height:44px; align-items:center; justify-content:center; }
+.hamburger span { display:block; width:24px; height:2px; background:var(--text2); border-radius:2px; transition:all 0.3s; }
+.hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+.hamburger.open span:nth-child(2) { opacity:0; }
+.hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+.mobile-menu { display:none; position:fixed; top:60px; left:0; right:0; background:rgba(13,18,32,0.98); backdrop-filter:blur(20px); border-bottom:1px solid var(--border2,rgba(255,255,255,0.08)); padding:16px; z-index:998; flex-direction:column; gap:4px; }
+.mobile-menu.open { display:flex; }
+.mm-inner { max-width:1160px; margin:0 auto; padding:0 5%; }
+.mm-link { display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; text-decoration:none; font-size:15px; font-weight:600; color:var(--text2,#94a3b8); transition:all 0.15s; border-bottom:1px solid rgba(255,255,255,0.05); }
+.mm-link:hover { background:rgba(255,255,255,0.06); color:var(--text,#f1f5f9); }
+.mm-link-arrow { font-size:11px; color:#64748b; margin-left:auto; }
+.mm-cta { display:flex; align-items:center; justify-content:center; background:#3b82f6; color:white; padding:13px; border-radius:9px; font-size:15px; font-weight:700; text-decoration:none; margin:14px 0 0; transition:background 0.15s; }
+.mm-cta:hover { background:#2563eb; }
+@media (max-width:900px) { .hamburger { display:flex; } .nav-right,.nav-links { display:none !important; } }
+
 </style>
 </head>
 <body>
@@ -100,8 +116,17 @@ footer{border-top:1px solid var(--border);padding:32px 5%;background:var(--bg)}
       <a href="contact.html" class="nav-link">Contact</a>
       <a href="index.html#get-compliant" class="nav-btn">Get compliant — £49</a>
     </div>
-  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+</div>
 </nav>
+<div class="mobile-menu" id="mobile-menu"><div class="mm-inner">
+  <a href="index.html" class="mm-link" onclick="closeMenu()">Home <span class="mm-link-arrow">›</span></a>
+  <a href="blog.html" class="mm-link" onclick="closeMenu()">← Blog <span class="mm-link-arrow">›</span></a>
+  <a href="bulk.html" class="mm-link" onclick="closeMenu()">Portfolio & Agency <span class="mm-link-arrow">›</span></a>
+  <a href="contact.html" class="mm-link" onclick="closeMenu()">Contact <span class="mm-link-arrow">›</span></a>
+  <a href="login.html" class="mm-link" onclick="closeMenu()">Log in <span class="mm-link-arrow">›</span></a>
+  <a href="index.html#get-compliant" class="mm-cta" onclick="closeMenu()">Get compliant — £49</a>
+</div></div>
 
 <div class="layout">
   <article>
@@ -306,7 +331,7 @@ var post = postContent[slug] || defaultPost;
 // Set content
 document.getElementById('meta-title').textContent = post.title + ' | CompliantUK';
 document.getElementById('meta-desc').setAttribute('content', post.intro);
-document.getElementById('meta-canonical').setAttribute('href', 'https://compliantuk.co.uk/blog-post.html?slug=' + slug);
+document.getElementById('meta-canonical').setAttribute('href', 'https://www.compliantuk.co.uk/blog-post?slug=' + slug);
 document.getElementById('breadcrumb-title').textContent = post.cat;
 document.getElementById('article-cat').textContent = post.cat;
 document.getElementById('article-cat').className = 'article-cat ' + post.catClass;
@@ -325,7 +350,7 @@ document.getElementById('article-schema').textContent = JSON.stringify({
   "headline": post.title,
   "description": post.intro,
   "author": {"@type": "Person", "name": "Huseyin Turkay"},
-  "publisher": {"@type": "Organization", "name": "CompliantUK", "url": "https://compliantuk.co.uk"},
+  "publisher": {"@type": "Organization", "name": "CompliantUK", "url": "https://www.compliantuk.co.uk"},
   "datePublished": post.date,
   "keywords": post.tags.join(', ')
 });
