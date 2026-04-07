@@ -20,7 +20,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="CompliantUK — Landlord Compliance Made Automatic">
 <meta name="twitter:description" content="Official Information Sheet delivery with proof of service. Renters Rights Act 2025 compliance from £49.">
-<link rel="canonical" href="https://www.compliantuk.co.uk">
+<link rel="canonical" href="https://compliantuk.co.uk">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;1,400;1,500&display=swap');
@@ -1627,19 +1627,19 @@ footer {
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
             <button type="button" class="tenant-count-btn active" onclick="setTenantCount(1,this)">
               <span style="font-size:18px;font-weight:800;color:var(--text);display:block;">1</span>
-              <span style="font-size:10px;color:var(--emerald2);font-family:var(--mono);font-weight:700;"></span>
+              <span style="font-size:10px;color:var(--emerald2);font-family:var(--mono);font-weight:700;">£49</span>
             </button>
             <button type="button" class="tenant-count-btn" onclick="setTenantCount(2,this)">
               <span style="font-size:18px;font-weight:800;color:var(--text);display:block;">2</span>
-              <span style="font-size:10px;color:var(--blue2);font-family:var(--mono);font-weight:700;"></span>
+              <span style="font-size:10px;color:var(--blue2);font-family:var(--mono);font-weight:700;">£78</span>
             </button>
             <button type="button" class="tenant-count-btn" onclick="setTenantCount(3,this)">
               <span style="font-size:18px;font-weight:800;color:var(--text);display:block;">3</span>
-              <span style="font-size:10px;color:var(--blue2);font-family:var(--mono);font-weight:700;"></span>
+              <span style="font-size:10px;color:var(--blue2);font-family:var(--mono);font-weight:700;">£97</span>
             </button>
             <button type="button" class="tenant-count-btn" onclick="setTenantCount(4,this)">
               <span style="font-size:18px;font-weight:800;color:var(--text);display:block;">4</span>
-              <span style="font-size:10px;color:var(--blue2);font-family:var(--mono);font-weight:700;"></span>
+              <span style="font-size:10px;color:var(--blue2);font-family:var(--mono);font-weight:700;">£116</span>
             </button>
           </div>
           <div style="font-size:11px;color:var(--text3);margin-top:7px;">Max 4 tenants per tenancy agreement under current legislation</div>
@@ -1657,10 +1657,12 @@ footer {
           <span class="price-val" id="price-display">£49</span>
         </div>
 
-        <button class="submit-btn" id="checkout-btn" onclick="handleCheckout(this)">Pay £49 — Become compliant instantly</button>
+        <div id="paypal-button-container" style="margin-top:16px;"></div>
+
+        <button class="submit-btn" id="checkout-btn" onclick="handleCheckout(this)" style="display:none">Pay £49 — Become compliant instantly</button>
 
         <div class="card-footer">
-          <span>🔒 SSL</span><span>✓ Stripe</span><span>🛡️ Guarantee</span><span>⚡ Instant</span>
+          <span>🔒 SSL</span><span>✓ Stripe</span><span>✓ PayPal</span><span>🛡️ Guarantee</span><span>⚡ Instant</span>
         </div>
       </div>
     </div>
@@ -2039,7 +2041,7 @@ footer {
         </div>
 
         <button class="pricing-btn" onclick="document.getElementById('get-compliant').scrollIntoView({behavior:'smooth'})">
-          Get compliant now from £49 →
+          Get compliant now — £49 →
         </button>
 
         <div class="pricing-security">
@@ -2298,8 +2300,11 @@ function validateEmail(email) {
 // ── STRIPE LINKS & PRICING ──
 var STRIPE_LINKS = {
   1: 'https://buy.stripe.com/14A5kv9hdfne7nG8i39bO02',
+  2: 'https://buy.stripe.com/8x26oz50Xdf6cI00PB9bO05',
+  3: 'https://buy.stripe.com/8x2cMXfFBcb2azSgOz9bO04',
+  4: 'https://buy.stripe.com/cNieV5bpl7UM4budCn9bO03'
 };
-var PRICES = {1:49, 2:49, 3:49, 4:49};
+var PRICES = {1:49, 2:78, 3:97, 4:116};
 var currentTenantCount = 1;
 
 // ── TENANT SELECTOR ──
@@ -2425,6 +2430,60 @@ if ('serviceWorker' in navigator) {
       console.log('SW error', err);
     });
   });
+}
+</script>
+
+<!-- PayPal Integration -->
+<script src="https://www.paypal.com/sdk/js?client-id=7Y8VFG3UKV55L&currency=GBP"></script>
+<script>
+if (window.paypal) {
+  paypal.Buttons({
+    createOrder: function(data, actions) {
+      var firstName = document.getElementById('f-firstname').value.trim();
+      var lastName = document.getElementById('f-lastname').value.trim();
+      var email = document.getElementById('f-email').value.trim();
+      var address = document.getElementById('f-address').value.trim();
+      var amount = (PRICES[currentTenantCount] || 49).toString();
+      if (!firstName || !lastName || !email || !address) { showError('Please fill in all required fields'); return; }
+      return actions.order.create({
+        purchase_units: [{
+          amount: { value: amount, currency_code: 'GBP' },
+          description: 'Renters Rights Act Compliance - ' + currentTenantCount + ' tenant(s)',
+          custom_id: address.substring(0,50)
+        }],
+        payer: { name: { given_name: firstName, surname: lastName }, email_address: email }
+      });
+    },
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(orderData) {
+        var firstName = document.getElementById('f-firstname').value.trim();
+        var lastName = document.getElementById('f-lastname').value.trim();
+        var email = document.getElementById('f-email').value.trim();
+        var address = document.getElementById('f-address').value.trim();
+        var tenants = [];
+        for (var i = 1; i <= currentTenantCount; i++) {
+          var tName = document.getElementById('f-tenant-name-' + i).value.trim();
+          var tEmail = document.getElementById('f-tenant-email-' + i).value.trim();
+          tenants.push({ name: tName, email: tEmail });
+        }
+        fetch('/api/paypal-webhook', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: orderData.id,
+            customerName: firstName + ' ' + lastName,
+            customerEmail: email,
+            propertyAddress: address,
+            tenants: tenants,
+            amount: PRICES[currentTenantCount]
+          })
+        }).then(r => r.json()).then(d => {
+          if (d.success) { window.location.href = 'success.html'; }
+        }).catch(e => { showError('Payment processing failed'); });
+      });
+    },
+    onError: function(err) { showError('PayPal error: ' + err); }
+  }).render('#paypal-button-container');
 }
 </script>
 
