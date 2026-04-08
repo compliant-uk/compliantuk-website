@@ -1657,9 +1657,16 @@ footer {
           <span class="price-val" id="price-display">£49</span>
         </div>
 
-        <div id="paypal-button-container" style="margin-top:16px;"></div>
-
-        <button class="submit-btn" id="checkout-btn" onclick="handleCheckout(this)" style="display:none">Pay £49 — Become compliant instantly</button>
+        <div style="margin-top:16px;">
+          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:10px;text-align:center;">Choose payment method</div>
+          <div id="paypal-button-container"></div>
+          <div style="display:flex;align-items:center;gap:10px;margin:10px 0;">
+            <div style="flex:1;height:1px;background:var(--border2);"></div>
+            <span style="font-size:11px;color:var(--text3);font-weight:600;">OR</span>
+            <div style="flex:1;height:1px;background:var(--border2);"></div>
+          </div>
+          <button class="submit-btn" id="checkout-btn" onclick="handleCheckout(this)">Pay £49 via Card — Become compliant instantly</button>
+        </div>
 
         <div class="card-footer">
           <span>🔒 SSL</span><span>✓ Stripe</span><span>✓ PayPal</span><span>🛡️ Guarantee</span><span>⚡ Instant</span>
@@ -2272,9 +2279,7 @@ function handleBundleCheckout(btn) {
   btn.disabled = true;
   btn.style.opacity = '0.8';
 
-  // Replace with your £89 bundle Stripe Payment Link when created
-  // Stripe Dashboard -> Payment Links -> Create -> £89 -> Copy link
-  var BUNDLE_LINK = 'https://buy.stripe.com/14A5kv9hdfne7nG8i39bO02'; // Replace with bundle link
+  var BUNDLE_LINK = 'https://buy.stripe.com/14A5kv9hdfne7nG8i39bO02';
   var stripeUrl = BUNDLE_LINK + '?prefilled_email=' + encodeURIComponent(email) + '&client_reference_id=bundle_' + encodeURIComponent(address.substring(0, 40));
 
   setTimeout(function() { window.location.href = stripeUrl; }, 800);
@@ -2316,7 +2321,7 @@ function setTenantCount(count, btn) {
   document.getElementById('price-display').textContent = '£' + price;
   document.getElementById('price-label').textContent = count + ' tenant' + (count > 1 ? 's' : '') + ' — Compliance pack';
   document.getElementById('price-includes').textContent = count > 1 ? 'Info Sheet · Proof certificate · Each tenant emailed individually' : 'Info Sheet · Proof certificate · Tracking';
-  document.getElementById('checkout-btn').textContent = 'Pay £' + price + ' — Become compliant instantly';
+  document.getElementById('checkout-btn').textContent = 'Pay £' + price + ' via Card — Become compliant instantly';
   renderTenantFields(count);
 }
 
@@ -2336,20 +2341,6 @@ function renderTenantFields(count) {
 }
 
 // ── VALIDATION & CHECKOUT ──
-function showError(msg) {
-  var el = document.getElementById('form-error');
-  el.textContent = msg;
-  el.style.display = 'block';
-  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-function hideError() {
-  var el = document.getElementById('form-error');
-  if (el) el.style.display = 'none';
-}
-function validateEmail(email) {
-  return email.indexOf('@') > 0 && email.indexOf('.') > email.indexOf('@');
-}
-
 function handleCheckout(btn) {
   hideError();
   var firstName = document.getElementById('f-firstname').value.trim();
@@ -2482,7 +2473,7 @@ if (window.paypal) {
         }).catch(e => { showError('Payment processing failed'); });
       });
     },
-    onError: function(err) { showError('PayPal error: ' + err); }
+    onError: function(err) { console.error('PayPal error:', err); showError('PayPal encountered an issue. Please try paying by card instead, or contact support@compliantuk.co.uk'); }
   }).render('#paypal-button-container');
 }
 </script>
