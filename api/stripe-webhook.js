@@ -79,6 +79,7 @@ export default async function handler(req, res) {
             tenantName,
             tenantEmail,
             plan,
+            paymentReference: session.id, // <- ADDED: pass Stripe session id
           }),
         });
 
