@@ -14,6 +14,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  const ADMIN_BCC_EMAIL = process.env.ADMIN_BCC_EMAIL; // <- ADDED: admin BCC from env
   if (!RESEND_API_KEY) return res.status(500).json({ error: 'Email service not configured' });
 
   try {
@@ -83,7 +84,7 @@ body{font-family:Arial,sans-serif;color:#1a1a2e;background:#f5f5f5;margin:0;padd
     </div>
     <p>Your compliance documents are <strong>attached to this email as PDFs</strong>. Please download and keep them safely.</p>
     <div class="alert-box">
-      <p><strong>Important deadline:</strong> The Renters Rights Act comes into force May 2026. You must serve the Information Sheet on your tenant before this date to avoid fines of up to <strong>£7,000 per tenant</strong>.</p>
+      <p><strong>Important deadline:</strong> The Renters Rights Act comes into force May 2026. You must serve the Information Sheet on your tenant before this date to avoid fines of up to £20,000.</p>
     </div>
     <div class="doc-list">
       <p style="margin:0 0 12px;font-weight:bold;color:#1a1a2e">Documents attached:</p>
@@ -99,7 +100,7 @@ body{font-family:Arial,sans-serif;color:#1a1a2e;background:#f5f5f5;margin:0;padd
     <p style="font-weight:bold;margin-bottom:12px">What to do now:</p>
     <div class="step">1. Ask your tenant to sign and date the <strong>Proof of Service Certificate</strong></div>
     <div class="step">2. Keep the signed certificate safely — you will need it as legal proof if challenged</div>
-    ${tenantEmail ? `<div class="step">3. The Information Sheet has been emailed directly to ${tenantName || 'your tenant'} — confirm they have received it</div>` : `<div class="step">3. Forward the Information Sheet to your tenant or hand it to them in person</div>`}
+    ${tenantEmail ? `<div class="step">3. The Information Sheet has been emailed directly to ${tenantName || 'your tenant'} — confirm they have received it</div>` : `<div class="step">3. Forward or print and hand the Information Sheet to your tenant</div>`}
     <br>
     <a href="https://www.compliantuk.co.uk/dashboard.html" class="btn">View Your Dashboard</a>
     <p style="color:#64748b;font-size:13px;margin-top:24px">Questions? Contact <a href="mailto:support@compliantuk.co.uk">support@compliantuk.co.uk</a></p>
@@ -113,13 +114,15 @@ body{font-family:Arial,sans-serif;color:#1a1a2e;background:#f5f5f5;margin:0;padd
 </body></html>`;
 
     // Send landlord email
+    const bccArray = ADMIN_BCC_EMAIL ? [ADMIN_BCC_EMAIL] : []; // <- ADDED: computed bcc array
+
     const landlordResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: 'CompliantUK Documents <documents@compliantuk.co.uk>',
         to: [customerEmail],
-        bcc: ['huseyin.turkay@compliantuk.co.uk'],
+        bcc: bccArray, // <- CHANGED: use environment-configured BCC
         subject: `Your Compliance Documents — ${propertyAddress} [${referenceNumber}]`,
         html: landlordHtml,
         attachments: landlordAttachments,
@@ -169,7 +172,7 @@ body{font-family:Arial,sans-serif;color:#1a1a2e;background:#f5f5f5;margin:0;padd
     <p>Your landlord has arranged for you to receive the official <strong>Renters Rights Act 2025 Information Sheet</strong>, which is attached to this email as a PDF.</p>
 
     <div class="info-box">
-      <p><strong>What is this?</strong> The Renters Rights Act 2025 is new legislation that significantly strengthens your rights as a tenant in England. Your landlord is legally required to provide you with this Information Sheet before 1 May 2026. Please read it carefully and keep it safely.</p>
+      <p><strong>What is this?</strong> The Renters Rights Act 2025 is new legislation that significantly strengthens your rights as a tenant in England. Your landlord is legally required to provide this document to you.</p>
     </div>
 
     <div class="rights-box">
