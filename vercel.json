@@ -25,6 +25,16 @@
     "api/send-documents.js": {
       "memory": 512,
       "maxDuration": 30
+    },
+    "api/send-reminders.js": {
+      "memory": 256,
+      "maxDuration": 60
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/send-reminders",
+      "schedule": "0 * * * *"
+    }
+  ]
 }
