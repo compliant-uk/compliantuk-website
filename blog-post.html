@@ -374,6 +374,13 @@ function tick() {
 }
 tick();
 setInterval(tick, 60000);
+function toggleMenu(){
+  var m=document.getElementById('mobile-menu');
+  var b=document.getElementById('hamburger');
+  var open=m.classList.contains('open');
+  m.classList.toggle('open',!open);
+  b.classList.toggle('open',!open);
+}
 </script>
 </body>
 </html>

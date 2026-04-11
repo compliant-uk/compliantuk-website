@@ -81,10 +81,24 @@ footer{background:var(--bg1);border-top:1px solid var(--border);padding:28px max
 .fl a{color:var(--text3);text-decoration:none;font-size:13px;padding:4px 10px;border-radius:6px;transition:color .15s}
 .fl a:hover{color:var(--text2)}
 @media(max-width:600px){.card,.cs{padding:20px}.cs-feats{grid-template-columns:1fr}.dcta{flex-direction:column;align-items:flex-start}}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:10px;min-width:44px;min-height:44px;align-items:center;justify-content:center}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text2);border-radius:2px;transition:all .3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mobile-menu{display:none;position:fixed;top:60px;left:0;right:0;background:rgba(8,12,20,0.98);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.08);z-index:998;padding:8px 16px 16px;flex-direction:column;gap:4px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{color:#94a3b8;text-decoration:none;font-size:15px;font-weight:500;padding:10px 14px;border-radius:8px;display:block}
+.mobile-menu a:hover{background:rgba(255,255,255,0.05);color:#f1f5f9}
+@media(max-width:900px){.dash-link{display:none!important}.hamburger{display:flex}}
 </style>
 </head>
 <body>
-<nav><div class="nw"><a href="/" class="logo"><div class="lm">✓</div><span class="ln">Compliant<span>UK</span></span></a><a href="/dashboard.html" class="dash-link">My dashboard →</a></div></nav>
+<nav><div class="nw"><a href="/" class="logo"><div class="lm">✓</div><span class="ln">Compliant<span>UK</span></span></a><a href="/dashboard" class="dash-link">My dashboard →</a><button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button></div></nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/">Home</a>
+  <a href="/dashboard" style="color:#60a5fa;font-weight:700">My dashboard →</a>
+</div>
 
 <div class="sh">
 <div class="sh-icon">✅</div>
@@ -151,6 +165,7 @@ const raw=sessionStorage.getItem('pendingOrder');
 if(raw){try{const o=JSON.parse(raw);document.getElementById('sum-addr').textContent=o.propertyAddress||'—';document.getElementById('sum-landlord').textContent=`${o.landlordFirst||''} ${o.landlordLast||''}`.trim()||'—';document.getElementById('sum-tc').textContent=`${o.tenantCount||1} tenant${o.tenantCount>1?'s':''}`;document.getElementById('sum-price').textContent=`£${o.price||49}`;if(o.tenants&&o.tenants.length){document.getElementById('slist').innerHTML=o.tenants.map(t=>`<div class="si"><span class="sd"></span><span class="sn">${t.first} ${t.last}</span><span class="se">${t.email} — Sent ✓</span></div>`).join('')}}catch(e){}}
 if(!document.getElementById('slist').innerHTML)document.getElementById('slist').innerHTML='<div class="si"><span class="sd"></span><span class="se">Email sent to tenant(s) ✓</span></div>';
 function handleNotify(){const e=document.getElementById('ne').value.trim();if(!e||!e.includes('@')){alert('Please enter a valid email.');return}fetch('/api/notify-waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,service:'tenancy-agreement-generator'})}).catch(()=>{});document.getElementById('ne').value='';alert("You're on the list — we'll email you when it launches!")}
+function toggleMenu(){var m=document.getElementById('mobile-menu');var b=document.getElementById('hamburger');var open=m.classList.contains('open');m.classList.toggle('open',!open);b.classList.toggle('open',!open);}
 </script>
 </body>
 </html>

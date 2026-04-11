@@ -115,6 +115,16 @@ nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filt
 /* RESPONSIVE */
 @media(max-width:900px){.stats-row{grid-template-columns:1fr 1fr}.nav-email{display:none}}
 @media(max-width:600px){.stats-row{grid-template-columns:1fr 1fr}.actions-row{flex-direction:column;align-items:stretch}.filter-tabs{overflow-x:auto}.tenants-table th:nth-child(3),.tenants-table td:nth-child(3){display:none}}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:10px;min-width:44px;min-height:44px;align-items:center;justify-content:center}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text2);border-radius:2px;transition:all .3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mobile-menu{display:none;position:fixed;top:60px;left:0;right:0;background:rgba(8,12,20,0.98);backdrop-filter:blur(24px);border-bottom:1px solid var(--border2);z-index:998;padding:8px 16px 16px;flex-direction:column;gap:4px}
+.mobile-menu.open{display:flex}
+.mobile-menu a,.mobile-menu button{color:var(--text2);text-decoration:none;font-size:15px;font-weight:500;padding:10px 14px;border-radius:8px;display:block;background:none;border:none;cursor:pointer;width:100%;text-align:left;font-family:var(--font)}
+.mobile-menu a:hover,.mobile-menu button:hover{background:rgba(255,255,255,0.05);color:var(--text)}
+@media(max-width:900px){.nav-right{display:none!important}.hamburger{display:flex}}
 </style>
 </head>
 <body>
@@ -140,8 +150,13 @@ nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filt
       <span class="nav-email" id="navEmail"></span>
       <button class="logout-btn" onclick="signOut()">Sign out</button>
     </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
+<div class="mobile-menu" id="mobile-menu">
+  <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);padding:8px 14px 4px">Landlord Dashboard</span>
+  <button onclick="signOut();toggleMenu()">Sign out</button>
+</div>
 
 <div class="main">
   <div class="page-header">
@@ -459,6 +474,8 @@ function showPwMsg(text, color) {
   msg.style.color = color;
   msg.style.display = 'block';
 }
+
+function toggleMenu(){var m=document.getElementById('mobile-menu');var b=document.getElementById('hamburger');var open=m.classList.contains('open');m.classList.toggle('open',!open);b.classList.toggle('open',!open);}
 
 init();
 </script>
