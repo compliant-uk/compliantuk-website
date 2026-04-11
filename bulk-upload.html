@@ -261,12 +261,9 @@ footer{background:var(--bg1);border-top:1px solid var(--border);padding:28px max
     <div id="prop-list" style="margin-bottom:20px;max-height:280px;overflow-y:auto"></div>
 
     <button class="pay-btn" id="pay-btn" onclick="handlePayment()">Pay now — Secure checkout →</button>
-    <div class="divider-or">OR</div>
-    <div id="paypal-button-container" style="margin-bottom:8px"></div>
     <div class="trust-row">
       <span>🔒 SSL secured</span>
       <span>✓ Stripe</span>
-      <span>✓ PayPal</span>
       <span>🛡️ Money-back guarantee</span>
     </div>
   </div>
@@ -455,11 +452,11 @@ function handlePayment() {
   };
   sessionStorage.setItem('bulkOrder', JSON.stringify(orderPayload));
 
-  // POST to backend to create Stripe session
+  // POST to backend to create Stripe session (send full payload so webhook can process)
   fetch('/api/create-bulk-checkout', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ plan: planKey, total, propertyCount: propCount })
+    body: JSON.stringify(orderPayload)
   })
   .then(r => r.json())
   .then(data => { if (data.url) window.location.href = data.url; else { hideProgress(); alert('Payment setup failed. Please try again.'); }})

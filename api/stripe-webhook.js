@@ -82,6 +82,127 @@ export default async function handler(req, res) {
   const meta = session.metadata;
 
   try {
+    // ── Detect bulk vs single order ──────────────────────────────────────────
+    if (meta.orderType === 'bulk') {
+      // Reassemble properties from chunked metadata
+      const chunkCount = parseInt(meta.propertiesChunks || '1', 10);
+      let propertiesJson = '';
+      for (let i = 0; i < chunkCount; i++) {
+        propertiesJson += meta[`properties_${i}`] || '';
+      }
+      const properties = JSON.parse(propertiesJson || '[]');
+      const landlordFirst = meta.landlordFirst;
+      const landlordLast  = meta.landlordLast;
+      const landlordEmail = meta.landlordEmail;
+
+      // Create/find Supabase account
+      let landlordId;
+      let tempPassword = null;
+      let isNewAccount = false;
+      const { data: existingUsers } = await supabase.auth.admin.listUsers();
+      const existingUser = existingUsers?.users?.find(u => u.email === landlordEmail);
+      if (existingUser) {
+        landlordId = existingUser.id;
+      } else {
+        tempPassword = generatePassword();
+        isNewAccount = true;
+        const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+          email: landlordEmail,
+          password: tempPassword,
+          email_confirm: true,
+          user_metadata: { first_name: landlordFirst, last_name: landlordLast },
+        });
+        if (createError) throw new Error(`Failed to create user: ${createError.message}`);
+        landlordId = newUser.user.id;
+      }
+
+      const pdfBuffer = await fetchInfoSheetPdf();
+      const pdfBase64 = pdfBuffer.toString('base64');
+
+      // Process each property
+      for (const property of properties) {
+        const propertyAddress = property.address;
+        const tenants = property.tenants || [];
+
+        const { data: order, error: orderError } = await supabase
+          .from('orders')
+          .insert({
+            stripe_session_id: session.id + '_' + propertyAddress.slice(0, 20).replace(/\s/g, '_'),
+            landlord_id: landlordId,
+            landlord_email: landlordEmail,
+            landlord_first: landlordFirst,
+            landlord_last: landlordLast,
+            property_address: propertyAddress,
+            amount_paid: 0, // bulk total split across properties
+            package: meta.plan || 'bulk',
+            status: 'processing',
+          })
+          .select()
+          .single();
+
+        if (orderError) {
+          console.error('Failed to save bulk order for', propertyAddress, orderError);
+          continue;
+        }
+
+        for (const tenant of tenants) {
+          const trackingId = generateTrackingId();
+          const { error: tenancyError } = await supabase
+            .from('tenancies')
+            .insert({
+              order_id: order.id,
+              landlord_id: landlordId,
+              property_address: propertyAddress,
+              tenant_first: tenant.first || tenant.name?.split(' ')[0] || '',
+              tenant_last: tenant.last || tenant.name?.split(' ').slice(1).join(' ') || '',
+              tenant_email: tenant.email,
+              tracking_id: trackingId,
+              status: 'sent',
+            });
+          if (tenancyError) { console.error('Tenancy save error:', tenancyError); continue; }
+
+          const trackingPixelUrl = `${BASE_URL}/api/track?id=${trackingId}`;
+          const tenantEmailHtml = buildTenantEmail({
+            tenantFirst: tenant.first || tenant.name?.split(' ')[0] || 'Tenant',
+            tenantLast: tenant.last || '',
+            landlordFirst,
+            landlordLast,
+            propertyAddress,
+            trackingPixelUrl,
+          });
+          await resend.emails.send({
+            from: 'CompliantUK <noreply@compliantuk.co.uk>',
+            to: tenant.email,
+            subject: `Important: Renters' Rights Act 2025 — Information Sheet from your landlord`,
+            html: tenantEmailHtml,
+            attachments: [{ filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf', content: pdfBase64, encoding: 'base64' }],
+          });
+        }
+
+        await supabase.from('orders').update({ status: 'complete' }).eq('id', order.id);
+      }
+
+      // Email landlord confirmation
+      await resend.emails.send({
+        from: 'CompliantUK <noreply@compliantuk.co.uk>',
+        to: landlordEmail,
+        bcc: process.env.ADMIN_BCC_EMAIL || 'huseyin.turkay@compliantuk.co.uk',
+        subject: `✅ Portfolio order confirmed — ${properties.length} properties processed`,
+        html: buildLandlordEmail({
+          landlordFirst, landlordLast, landlordEmail,
+          propertyAddress: `${properties.length} properties`,
+          tenants: properties.flatMap(p => p.tenants || []),
+          amountFormatted: `£${(session.amount_total / 100).toFixed(0)}`,
+          isNewAccount, tempPassword,
+          dashboardUrl: `${BASE_URL}/dashboard`,
+          loginUrl: `${BASE_URL}/login`,
+        }),
+      });
+
+      return res.status(200).json({ received: true, bulk: true, properties: properties.length });
+    }
+
+    // ── Single property order ────────────────────────────────────────────────
     const {
       landlordFirst,
       landlordLast,
