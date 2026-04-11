@@ -4,7 +4,8 @@
   "type": "module",
   "dependencies": {
     "pdf-lib": "^1.17.1",
-    "stripe": "^14.0.0"
+    "stripe": "^14.0.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "resend": "^3.2.0"
   }
 }
-
