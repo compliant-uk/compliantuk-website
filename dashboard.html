@@ -188,6 +188,35 @@ nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filt
     <div class="loading"><div class="spinner"></div> Loading your properties…</div>
   </div>
 
+  <!-- Account Settings -->
+  <div style="margin-top:40px;background:var(--bg1);border:1px solid var(--border2);border-radius:16px;padding:28px 32px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <span style="font-size:18px">🔒</span>
+      <h2 style="font-size:16px;font-weight:700;letter-spacing:-.3px;margin:0">Account Settings</h2>
+    </div>
+    <p style="font-size:13px;color:var(--text3);margin:0 0 24px">Change your password. If you're still using your temporary password, update it here.</p>
+
+    <div style="max-width:400px">
+      <div style="margin-bottom:14px">
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px">New password</label>
+        <input type="password" id="newPassword" placeholder="At least 8 characters"
+          style="width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:11px 13px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;transition:border-color .15s"
+          onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'">
+      </div>
+      <div style="margin-bottom:18px">
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px">Confirm new password</label>
+        <input type="password" id="confirmPassword" placeholder="Repeat your password"
+          style="width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:11px 13px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;transition:border-color .15s"
+          onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'">
+      </div>
+      <button id="pwBtn" onclick="changePassword()"
+        style="background:var(--blue);color:white;border:none;border-radius:9px;padding:11px 22px;font-size:14px;font-weight:600;font-family:var(--font);cursor:pointer;transition:opacity .15s">
+        Update password
+      </button>
+      <div id="pwMsg" style="margin-top:12px;font-size:13px;display:none"></div>
+    </div>
+  </div>
+
 </div>
 </div><!-- /app -->
 
@@ -388,6 +417,47 @@ async function signOut() {
   clearInterval(refreshInterval);
   await sb.auth.signOut();
   window.location.href = '/login';
+}
+
+async function changePassword() {
+  const pw = document.getElementById('newPassword').value;
+  const confirm = document.getElementById('confirmPassword').value;
+  const btn = document.getElementById('pwBtn');
+  const msg = document.getElementById('pwMsg');
+
+  msg.style.display = 'none';
+
+  if (pw.length < 8) {
+    showPwMsg('Password must be at least 8 characters.', '#fca5a5');
+    return;
+  }
+  if (pw !== confirm) {
+    showPwMsg('Passwords do not match.', '#fca5a5');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Updating…';
+
+  const { error } = await sb.auth.updateUser({ password: pw });
+
+  if (error) {
+    showPwMsg(error.message || 'Failed to update password. Please try again.', '#fca5a5');
+  } else {
+    showPwMsg('✓ Password updated successfully.', '#34d399');
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Update password';
+}
+
+function showPwMsg(text, color) {
+  const msg = document.getElementById('pwMsg');
+  msg.textContent = text;
+  msg.style.color = color;
+  msg.style.display = 'block';
 }
 
 init();
