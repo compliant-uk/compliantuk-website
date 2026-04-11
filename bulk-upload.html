@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CompliantUK — Portfolio Upload &amp; Payment</title>
+<meta name="theme-color" content="#080c14">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Geist+Mono:wght@400;500&family=Lora:ital,wght@0,400;1,400&display=swap');
+:root{--bg:#080c14;--bg1:#0d1220;--bg2:#111827;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--blue:#3b82f6;--blue2:#60a5fa;--blue3:#1d4ed8;--indigo:#6366f1;--emerald:#10b981;--emerald2:#34d399;--red:#ef4444;--amber:#f59e0b;--amber2:#fbbf24;--font:'Bricolage Grotesque',sans-serif;--mono:'Geist Mono',monospace;--serif:'Lora',serif;--radius:14px;--radius-lg:20px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bg2);border-radius:2px}
+/* nav */
+nav{background:rgba(8,12,20,0.95);border-bottom:1px solid var(--border);padding:0 max(5%,20px)}
+.nw{max-width:1160px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.lm{width:32px;height:32px;background:linear-gradient(135deg,var(--blue3),var(--blue));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:white;box-shadow:0 0 20px rgba(59,130,246,0.4)}
+.ln{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.4px}
+.ln span{color:var(--blue2)}
+.back-link{color:var(--text3);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:6px;transition:color .15s}
+.back-link:hover{color:var(--text2)}
+/* hero */
+.hero{padding:60px max(5%,20px) 48px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.hero-mesh{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.35}
+.b1{width:500px;height:500px;background:radial-gradient(circle,rgba(59,130,246,0.2),transparent 70%);top:-180px;right:-100px;animation:f1 8s ease-in-out infinite}
+.b2{width:300px;height:300px;background:radial-gradient(circle,rgba(99,102,241,0.15),transparent 70%);bottom:-80px;left:10%;animation:f2 10s ease-in-out infinite}
+@keyframes f1{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,15px)}}
+@keyframes f2{0%,100%{transform:translate(0,0)}50%{transform:translate(15px,-20px)}}
+.hero-in{max-width:800px;margin:0 auto;position:relative;z-index:1}
+.plan-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);color:var(--blue2);padding:5px 14px;border-radius:100px;font-size:12px;font-weight:700;font-family:var(--mono);letter-spacing:.5px;margin-bottom:20px;text-transform:uppercase}
+h1{font-size:clamp(1.9rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:12px}
+h1 .sr{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--blue2)}
+.hero-sub{font-size:15px;color:var(--text2);line-height:1.7;max-width:580px}
+/* main */
+main{max-width:800px;margin:0 auto;padding:8px 24px 80px}
+/* step indicator */
+.steps-bar{display:flex;align-items:center;gap:0;margin-bottom:36px}
+.step-item{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text3)}
+.step-item.active{color:var(--text)}
+.step-item.done{color:var(--emerald2)}
+.step-num{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-family:var(--mono);font-weight:700;flex-shrink:0;background:var(--bg1)}
+.step-item.active .step-num{border-color:var(--blue);background:rgba(59,130,246,0.12);color:var(--blue2)}
+.step-item.done .step-num{border-color:var(--emerald);background:rgba(16,185,129,0.12);color:var(--emerald2)}
+.step-line{flex:1;height:1px;background:var(--border2);margin:0 10px}
+/* cards */
+.card{background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:32px;margin-bottom:20px;position:relative;overflow:hidden;transition:opacity .3s}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,0.3),transparent)}
+.card.dimmed{opacity:.4;pointer-events:none}
+.card-head{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.card-num{width:32px;height:32px;border-radius:50%;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--blue2);font-family:var(--mono);flex-shrink:0}
+.card-head h2{font-size:18px;font-weight:800;letter-spacing:-.4px;color:var(--text)}
+.card-head p{font-size:13px;color:var(--text3);margin-top:2px}
+/* details form */
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.fg label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.7px}
+.fg input,.fg select{background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:8px;padding:11px 14px;font-size:14px;font-family:var(--font);color:var(--text);outline:none;transition:all .15s;width:100%}
+.fg input::placeholder{color:var(--text3)}
+.fg input:focus,.fg select:focus{border-color:var(--blue);background:rgba(59,130,246,0.05);box-shadow:0 0 0 3px rgba(59,130,246,0.1)}
+.fg select option{background:var(--bg2)}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+/* file upload zone */
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--radius);padding:40px 24px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.02);position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:rgba(59,130,246,0.04)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.uz-icon{font-size:36px;margin-bottom:12px}
+.uz-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
+.uz-sub{font-size:13px;color:var(--text3);line-height:1.5}
+.uz-formats{display:flex;justify-content:center;gap:8px;margin-top:14px;flex-wrap:wrap}
+.fmt-tag{font-size:11px;font-weight:600;font-family:var(--mono);padding:3px 10px;border-radius:20px;background:rgba(255,255,255,0.05);border:1px solid var(--border2);color:var(--text3)}
+/* file preview */
+.file-preview{display:none;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:14px 16px;margin-top:14px;align-items:center;justify-content:space-between;gap:12px}
+.file-preview.show{display:flex}
+.fp-info{display:flex;align-items:center;gap:10px}
+.fp-icon{font-size:22px}
+.fp-name{font-size:14px;font-weight:600;color:var(--text)}
+.fp-size{font-size:12px;color:var(--text3);font-family:var(--mono)}
+.fp-remove{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px;border-radius:4px;transition:color .15s;line-height:1}
+.fp-remove:hover{color:var(--red)}
+/* template download */
+.tmpl-note{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;margin-bottom:20px}
+.tmpl-note-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+.tmpl-note-text{font-size:13px;color:var(--amber2);line-height:1.6}
+.tmpl-note-text strong{color:var(--text)}
+.tmpl-dl{display:inline-flex;align-items:center;gap:6px;color:var(--amber2);font-weight:700;text-decoration:none;font-size:13px;margin-top:6px;border-bottom:1px solid rgba(245,158,11,0.3);padding-bottom:1px;transition:border-color .15s}
+.tmpl-dl:hover{border-color:var(--amber2)}
+/* column map preview */
+.col-map{display:none;margin-top:20px}
+.col-map.show{display:block}
+.col-map h3{font-size:14px;font-weight:700;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.col-map-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cm-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.cm-col{font-size:12px;font-family:var(--mono);color:var(--blue2);min-width:140px}
+.cm-arrow{color:var(--text3);font-size:12px}
+.cm-field{font-size:12px;color:var(--text2)}
+/* order summary */
+.order-summary{background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:20px 24px;margin-bottom:20px}
+.os-head{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--emerald2);font-family:var(--mono);margin-bottom:14px}
+.os-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(16,185,129,0.1);font-size:14px}
+.os-row:last-child{border-bottom:none;font-weight:700;font-size:16px;margin-top:4px;padding-top:12px}
+.os-lbl{color:var(--text2)}
+.os-val{color:var(--text);font-family:var(--mono)}
+.os-row:last-child .os-val{color:var(--emerald2);font-size:18px}
+/* payment */
+.pay-btn{width:100%;background:linear-gradient(135deg,var(--blue3),var(--blue));color:white;border:none;padding:16px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:var(--font);letter-spacing:-.2px;transition:all .2s;box-shadow:0 4px 20px rgba(59,130,246,0.25);margin-bottom:12px}
+.pay-btn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(59,130,246,0.35)}
+.pay-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.divider-or{display:flex;align-items:center;gap:10px;margin:12px 0;font-size:12px;color:var(--text3)}
+.divider-or::before,.divider-or::after{content:'';flex:1;height:1px;background:var(--border)}
+.trust-row{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:14px}
+.trust-row span{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:5px}
+/* progress overlay */
+.progress-overlay{display:none;position:fixed;inset:0;background:rgba(8,12,20,0.85);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.progress-overlay.show{display:flex}
+.prog-box{background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:40px 48px;text-align:center;max-width:360px}
+.prog-spinner{width:48px;height:48px;border:3px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.prog-title{font-size:18px;font-weight:700;margin-bottom:8px}
+.prog-sub{font-size:13px;color:var(--text2)}
+/* footer */
+footer{background:var(--bg1);border-top:1px solid var(--border);padding:28px max(5%,20px)}
+.fi{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.fl{display:flex;gap:4px;flex-wrap:wrap}
+.fl a{color:var(--text3);text-decoration:none;font-size:13px;padding:4px 10px;border-radius:6px;transition:color .15s}
+.fl a:hover{color:var(--text2)}
+@media(max-width:600px){.fg-row{grid-template-columns:1fr}.col-map-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nw">
+    <a href="/" class="logo"><div class="lm">✓</div><span class="ln">Compliant<span>UK</span></span></a>
+    <a href="/bulk.html" class="back-link">← Back to portfolio plans</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-mesh"><div class="blob b1"></div><div class="blob b2"></div></div>
+  <div class="hero-in">
+    <div class="plan-pill" id="plan-pill">⭐ Silver Plan — £44/property</div>
+    <h1>Upload your portfolio &amp;<br><span class="sr">make payment.</span></h1>
+    <p class="hero-sub">Upload your property and tenant data via Excel or CSV, review your order, then pay securely. We'll handle every email, certificate, and proof of service automatically.</p>
+  </div>
+</div>
+
+<main>
+
+  <!-- Step indicator -->
+  <div class="steps-bar">
+    <div class="step-item active" id="step-ind-1"><span class="step-num">1</span>Your details</div>
+    <div class="step-line"></div>
+    <div class="step-item" id="step-ind-2"><span class="step-num">2</span>Upload file</div>
+    <div class="step-line"></div>
+    <div class="step-item" id="step-ind-3"><span class="step-num">3</span>Review &amp; pay</div>
+  </div>
+
+  <!-- STEP 1: Your details -->
+  <div class="card" id="step1">
+    <div class="card-head">
+      <div class="card-num">1</div>
+      <div><h2>Your details</h2><p>Your name, email, and organisation</p></div>
+    </div>
+    <div class="fg-row">
+      <div class="fg"><label>First name *</label><input type="text" id="s1-first" placeholder="Jane" required></div>
+      <div class="fg"><label>Last name *</label><input type="text" id="s1-last" placeholder="Smith" required></div>
+    </div>
+    <div class="fg"><label>Email address *</label><input type="email" id="s1-email" placeholder="you@example.com" required></div>
+    <div class="fg"><label>Organisation / company name</label><input type="text" id="s1-org" placeholder="Smith Property Management Ltd"></div>
+    <div class="fg">
+      <label>You are a *</label>
+      <select id="s1-type">
+        <option value="">Select...</option>
+        <option>Private landlord</option>
+        <option>Letting agent</option>
+        <option>Property management company</option>
+        <option>Estate agent</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <button class="pay-btn" onclick="goStep2()" style="margin-top:8px">Continue to upload →</button>
+  </div>
+
+  <!-- STEP 2: File Upload -->
+  <div class="card dimmed" id="step2">
+    <div class="card-head">
+      <div class="card-num">2</div>
+      <div><h2>Upload your property &amp; tenant data</h2><p>Excel (.xlsx), CSV, or our template</p></div>
+    </div>
+
+    <div class="tmpl-note">
+      <span class="tmpl-note-icon">📋</span>
+      <div class="tmpl-note-text">
+        <strong>Use our template for fastest processing.</strong> Download the Excel template below — it has the correct column headings pre-filled. Fill in one row per tenancy. If uploading your own file, make sure it includes the columns shown below.
+        <br>
+        <a href="/templates/compliantuk-portfolio-template.xlsx" class="tmpl-dl" download>⬇ Download Excel template</a>
+        &nbsp;&nbsp;
+        <a href="/templates/compliantuk-portfolio-template.csv" class="tmpl-dl" download>⬇ Download CSV template</a>
+      </div>
+    </div>
+
+    <div class="upload-zone" id="upload-zone">
+      <input type="file" id="file-input" accept=".xlsx,.xls,.csv,.ods" onchange="handleFile(this)">
+      <div class="uz-icon">📂</div>
+      <div class="uz-title">Drop your file here or click to browse</div>
+      <div class="uz-sub">Supports Excel and CSV files up to 10MB<br>One row per tenancy — multiple tenants per row</div>
+      <div class="uz-formats">
+        <span class="fmt-tag">.xlsx</span>
+        <span class="fmt-tag">.xls</span>
+        <span class="fmt-tag">.csv</span>
+        <span class="fmt-tag">.ods</span>
+      </div>
+    </div>
+
+    <div class="file-preview" id="file-preview">
+      <div class="fp-info">
+        <span class="fp-icon">📊</span>
+        <div>
+          <div class="fp-name" id="fp-name">—</div>
+          <div class="fp-size" id="fp-size">—</div>
+        </div>
+      </div>
+      <button class="fp-remove" onclick="removeFile()" title="Remove file">✕</button>
+    </div>
+
+    <div class="col-map" id="col-map">
+      <h3>📐 Expected columns <span style="font-size:11px;font-weight:400;color:var(--text3);font-family:var(--mono)">(your file will be mapped automatically)</span></h3>
+      <div class="col-map-grid">
+        <div class="cm-row"><span class="cm-col">Property Address</span><span class="cm-arrow">→</span><span class="cm-field">Full address of the let</span></div>
+        <div class="cm-row"><span class="cm-col">Landlord Name</span><span class="cm-arrow">→</span><span class="cm-field">Name on the tenancy</span></div>
+        <div class="cm-row"><span class="cm-col">Tenant 1 Name</span><span class="cm-arrow">→</span><span class="cm-field">Full name of tenant 1</span></div>
+        <div class="cm-row"><span class="cm-col">Tenant 1 Email</span><span class="cm-arrow">→</span><span class="cm-field">Email of tenant 1</span></div>
+        <div class="cm-row"><span class="cm-col">Tenant 2 Name</span><span class="cm-arrow">→</span><span class="cm-field">Full name (optional)</span></div>
+        <div class="cm-row"><span class="cm-col">Tenant 2 Email</span><span class="cm-arrow">→</span><span class="cm-field">Email (optional)</span></div>
+        <div class="cm-row"><span class="cm-col">Tenant 3 Name</span><span class="cm-arrow">→</span><span class="cm-field">Full name (optional)</span></div>
+        <div class="cm-row"><span class="cm-col">Tenant 4 Name</span><span class="cm-arrow">→</span><span class="cm-field">Full name (optional)</span></div>
+      </div>
+    </div>
+
+    <button class="pay-btn" id="step2-btn" onclick="goStep3()" style="margin-top:20px;display:none">Review order →</button>
+  </div>
+
+  <!-- STEP 3: Review & Pay -->
+  <div class="card dimmed" id="step3">
+    <div class="card-head">
+      <div class="card-num">3</div>
+      <div><h2>Review &amp; pay</h2><p>Confirm your order and make payment</p></div>
+    </div>
+
+    <div class="order-summary">
+      <div class="os-head">Order summary</div>
+      <div class="os-row"><span class="os-lbl">Plan</span><span class="os-val" id="os-plan">—</span></div>
+      <div class="os-row"><span class="os-lbl">Properties detected</span><span class="os-val" id="os-props">—</span></div>
+      <div class="os-row"><span class="os-lbl">Price per property</span><span class="os-val" id="os-ppp">—</span></div>
+      <div class="os-row"><span class="os-lbl">Additional tenants</span><span class="os-val" id="os-extra">—</span></div>
+      <div class="os-row"><span class="os-lbl">Total</span><span class="os-val" id="os-total">—</span></div>
+    </div>
+
+    <div id="prop-list" style="margin-bottom:20px;max-height:280px;overflow-y:auto"></div>
+
+    <button class="pay-btn" id="pay-btn" onclick="handlePayment()">Pay now — Secure checkout →</button>
+    <div class="divider-or">OR</div>
+    <div id="paypal-button-container" style="margin-bottom:8px"></div>
+    <div class="trust-row">
+      <span>🔒 SSL secured</span>
+      <span>✓ Stripe</span>
+      <span>✓ PayPal</span>
+      <span>🛡️ Money-back guarantee</span>
+    </div>
+  </div>
+
+</main>
+
+<!-- Progress overlay -->
+<div class="progress-overlay" id="progress-overlay">
+  <div class="prog-box">
+    <div class="prog-spinner"></div>
+    <div class="prog-title" id="prog-title">Processing your file…</div>
+    <div class="prog-sub" id="prog-sub">Parsing properties and tenant data</div>
+  </div>
+</div>
+
+<footer>
+  <div class="fi">
+    <a href="/" class="logo"><div class="lm">✓</div><span class="ln">Compliant<span>UK</span></span></a>
+    <div class="fl"><a href="/about.html">About</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/contact.html">Contact</a></div>
+    <span style="font-size:13px;color:var(--text3)">© 2026 CompliantUK</span>
+  </div>
+</footer>
+
+<script>
+// ── Plan config from URL params ──────────────────────────────────────────────
+const PLANS = {
+  silver:   { name:'Silver',   price:44, extra:8,  range:'2–10 properties' },
+  bronze:   { name:'Bronze',   price:34, extra:7,  range:'11–25 properties' },
+  gold:     { name:'Gold',     price:24, extra:6,  range:'25–50 properties' },
+  platinum: { name:'Platinum', price:19, extra:5,  range:'50–100 properties' },
+};
+
+const params  = new URLSearchParams(location.search);
+const planKey = (params.get('plan') || 'silver').toLowerCase();
+const plan    = PLANS[planKey] || PLANS.silver;
+
+// Update UI with plan info
+document.getElementById('plan-pill').textContent = `⭐ ${plan.name} Plan — £${plan.price}/property`;
+document.getElementById('os-plan').textContent   = `${plan.name} (${plan.range})`;
+document.getElementById('os-ppp').textContent    = `£${plan.price}`;
+
+// ── Step navigation ──────────────────────────────────────────────────────────
+function setStepActive(n) {
+  [1,2,3].forEach(i => {
+    const el = document.getElementById(`step-ind-${i}`);
+    const card = document.getElementById(`step${i}`);
+    el.className = 'step-item' + (i < n ? ' done' : i === n ? ' active' : '');
+    if (i < n) el.querySelector('.step-num').textContent = '✓';
+    card.classList.toggle('dimmed', i > n);
+  });
+}
+
+function goStep2() {
+  const first = document.getElementById('s1-first').value.trim();
+  const last  = document.getElementById('s1-last').value.trim();
+  const email = document.getElementById('s1-email').value.trim();
+  const type  = document.getElementById('s1-type').value;
+  if (!first || !last || !email || !type) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+  setStepActive(2);
+  document.getElementById('step2').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ── File handling ─────────────────────────────────────────────────────────────
+let parsedData = null;
+
+function handleFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  // Show preview
+  document.getElementById('fp-name').textContent = file.name;
+  document.getElementById('fp-size').textContent = formatSize(file.size);
+  document.getElementById('file-preview').classList.add('show');
+  document.getElementById('col-map').classList.add('show');
+  document.getElementById('step2-btn').style.display = 'block';
+
+  // Show progress
+  showProgress('Reading your file…', 'Parsing properties and tenants');
+
+  // Simulate parse (real implementation would use SheetJS server-side or a worker)
+  setTimeout(() => {
+    // Mock parsed data — replace with real SheetJS parsing in production
+    parsedData = mockParse(file.name);
+    hideProgress();
+    updateOrderSummary();
+  }, 1200);
+}
+
+function mockParse(filename) {
+  // Returns mock structure — replace with actual SheetJS parsing
+  return [
+    { address:'14 Maple Avenue, London E1 2AB', landlord:'Jane Smith', tenants:[{name:'Tom Brown',email:'tom@example.com'},{name:'Sarah Jones',email:'sarah@example.com'}]},
+    { address:'7 Birch Close, Manchester M1 4PQ', landlord:'Jane Smith', tenants:[{name:'Alex White',email:'alex@example.com'}]},
+    { address:'91 Cedar Drive, Bristol BS1 3RT', landlord:'Jane Smith', tenants:[{name:'Emma Green',email:'emma@example.com'},{name:'Mark Lee',email:'mark@example.com'}]},
+  ];
+}
+
+function removeFile() {
+  document.getElementById('file-input').value = '';
+  document.getElementById('file-preview').classList.remove('show');
+  document.getElementById('col-map').classList.remove('show');
+  document.getElementById('step2-btn').style.display = 'none';
+  parsedData = null;
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+  return (bytes/1024/1024).toFixed(1) + ' MB';
+}
+
+// drag & drop
+const zone = document.getElementById('upload-zone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => {
+  e.preventDefault();
+  zone.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    const input = document.getElementById('file-input');
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+    handleFile(input);
+  }
+});
+
+// ── Step 3: Order summary ─────────────────────────────────────────────────────
+function goStep3() {
+  if (!parsedData) { alert('Please upload a file first.'); return; }
+  updateOrderSummary();
+  setStepActive(3);
+  document.getElementById('step3').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function updateOrderSummary() {
+  if (!parsedData) return;
+  const propCount = parsedData.length;
+  let extraTenants = 0;
+  parsedData.forEach(p => { if (p.tenants.length > 4) extraTenants += p.tenants.length - 4; });
+  const baseCost = propCount * plan.price;
+  const extraCost = extraTenants * plan.extra;
+  const total = baseCost + extraCost;
+
+  document.getElementById('os-props').textContent  = propCount;
+  document.getElementById('os-extra').textContent  = extraTenants > 0 ? `${extraTenants} × £${plan.extra} = £${extraCost}` : 'None';
+  document.getElementById('os-total').textContent  = `£${total.toLocaleString()}`;
+
+  // Property list preview
+  const list = document.getElementById('prop-list');
+  list.innerHTML = parsedData.map((p,i) => `
+    <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">${p.address}</div>
+      <div style="font-size:12px;color:var(--text3);font-family:var(--mono)">${p.tenants.map(t=>t.name).join(' · ')}</div>
+    </div>
+  `).join('');
+}
+
+// ── Payment ──────────────────────────────────────────────────────────────────
+function handlePayment() {
+  if (!parsedData) { alert('No data to process.'); return; }
+  const propCount = parsedData.length;
+  let extraTenants = 0;
+  parsedData.forEach(p => { if (p.tenants.length > 4) extraTenants += p.tenants.length - 4; });
+  const total = (propCount * plan.price) + (extraTenants * plan.extra);
+
+  showProgress('Preparing checkout…', 'Securing your order');
+
+  const orderPayload = {
+    plan: planKey,
+    pricePerProperty: plan.price,
+    extraTenantCost: plan.extra,
+    properties: parsedData,
+    submittedBy: {
+      first: document.getElementById('s1-first').value.trim(),
+      last:  document.getElementById('s1-last').value.trim(),
+      email: document.getElementById('s1-email').value.trim(),
+      org:   document.getElementById('s1-org').value.trim(),
+      type:  document.getElementById('s1-type').value,
+    },
+    total
+  };
+  sessionStorage.setItem('bulkOrder', JSON.stringify(orderPayload));
+
+  // POST to backend to create Stripe session
+  fetch('/api/create-bulk-checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ plan: planKey, total, propertyCount: propCount })
+  })
+  .then(r => r.json())
+  .then(data => { if (data.url) window.location.href = data.url; else { hideProgress(); alert('Payment setup failed. Please try again.'); }})
+  .catch(() => { hideProgress(); alert('Network error. Please try again.'); });
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function showProgress(title, sub) {
+  document.getElementById('prog-title').textContent = title;
+  document.getElementById('prog-sub').textContent   = sub;
+  document.getElementById('progress-overlay').classList.add('show');
+}
+function hideProgress() { document.getElementById('progress-overlay').classList.remove('show'); }
+
+// Init
+setStepActive(1);
+</script>
+</body>
+</html>

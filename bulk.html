@@ -67,7 +67,9 @@ h2 .sr{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--bl
 .tc-list li{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2);line-height:1.4}
 .tc-list li:last-child{border-bottom:none}
 .lc{width:16px;height:16px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--emerald2);flex-shrink:0;margin-top:2px;font-weight:700}
-.extra{background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--blue2);font-family:var(--mono)}
+.extra{background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--blue2);font-family:var(--mono);margin-bottom:12px}
+.tier-btn{display:block;width:100%;background:linear-gradient(135deg,var(--blue3),var(--blue));color:white;border:none;padding:11px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);text-decoration:none;text-align:center;transition:all .2s;box-shadow:0 4px 16px rgba(59,130,246,0.2);margin-top:4px}
+.tier-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,0.32)}
 /* calculator */
 .calc{background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:36px;margin-bottom:48px}
 .calc h3{font-size:20px;font-weight:700;margin-bottom:6px}
@@ -123,16 +125,16 @@ footer{background:var(--bg1);border-top:1px solid var(--border);padding:40px max
 
 <div class="tiers">
 <div class="tc"><div class="tc-head"><div class="tc-name">Silver</div><div class="tc-range">2–10 properties</div><div class="tc-price">£44<sub>/property</sub></div></div>
-<div class="tc-body"><ul class="tc-list"><li><span class="lc">✓</span>Official GOV.UK Information Sheet</li><li><span class="lc">✓</span>Personalised covering letter per tenant</li><li><span class="lc">✓</span>Proof-of-service certificate (all tenants listed)</li><li><span class="lc">✓</span>Real-time tracking dashboard</li><li><span class="lc">✓</span>48-hour auto-reminders</li><li><span class="lc">✓</span>Up to 4 tenants per property</li></ul><div class="extra">+£8 per additional tenant over 4</div></div></div>
+<div class="tc-body"><ul class="tc-list"><li><span class="lc">✓</span>Official GOV.UK Information Sheet</li><li><span class="lc">✓</span>Personalised covering letter per tenant</li><li><span class="lc">✓</span>Proof-of-service certificate (all tenants listed)</li><li><span class="lc">✓</span>Real-time tracking dashboard</li><li><span class="lc">✓</span>48-hour auto-reminders</li><li><span class="lc">✓</span>Up to 4 tenants per property</li></ul><div class="extra">+£8 per additional tenant over 4</div><a href="/bulk-upload.html?plan=silver&price=44" class="tier-btn">Get started — Silver →</a></div></div>
 
 <div class="tc feat"><div class="tc-badge">Most popular</div><div class="tc-head"><div class="tc-name">Bronze</div><div class="tc-range">11–25 properties</div><div class="tc-price">£34<sub>/property</sub></div></div>
-<div class="tc-body"><ul class="tc-list"><li><span class="lc">✓</span>Official GOV.UK Information Sheet</li><li><span class="lc">✓</span>Personalised covering letter per tenant</li><li><span class="lc">✓</span>Proof-of-service certificate (all tenants listed)</li><li><span class="lc">✓</span>Real-time tracking dashboard</li><li><span class="lc">✓</span>48-hour auto-reminders</li><li><span class="lc">✓</span>Up to 4 tenants per property</li></ul><div class="extra">+£7 per additional tenant over 4</div></div></div>
+<div class="tc-body"><ul class="tc-list"><li><span class="lc">✓</span>Official GOV.UK Information Sheet</li><li><span class="lc">✓</span>Personalised covering letter per tenant</li><li><span class="lc">✓</span>Proof-of-service certificate (all tenants listed)</li><li><span class="lc">✓</span>Real-time tracking dashboard</li><li><span class="lc">✓</span>48-hour auto-reminders</li><li><span class="lc">✓</span>Up to 4 tenants per property</li></ul><div class="extra">+£7 per additional tenant over 4</div><a href="/bulk-upload.html?plan=bronze&price=34" class="tier-btn">Get started — Bronze →</a></div></div>
 
 <div class="tc"><div class="tc-head"><div class="tc-name">Gold</div><div class="tc-range">25–50 properties</div><div class="tc-price">£24<sub>/property</sub></div></div>
-<div class="tc-body"><ul class="tc-list"><li><span class="lc">✓</span>Official GOV.UK Information Sheet</li><li><span class="lc">✓</span>Personalised covering letter per tenant</li><li><span class="lc">✓</span>Proof-of-service certificate (all tenants listed)</li><li><span class="lc">✓</span>Real-time tracking dashboard</li><li><span class="lc">✓</span>48-hour auto-reminders</li><li><span class="lc">✓</span>Up to 4 tenants per property</li><li><span class="lc">✓</span>Priority support</li></ul><div class="extra">+£6 per additional tenant over 4</div></div></div>
+<div class="tc-body"><ul class="tc-list"><li><span class="lc">✓</span>Official GOV.UK Information Sheet</li><li><span class="lc">✓</span>Personalised covering letter per tenant</li><li><span class="lc">✓</span>Proof-of-service certificate (all tenants listed)</li><li><span class="lc">✓</span>Real-time tracking dashboard</li><li><span class="lc">✓</span>48-hour auto-reminders</li><li><span class="lc">✓</span>Up to 4 tenants per property</li><li><span class="lc">✓</span>Priority support</li></ul><div class="extra">+£6 per additional tenant over 4</div><a href="/bulk-upload.html?plan=gold&price=24" class="tier-btn">Get started — Gold →</a></div></div>
 
 <div class="tc"><div class="tc-head"><div class="tc-name">Platinum</div><div class="tc-range">50–100 properties</div><div class="tc-price">£19<sub>/property</sub></div></div>
-<div class="tc-body"><ul class="tc-list"><li><span class="lc">✓</span>Official GOV.UK Information Sheet</li><li><span class="lc">✓</span>Personalised covering letter per tenant</li><li><span class="lc">✓</span>Proof-of-service certificate (all tenants listed)</li><li><span class="lc">✓</span>Real-time tracking dashboard</li><li><span class="lc">✓</span>48-hour auto-reminders</li><li><span class="lc">✓</span>Up to 4 tenants per property</li><li><span class="lc">✓</span>Priority support</li><li><span class="lc">✓</span>Dedicated account manager</li></ul><div class="extra">+£5 per additional tenant over 4</div></div></div>
+<div class="tc-body"><ul class="tc-list"><li><span class="lc">✓</span>Official GOV.UK Information Sheet</li><li><span class="lc">✓</span>Personalised covering letter per tenant</li><li><span class="lc">✓</span>Proof-of-service certificate (all tenants listed)</li><li><span class="lc">✓</span>Real-time tracking dashboard</li><li><span class="lc">✓</span>48-hour auto-reminders</li><li><span class="lc">✓</span>Up to 4 tenants per property</li><li><span class="lc">✓</span>Priority support</li><li><span class="lc">✓</span>Dedicated account manager</li></ul><div class="extra">+£5 per additional tenant over 4</div><a href="/bulk-upload.html?plan=platinum&price=19" class="tier-btn">Get started — Platinum →</a></div></div>
 </div>
 
 <!-- Calculator -->
@@ -165,4 +167,3 @@ recalc();
 </script>
 </body>
 </html>
-
