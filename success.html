@@ -1,74 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payment Successful — CompliantUK</title>
-<meta name="robots" content="noindex">
-<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CompliantUK — You're Compliant!</title>
+<meta name="theme-color" content="#080c14">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap');
-:root{--bg:#080c14;--bg1:#0d1220;--blue:#3b82f6;--blue2:#60a5fa;--green:#10b981;--green2:#34d399;--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--border:rgba(255,255,255,0.07);--font:'Bricolage Grotesque',sans-serif}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;-webkit-font-smoothing:antialiased}
-.card{background:var(--bg1);border:1px solid rgba(16,185,129,0.25);border-radius:20px;padding:52px 48px;max-width:560px;width:100%;text-align:center;box-shadow:0 0 80px rgba(16,185,129,0.08)}
-.icon{width:72px;height:72px;background:rgba(16,185,129,0.1);border:2px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 24px}
-h1{font-size:2rem;font-weight:800;letter-spacing:-1px;margin-bottom:12px;color:var(--text)}
-.subtitle{font-size:1rem;color:var(--text2);line-height:1.7;margin-bottom:32px}
-.steps-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:28px;text-align:left}
-.steps-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:16px}
-.step{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13.5px;color:var(--text2)}
-.step:last-child{border-bottom:none}
-.step-num{width:22px;height:22px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;margin-top:1px}
-.deadline-box{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:14px 18px;margin-bottom:28px;font-size:13px;color:#fbbf24;line-height:1.6}
-.btn{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:white;padding:14px 28px;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;transition:all 0.2s;width:100%;justify-content:center;margin-bottom:12px}
-.btn:hover{background:#2563eb}
-.btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:8px;color:var(--text3);font-size:13px;text-decoration:none;transition:color 0.2s}
-.btn-ghost:hover{color:var(--text2)}
-.logo{display:flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:32px;justify-content:center}
-.logo-mark{width:32px;height:32px;background:linear-gradient(135deg,#1d4ed8,var(--blue));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:white}
-.logo-name{font-size:17px;font-weight:700;color:var(--text)}
-.logo-name span{color:var(--blue2)}
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Geist+Mono:wght@400;500&family=Lora:ital,wght@0,400;1,400&display=swap');
+:root{--bg:#080c14;--bg1:#0d1220;--bg2:#111827;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--blue:#3b82f6;--blue2:#60a5fa;--blue3:#1d4ed8;--indigo:#6366f1;--emerald:#10b981;--emerald2:#34d399;--red:#ef4444;--amber:#f59e0b;--amber2:#fbbf24;--gold:#f59e0b;--font:'Bricolage Grotesque',sans-serif;--mono:'Geist Mono',monospace;--serif:'Lora',serif;--radius:14px;--radius-lg:20px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+nav{background:rgba(8,12,20,0.95);border-bottom:1px solid var(--border);padding:0 max(5%,20px)}
+.nw{max-width:1160px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.lm{width:32px;height:32px;background:linear-gradient(135deg,var(--blue3),var(--blue));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:white}
+.ln{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.4px}
+.ln span{color:var(--blue2)}
+.dash-link{color:var(--blue2);text-decoration:none;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;padding:7px 14px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:8px;transition:all .15s}
+.dash-link:hover{background:rgba(59,130,246,0.15)}
+/* success hero */
+.sh{position:relative;padding:64px max(5%,20px) 52px;overflow:hidden;text-align:center}
+.sh::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center top,rgba(16,185,129,0.08),transparent 60%)}
+.sh-icon{font-size:52px;margin-bottom:16px;animation:pop .5s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{transform:scale(0) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.sh h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-1px;margin-bottom:10px}
+.sh h1 .sr{font-family:var(--serif);font-style:italic;color:var(--emerald2)}
+.sh p{font-size:15px;color:var(--text2);max-width:520px;margin:0 auto;line-height:1.7}
+/* main */
+main{max-width:720px;margin:0 auto;padding:36px 24px 72px}
+.card{background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,0.3),transparent)}
+.card h2{font-size:16px;font-weight:700;color:var(--text);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.orow{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px}
+.orow:last-child{border-bottom:none}
+.orl{color:var(--text3)}
+.orv{font-weight:600;color:var(--text);text-align:right}
+/* delivery status */
+.sc{background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:var(--radius-lg);padding:24px 28px;margin-bottom:16px}
+.sc-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--emerald2);font-family:var(--mono);margin-bottom:14px}
+.si{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(16,185,129,0.1);font-size:14px}
+.si:last-child{border-bottom:none}
+.sd{width:8px;height:8px;border-radius:50%;background:var(--emerald2);flex-shrink:0;box-shadow:0 0 8px rgba(52,211,153,0.5)}
+.sn{font-weight:600;color:var(--text);min-width:140px}
+.se{color:var(--text3);font-family:var(--mono);font-size:13px}
+/* steps */
+.nsteps{list-style:none}
+.nstep{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.nstep:last-child{border-bottom:none}
+.nsi{font-size:22px;flex-shrink:0;margin-top:2px}
+.nst h4{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.nst p{font-size:13px;color:var(--text2);line-height:1.55}
+/* dashboard CTA */
+.dcta{background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(99,102,241,0.04));border:1px solid rgba(59,130,246,0.25);border-radius:var(--radius-lg);padding:24px 28px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.dcta h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.dcta p{font-size:13px;color:var(--text2)}
+.dbtn{background:linear-gradient(135deg,var(--blue3),var(--blue));color:white;padding:12px 22px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none;font-family:var(--font);white-space:nowrap;transition:all .2s;box-shadow:0 4px 16px rgba(59,130,246,0.25)}
+.dbtn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,0.35)}
+/* ★ COMING SOON CARD ★ */
+.cs{background:linear-gradient(135deg,var(--bg1) 0%,#0f1a10 50%,var(--bg1) 100%);border:1px solid rgba(52,211,153,0.25);border-radius:var(--radius-lg);padding:32px;margin-bottom:16px;position:relative;overflow:hidden}
+.cs::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(16,185,129,0.12),transparent 70%);pointer-events:none}
+.cs::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--emerald2),rgba(16,185,129,0.3),transparent)}
+.cs-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:var(--emerald2);font-size:10px;font-weight:700;font-family:var(--mono);text-transform:uppercase;letter-spacing:.8px;padding:4px 12px;border-radius:20px;margin-bottom:16px}
+.cs h3{font-size:20px;font-weight:800;letter-spacing:-.4px;margin-bottom:10px}
+.cs h3 strong{color:var(--emerald2)}
+.cs > p{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:22px}
+.cs-feats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.csf{background:rgba(255,255,255,0.03);border:1px solid rgba(52,211,153,0.12);border-radius:10px;padding:14px 16px}
+.csf-icon{font-size:18px;margin-bottom:6px}
+.csf h4{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.csf p{font-size:12px;color:var(--text3);line-height:1.4}
+.cs-notify{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cs-notify input{flex:1;min-width:180px;padding:10px 14px;border-radius:8px;border:1px solid rgba(52,211,153,0.25);background:rgba(255,255,255,0.04);color:var(--text);font-size:14px;font-family:var(--font);outline:none}
+.cs-notify input::placeholder{color:var(--text3)}
+.cs-notify input:focus{border-color:var(--emerald2);box-shadow:0 0 0 3px rgba(52,211,153,0.1)}
+.cs-notify button{background:var(--emerald);color:white;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-family:var(--font);font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s}
+.cs-notify button:hover{background:var(--emerald2);color:#064e3b}
+.cs-note{font-size:11px;color:var(--text3);margin-top:10px;font-family:var(--mono)}
+footer{background:var(--bg1);border-top:1px solid var(--border);padding:28px max(5%,20px)}
+.fi{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.fl{display:flex;gap:4px;flex-wrap:wrap}
+.fl a{color:var(--text3);text-decoration:none;font-size:13px;padding:4px 10px;border-radius:6px;transition:color .15s}
+.fl a:hover{color:var(--text2)}
+@media(max-width:600px){.card,.cs{padding:20px}.cs-feats{grid-template-columns:1fr}.dcta{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
-<div class="card">
-  <a href="index.html" class="logo">
-    <div class="logo-mark">C</div>
-    <span class="logo-name">Compliant<span>UK</span></span>
-  </a>
+<nav><div class="nw"><a href="/" class="logo"><div class="lm">✓</div><span class="ln">Compliant<span>UK</span></span></a><a href="/dashboard.html" class="dash-link">My dashboard →</a></div></nav>
 
-  <div class="icon">&#10003;</div>
-
-  <h1>Payment Successful</h1>
-  <p class="subtitle">Thank you for your order. Your compliance documents are being generated and will arrive in your inbox within the next 2 minutes.</p>
-
-  <div class="deadline-box">
-    <strong>Deadline reminder:</strong> The Renters Rights Act comes into force <strong>1 May 2026</strong>. Please serve the Information Sheet on your tenant as soon as possible to avoid fines of up to <strong>£7,000 per tenant</strong>.
-  </div>
-
-  <div class="steps-box">
-    <div class="steps-title">What happens next</div>
-    <div class="step">
-      <div class="step-num">1</div>
-      <div>Check your email inbox — your compliance documents will arrive within 2 minutes. Check your spam folder if not received.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div>Your tenants will each receive their own email with the <strong>Information Sheet</strong> attached — no printing or posting required.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div>Your <strong>Proof of Service Certificate</strong> is attached to your email — save it securely as your legal record of compliance.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">4</div>
-      <div>Track your compliance status on your dashboard at any time.</div>
-    </div>
-  </div>
-
-  <a href="dashboard.html" class="btn">View Your Dashboard</a>
-  <a href="index.html" class="btn-ghost">Back to home</a>
+<div class="sh">
+<div class="sh-icon">✅</div>
+<h1>You're <span class="sr">compliant.</span></h1>
+<p>Payment confirmed. Your tenants are being emailed right now with the official Information Sheet. Your proof-of-service certificate will be ready the moment each tenant reads the document.</p>
 </div>
+
+<main>
+<!-- Order summary -->
+<div class="card">
+<h2>📋 Order summary</h2>
+<div class="orow"><span class="orl">Property</span><span class="orv" id="sum-addr">—</span></div>
+<div class="orow"><span class="orl">Landlord</span><span class="orv" id="sum-landlord">—</span></div>
+<div class="orow"><span class="orl">Tenants on this tenancy</span><span class="orv" id="sum-tc">—</span></div>
+<div class="orow"><span class="orl">Amount paid</span><span class="orv" id="sum-price">—</span></div>
+</div>
+
+<!-- Delivery status -->
+<div class="sc">
+<div class="sc-head">📨 Delivery status</div>
+<div id="slist"></div>
+</div>
+
+<!-- What happens next -->
+<div class="card">
+<h2>What happens next</h2>
+<ul class="nsteps">
+<li class="nstep"><span class="nsi">📧</span><div class="nst"><h4>Each tenant receives their email now</h4><p>Every tenant is emailed individually with a personalised covering letter and the official GOV.UK Information Sheet as a PDF attachment. Read-tracking activates the moment we send.</p></div></li>
+<li class="nstep"><span class="nsi">📋</span><div class="nst"><h4>You receive your landlord copy</h4><p>We've emailed you a copy of the Information Sheet and your certificate — which lists your name, the property address, and all tenants on this tenancy.</p></div></li>
+<li class="nstep"><span class="nsi">⏰</span><div class="nst"><h4>48-hour reminder if unread</h4><p>If any tenant hasn't opened the document within 48 hours, we automatically send a polite reminder. No action needed from you.</p></div></li>
+<li class="nstep"><span class="nsi">🏅</span><div class="nst"><h4>Certificate generated on read</h4><p>The moment each tenant reads the document, a timestamped proof-of-service certificate is generated with IP address, device, and exact time. Available in your dashboard forever.</p></div></li>
+</ul>
+</div>
+
+<!-- Dashboard CTA -->
+<div class="dcta">
+<div><h3>Track compliance in your dashboard</h3><p>Monitor opens, reads and download your certificates anytime. All your properties in one place — landlord access only.</p></div>
+<a href="/dashboard.html" class="dbtn">Go to dashboard →</a>
+</div>
+
+<!-- ★ COMING SOON: Tenancy Agreement Generator ★ -->
+<div class="cs">
+<div class="cs-tag">⭐ Coming 2026</div>
+<h3>2026 Tenancy Agreement <strong>Generator</strong></h3>
+<p>A major new service launching later this year. Enter your property's specific requirements and we generate a fully updated, 2026-compliant tenancy agreement — sent directly to your tenants with a <strong style="color:var(--emerald2)">digital signature facility</strong>. The generator also identifies all compliance obligations for your property and provides a curated list of 3–5 vetted local contractors ready to quote.</p>
+<div class="cs-feats">
+<div class="csf"><div class="csf-icon">📝</div><h4>Property-specific agreement</h4><p>Enter your requirements; receive a fully tailored, legally updated tenancy agreement</p></div>
+<div class="csf"><div class="csf-icon">✍️</div><h4>Digital signatures</h4><p>Sent directly to tenants with a secure digital signature facility built in</p></div>
+<div class="csf"><div class="csf-icon">🔍</div><h4>Full compliance checklist</h4><p>Generator identifies all compliance requirements specific to your property type and location</p></div>
+<div class="csf"><div class="csf-icon">🔧</div><h4>3–5 local contractor quotes</h4><p>Automatically matched vetted local contractors in your area, ready to quote for compliance work</p></div>
+</div>
+<div class="cs-notify">
+<input type="email" id="ne" placeholder="Enter your email to be notified first" />
+<button onclick="handleNotify()">Notify me →</button>
+</div>
+<p class="cs-note">One email only when this launches. No spam.</p>
+</div>
+</main>
+
+<footer><div class="fi"><a href="/" class="logo"><div class="lm">✓</div><span class="ln">Compliant<span>UK</span></span></a><div class="fl"><a href="/about.html">About</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/contact.html">Contact</a><a href="/dashboard.html">Dashboard</a></div><span style="font-size:13px;color:var(--text3)">© 2026 CompliantUK</span></div></footer>
+
+<script>
+const raw=sessionStorage.getItem('pendingOrder');
+if(raw){try{const o=JSON.parse(raw);document.getElementById('sum-addr').textContent=o.propertyAddress||'—';document.getElementById('sum-landlord').textContent=`${o.landlordFirst||''} ${o.landlordLast||''}`.trim()||'—';document.getElementById('sum-tc').textContent=`${o.tenantCount||1} tenant${o.tenantCount>1?'s':''}`;document.getElementById('sum-price').textContent=`£${o.price||49}`;if(o.tenants&&o.tenants.length){document.getElementById('slist').innerHTML=o.tenants.map(t=>`<div class="si"><span class="sd"></span><span class="sn">${t.first} ${t.last}</span><span class="se">${t.email} — Sent ✓</span></div>`).join('')}}catch(e){}}
+if(!document.getElementById('slist').innerHTML)document.getElementById('slist').innerHTML='<div class="si"><span class="sd"></span><span class="se">Email sent to tenant(s) ✓</span></div>';
+function handleNotify(){const e=document.getElementById('ne').value.trim();if(!e||!e.includes('@')){alert('Please enter a valid email.');return}fetch('/api/notify-waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,service:'tenancy-agreement-generator'})}).catch(()=>{});document.getElementById('ne').value='';alert("You're on the list — we'll email you when it launches!")}
+</script>
 </body>
 </html>
+
