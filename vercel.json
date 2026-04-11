@@ -2,18 +2,25 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "functions": {
-    "api/send-documents.js": {
+    "api/create-checkout.js": {
+      "memory": 256,
+      "maxDuration": 15
+    },
+    "api/stripe-webhook.js": {
+      "memory": 512,
+      "maxDuration": 60
+    },
+    "api/track.js": {
+      "memory": 256,
+      "maxDuration": 30
+    },
+    "api/generate-certificate.js": {
       "memory": 512,
       "maxDuration": 30
     },
-    "api/stripe-webhook.js": {
-      "memory": 256,
-      "maxDuration": 10
-    },
-    "api/generate-certificate.js": {
+    "api/send-documents.js": {
       "memory": 512,
       "maxDuration": 30
     }
   }
 }
-
