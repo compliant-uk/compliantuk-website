@@ -217,10 +217,17 @@ export default async function handler(req, res) {
       landlordEmail,
       propertyAddress,
       tenantCount,
-      tenants: tenantsJson,
     } = meta;
 
-    const tenants = JSON.parse(tenantsJson || '[]');
+    const tenants = (() => {
+      if (meta.tenants) return JSON.parse(meta.tenants);
+      if (meta.tenantsChunks) {
+        let json = '';
+        for (let i = 0; i < parseInt(meta.tenantsChunks, 10); i++) json += meta[`tenants_${i}`] || '';
+        return JSON.parse(json);
+      }
+      return [];
+    })();
 
     // ─────────────────────────────────────
     // 1. Create or find Supabase account

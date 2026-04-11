@@ -42,10 +42,30 @@ export default async function handler(req, res) {
     const extraTenants = Math.max(0, tenantCount - 1);
     const totalPence = tier.base + (extraTenants * tier.extraTenant);
 
-    // Serialise tenant data into metadata (Stripe has 500 char limit per value)
-    // We store as JSON string - safe for up to ~10 tenants inline
-    // For bulk orders, tenants are chunked
-    const tenantsJson = JSON.stringify(tenants.slice(0, 20)); // cap at 20 for metadata
+    // Serialise tenant data into metadata
+    // Stripe has 500 char limit per value — chunk if needed
+    const tenantsJson = JSON.stringify(tenants);
+    const metadata = {
+      landlordFirst,
+      landlordLast,
+      landlordEmail,
+      propertyAddress,
+      tenantCount: String(tenantCount),
+      package: packageName,
+    };
+
+    if (tenantsJson.length <= 490) {
+      metadata.tenants = tenantsJson;
+    } else {
+      // Chunk across multiple keys
+      const chunkSize = 490;
+      let chunkIndex = 0;
+      for (let i = 0; i < tenantsJson.length; i += chunkSize) {
+        metadata[`tenants_${chunkIndex}`] = tenantsJson.slice(i, i + chunkSize);
+        chunkIndex++;
+      }
+      metadata.tenantsChunks = String(chunkIndex);
+    }
 
     const origin = req.headers.origin || 'https://www.compliantuk.co.uk';
 
@@ -66,15 +86,7 @@ export default async function handler(req, res) {
           quantity: 1,
         },
       ],
-      metadata: {
-        landlordFirst,
-        landlordLast,
-        landlordEmail,
-        propertyAddress,
-        tenantCount: String(tenantCount),
-        package: packageName,
-        tenants: tenantsJson,
-      },
+      metadata,
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/#get-compliant`,
       payment_intent_data: {
