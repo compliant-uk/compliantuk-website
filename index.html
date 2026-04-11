@@ -6,2477 +6,310 @@
 <title>CompliantUK — Official Information Sheet Delivery &amp; Landlord Compliance | Renters Rights Act 2025</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#080c14">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="CompliantUK">
-<meta name="description" content="CompliantUK — Serve the official Renters Rights Act 2025 Information Sheet to your tenants with verified proof of delivery. Avoid fines up to £7,000. Landlord compliance made automatic. From £49 per property.">
-<meta name="keywords" content="renters rights act information sheet, landlord information sheet proof of delivery, how to serve information sheet landlord, landlord compliance 2026, renters rights act landlord compliance, section 21 abolished landlord, landlord compliance service UK, renters rights act fine landlord, information sheet proof of service, landlord compliance checklist UK, renters rights act 2025 landlord guide, official information sheet GOV.UK, landlord legal compliance England, proof of service certificate landlord, renters rights act deadline May 2026">
-<meta name="robots" content="index, follow">
-<meta name="author" content="CompliantUK">
-<meta property="og:type" content="website">
-<meta property="og:title" content="CompliantUK — Landlord Information Sheet Delivery &amp; Proof of Service">
-<meta property="og:description" content="Serve the official Renters Rights Act 2025 Information Sheet to your tenants with timestamped proof of delivery. Avoid fines up to £7,000. Automated, instant, from £49.">
-<meta property="og:url" content="https://compliantuk.co.uk">
-<meta property="og:site_name" content="CompliantUK">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="CompliantUK — Landlord Compliance Made Automatic">
-<meta name="twitter:description" content="Official Information Sheet delivery with proof of service. Renters Rights Act 2025 compliance from £49.">
+<meta name="description" content="CompliantUK — Serve the official Renters Rights Act 2025 Information Sheet to your tenants with verified proof of delivery. Avoid fines up to £7,000. From £49 per property.">
 <link rel="canonical" href="https://compliantuk.co.uk">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;1,400;1,500&display=swap');
-
-:root {
-  /* Core palette - dark first */
-  --bg:       #080c14;
-  --bg1:      #0d1220;
-  --bg2:      #111827;
-  --bg3:      #1a2235;
-  --border:   rgba(255,255,255,0.07);
-  --border2:  rgba(255,255,255,0.12);
-
-  /* Text */
-  --text:     #f1f5f9;
-  --text2:    #94a3b8;
-  --text3:    #64748b;
-
-  /* Brand */
-  --blue:     #3b82f6;
-  --blue2:    #60a5fa;
-  --blue3:    #1d4ed8;
-  --indigo:   #6366f1;
-  --emerald:  #10b981;
-  --emerald2: #34d399;
-  --red:      #ef4444;
-  --red2:     #fca5a5;
-  --amber:    #f59e0b;
-  --amber2:   #fbbf24;
-
-  /* Glow */
-  --glow-blue:    rgba(59,130,246,0.15);
-  --glow-emerald: rgba(16,185,129,0.12);
-  --glow-red:     rgba(239,68,68,0.12);
-
-  --font: 'Bricolage Grotesque', sans-serif;
-  --mono: 'Geist Mono', monospace;
-  --serif: 'Lora', serif;
-
-  --radius: 14px;
-  --radius-sm: 8px;
-  --radius-lg: 20px;
-}
-
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 2px; }
-
-/* ══════════════════════════════════════
-   ANNOUNCEMENT BAR
-══════════════════════════════════════ */
-.bar {
-  background: linear-gradient(90deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
-  padding: 9px 20px;
-  text-align: center;
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.2px;
-  color: #fecaca;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.bar-pill {
-  background: rgba(255,255,255,0.15);
-  padding: 2px 10px;
-  border-radius: 20px;
-  font-family: var(--mono);
-  font-size: 12px;
-}
-.bar-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: #f87171;
-  animation: blink 1.4s ease infinite;
-  display: inline-block;
-}
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-
-/* ══════════════════════════════════════
-   NAV
-══════════════════════════════════════ */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 999;
-  background: rgba(8,12,20,0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 max(5%, 20px);
-}
-.nav-wrap {
-  max-width: 1160px;
-  margin: 0 auto;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  text-decoration: none;
-  flex-shrink: 0;
-}
-.logo-mark {
-  width: 32px; height: 32px;
-  background: linear-gradient(135deg, var(--blue3), var(--blue));
-  border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; font-weight: 800; color: white;
-  box-shadow: 0 0 20px rgba(59,130,246,0.4);
-}
-.logo-name {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.4px;
-}
-.logo-name span { color: var(--blue2); }
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  list-style: none;
-}
-.nav-links a {
-  color: var(--text2);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 7px;
-  transition: all 0.15s;
-}
-.nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
-.nav-btn {
-  background: var(--blue) !important;
-  color: white !important;
-  font-weight: 600 !important;
-  padding: 8px 18px !important;
-  font-size: 13.5px !important;
-  border-radius: 8px !important;
-  transition: all 0.15s !important;
-  box-shadow: 0 0 0 0 rgba(59,130,246,0.5);
-}
-.nav-btn:hover {
-  background: #2563eb !important;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.2) !important;
-  transform: none !important;
-}
-
-/* ══════════════════════════════════════
-   HERO
-══════════════════════════════════════ */
-.hero {
-  position: relative;
-  padding: 96px max(5%,20px) 80px;
-  overflow: hidden;
-}
-
-/* Mesh gradient background */
-.hero-mesh {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.mesh-blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.5;
-}
-.mesh-blob-1 {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(59,130,246,0.25), transparent 70%);
-  top: -200px; right: -100px;
-  animation: float1 8s ease-in-out infinite;
-}
-.mesh-blob-2 {
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(99,102,241,0.18), transparent 70%);
-  bottom: -100px; left: 5%;
-  animation: float2 10s ease-in-out infinite;
-}
-.mesh-blob-3 {
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(16,185,129,0.1), transparent 70%);
-  top: 30%; left: 40%;
-  animation: float3 12s ease-in-out infinite;
-}
-@keyframes float1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,20px)} }
-@keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-30px)} }
-@keyframes float3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-15px,15px)} }
-
-/* Grid lines */
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
-}
-
-.hero-inner {
-  max-width: 1160px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 460px;
-  gap: 48px;
-  align-items: start;
-  position: relative;
-  z-index: 1;
-}
-
-/* Left column */
-.hero-left { padding-top: 8px; }
-
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(239,68,68,0.1);
-  border: 1px solid rgba(239,68,68,0.25);
-  color: #fca5a5;
-  padding: 5px 14px 5px 8px;
-  border-radius: 100px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  margin-bottom: 24px;
-  animation: fadeUp 0.5s ease both;
-}
-.badge-dot {
-  width: 20px; height: 20px;
-  background: rgba(239,68,68,0.2);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px;
-}
-
-h1.hero-h {
-  font-size: clamp(2.6rem, 4.5vw, 3.8rem);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -1.5px;
-  margin-bottom: 20px;
-  animation: fadeUp 0.5s 0.06s ease both;
-}
-h1.hero-h .serif {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 400;
-  color: var(--blue2);
-  letter-spacing: -0.5px;
-}
-h1.hero-h .outline {
-  -webkit-text-stroke: 1px rgba(255,255,255,0.3);
-  color: transparent;
-}
-
-.hero-p {
-  font-size: 1.05rem;
-  color: var(--text2);
-  max-width: 500px;
-  line-height: 1.78;
-  margin-bottom: 32px;
-  font-weight: 400;
-  animation: fadeUp 0.5s 0.12s ease both;
-}
-
-.hero-ctas {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 40px;
-  animation: fadeUp 0.5s 0.18s ease both;
-}
-
-.cta-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--blue);
-  color: white;
-  padding: 14px 26px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font);
-  transition: all 0.2s;
-  box-shadow: 0 4px 24px rgba(59,130,246,0.3), 0 0 0 0 rgba(59,130,246,0.4);
-  position: relative;
-  overflow: hidden;
-}
-.cta-primary::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  transition: left 0.4s;
-}
-.cta-primary:hover::before { left: 100%; }
-.cta-primary:hover {
-  background: #2563eb;
-  box-shadow: 0 8px 32px rgba(59,130,246,0.4), 0 0 0 3px rgba(59,130,246,0.2);
-  transform: translateY(-1px);
-}
-
-.cta-ghost {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255,255,255,0.05);
-  color: var(--text2);
-  padding: 14px 22px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  border: 1px solid var(--border2);
-  transition: all 0.2s;
-  cursor: pointer;
-  font-family: var(--font);
-}
-.cta-ghost:hover {
-  background: rgba(255,255,255,0.09);
-  color: var(--text);
-  border-color: rgba(255,255,255,0.2);
-}
-
-.hero-trust {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  animation: fadeUp 0.5s 0.24s ease both;
-}
-.trust-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  color: var(--text3);
-  font-weight: 500;
-  padding: 4px 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-}
-.trust-chip .icon { font-size: 11px; }
-.trust-divider {
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: var(--text3);
-  opacity: 0.4;
-}
-
+:root{--bg:#080c14;--bg1:#0d1220;--bg2:#111827;--bg3:#1a2235;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--blue:#3b82f6;--blue2:#60a5fa;--blue3:#1d4ed8;--indigo:#6366f1;--emerald:#10b981;--emerald2:#34d399;--red:#ef4444;--red2:#fca5a5;--amber:#f59e0b;--amber2:#fbbf24;--font:'Bricolage Grotesque',sans-serif;--mono:'Geist Mono',monospace;--serif:'Lora',serif;--radius:14px;--radius-sm:8px;--radius-lg:20px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
+.bar{background:linear-gradient(90deg,#7f1d1d 0%,#991b1b 50%,#7f1d1d 100%);padding:9px 20px;text-align:center;font-size:12.5px;font-weight:600;letter-spacing:.2px;color:#fecaca;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.bar-pill{background:rgba(255,255,255,0.15);padding:2px 10px;border-radius:20px;font-family:var(--mono);font-size:12px}
+.bar-dot{width:6px;height:6px;border-radius:50%;background:#f87171;animation:blink 1.4s ease infinite;display:inline-block}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+nav{position:sticky;top:0;z-index:999;background:rgba(8,12,20,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 max(5%,20px)}
+.nav-wrap{max-width:1160px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--blue3),var(--blue));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:white;box-shadow:0 0 20px rgba(59,130,246,0.4)}
+.logo-name{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.4px}
+.logo-name span{color:var(--blue2)}
+.nav-links{display:flex;align-items:center;gap:6px;list-style:none}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:14px;font-weight:500;padding:6px 12px;border-radius:7px;transition:all .15s}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,0.06)}
+.nav-btn{background:var(--blue)!important;color:white!important;font-weight:600!important;padding:8px 18px!important;font-size:13.5px!important;border-radius:8px!important}
+.nav-btn:hover{background:#2563eb!important;box-shadow:0 0 0 3px rgba(59,130,246,0.2)!important}
+.ham{display:none;background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;padding:6px}
+.mob{display:none;background:var(--bg1);border-bottom:1px solid var(--border);padding:16px max(5%,20px);flex-direction:column;gap:4px}
+.mob a{color:var(--text2);text-decoration:none;font-size:15px;font-weight:500;padding:10px 14px;border-radius:8px;display:block}
+.mob a:hover{background:rgba(255,255,255,0.05);color:var(--text)}
+.mob.open{display:flex}
+.hero{position:relative;padding:96px max(5%,20px) 80px;overflow:hidden}
+.hero-mesh{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5}
+.b1{width:600px;height:600px;background:radial-gradient(circle,rgba(59,130,246,0.25),transparent 70%);top:-200px;right:-100px;animation:f1 8s ease-in-out infinite}
+.b2{width:400px;height:400px;background:radial-gradient(circle,rgba(99,102,241,0.18),transparent 70%);bottom:-100px;left:5%;animation:f2 10s ease-in-out infinite}
+.b3{width:300px;height:300px;background:radial-gradient(circle,rgba(16,185,129,0.1),transparent 70%);top:30%;left:40%;animation:f3 12s ease-in-out infinite}
+@keyframes f1{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,20px)}}
+@keyframes f2{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-30px)}}
+@keyframes f3{0%,100%{transform:translate(0,0)}50%{transform:translate(-15px,15px)}}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.hero-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 460px;gap:48px;align-items:start;position:relative;z-index:1}
+.hero-left{padding-top:8px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#fca5a5;padding:5px 14px 5px 8px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:.3px;margin-bottom:24px;animation:fu .5s ease both}
+.bdot{width:20px;height:20px;background:rgba(239,68,68,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px}
+h1.hh{font-size:clamp(2.6rem,4.5vw,3.8rem);font-weight:800;line-height:1.08;letter-spacing:-1.5px;margin-bottom:20px;animation:fu .5s .06s ease both}
+h1.hh .sr{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--blue2);letter-spacing:-.5px}
+.hero-p{font-size:1.05rem;color:var(--text2);max-width:500px;line-height:1.78;margin-bottom:32px;font-weight:400;animation:fu .5s .12s ease both}
+.hero-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:40px;animation:fu .5s .18s ease both}
+.cta-p{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:white;padding:14px 26px;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:var(--font);transition:all .2s;box-shadow:0 4px 24px rgba(59,130,246,0.3);position:relative;overflow:hidden}
+.cta-p:hover{background:#2563eb;box-shadow:0 8px 32px rgba(59,130,246,0.4),0 0 0 3px rgba(59,130,246,0.2);transform:translateY(-1px)}
+.cta-g{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.05);color:var(--text2);padding:14px 22px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;border:1px solid var(--border2);transition:all .2s}
+.cta-g:hover{background:rgba(255,255,255,0.09);color:var(--text);border-color:rgba(255,255,255,0.2)}
+.trust{display:flex;align-items:center;gap:6px;flex-wrap:wrap;animation:fu .5s .24s ease both}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--text3);font-weight:500;padding:4px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:100px}
+.tdiv{width:3px;height:3px;border-radius:50%;background:var(--text3);opacity:.4}
+@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 /* HERO CARD */
-/* ── CARD TABS */
-.card-tabs { display:grid; grid-template-columns:1fr 1fr; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.02); }
-.card-tab { display:flex; flex-direction:column; align-items:center; gap:3px; padding:13px 10px; border:none; background:none; cursor:pointer; font-family:var(--font); border-bottom:2px solid transparent; transition:all 0.2s; }
-.card-tab:first-child { border-right:1px solid var(--border); }
-.card-tab.active { background:rgba(59,130,246,0.07); border-bottom-color:var(--blue); }
-.card-tab:hover:not(.active) { background:rgba(255,255,255,0.04); }
-.ct-icon { font-size:15px; }
-.ct-label { font-size:11.5px; font-weight:700; color:var(--text2); }
-.card-tab.active .ct-label { color:var(--text); }
-.ct-price { font-size:13px; font-weight:800; color:var(--blue2); font-family:var(--mono); }
-.ct-upsell { color:#a5b4fc !important; }
-.upsell-badge { background:linear-gradient(90deg,rgba(99,102,241,0.15),rgba(99,102,241,0.08)); border:1px solid rgba(99,102,241,0.2); border-radius:7px; padding:7px 12px; font-size:12px; font-weight:700; color:#a5b4fc; margin-bottom:12px; text-align:center; }
-.price-includes { font-size:11px; color:var(--text3); margin-top:2px; }
-.bundle-includes { display:flex; flex-direction:column; gap:8px; margin:12px 0; }
-.bi-item { display:flex; align-items:flex-start; gap:9px; }
-.bi-check { width:20px; height:20px; border-radius:50%; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.25); display:flex; align-items:center; justify-content:center; font-size:9px; color:var(--emerald2); flex-shrink:0; margin-top:1px; font-weight:700; }
-.bi-check-new { background:rgba(99,102,241,0.15) !important; border-color:rgba(99,102,241,0.3) !important; color:#a5b4fc !important; font-size:12px !important; }
-.bi-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:2px; }
-.bi-desc { font-size:12px; color:var(--text2); line-height:1.5; }
-.s21-notice { display:flex; align-items:flex-start; gap:9px; background:rgba(245,158,11,0.07); border:1px solid rgba(245,158,11,0.2); border-radius:8px; padding:10px 13px; margin:12px 0; }
-.s21-icon { font-size:14px; flex-shrink:0; margin-top:1px; }
-.s21-text { font-size:12px; color:var(--amber2); line-height:1.55; font-weight:500; }
-
-.plan-toggle { display:grid; grid-template-columns:1fr 1fr; border-bottom:1px solid var(--border); }
-.plan-btn { padding:13px 15px; background:none; border:none; cursor:pointer; font-family:var(--font); text-align:left; border-bottom:2px solid transparent; transition:all 0.2s; position:relative; }
-.plan-btn:first-child { border-right:1px solid var(--border); }
-.plan-btn:hover { background:rgba(255,255,255,0.03); }
-.plan-btn.active { background:rgba(59,130,246,0.07); border-bottom-color:var(--blue); }
-.plan-btn.bundle-active { background:rgba(99,102,241,0.08) !important; border-bottom-color:#818cf8 !important; }
-.pb-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:3px; }
-.pb-name { font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; }
-.plan-btn.active .pb-name { color:var(--text); }
-.pb-price { font-size:16px; font-weight:800; color:var(--blue2); font-family:var(--mono); letter-spacing:-0.5px; }
-.pb-price-wrap { display:flex; align-items:baseline; gap:5px; }
-.pb-was { font-size:11px; color:var(--text3); text-decoration:line-through; font-family:var(--mono); }
-.pb-desc { font-size:11.5px; color:var(--text3); line-height:1.4; }
-.plan-btn.active .pb-desc { color:var(--text2); }
-.pb-badge { position:absolute; top:7px; right:8px; font-size:10px; font-weight:700; background:rgba(99,102,241,0.15); color:#c4b5fd; border:1px solid rgba(99,102,241,0.25); padding:1px 7px; border-radius:20px; font-family:var(--mono); }
-.price-includes { font-size:11px; color:var(--text3); margin-top:2px; }
-
-.hero-card {
-  background: var(--bg1);
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow:
-    0 0 0 1px rgba(59,130,246,0.1),
-    0 32px 80px rgba(0,0,0,0.6),
-    0 0 60px rgba(59,130,246,0.06);
-  animation: fadeUp 0.6s 0.1s ease both;
-  position: relative;
-}
-.hero-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radius-lg);
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(59,130,246,0.3), transparent 50%, rgba(99,102,241,0.15));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-.card-top {
-  padding: 18px 22px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(59,130,246,0.04);
-}
-.card-logo {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-.card-logo-mark {
-  width: 22px; height: 22px;
-  background: var(--blue);
-  border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px;
-  font-weight: 800;
-  color: white;
-}
-.card-status {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #fca5a5;
-  background: rgba(239,68,68,0.1);
-  border: 1px solid rgba(239,68,68,0.2);
-  padding: 3px 10px;
-  border-radius: 100px;
-  font-family: var(--mono);
-}
-
-.card-body { padding: 22px; }
-
-.card-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 4px;
-  letter-spacing: -0.3px;
-}
-.card-sub {
-  font-size: 13px;
-  color: var(--text2);
-  margin-bottom: 20px;
-}
-
-.field-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.field.full { grid-column: 1 / -1; }
-.field label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text3);
-  text-transform: uppercase;
-  letter-spacing: 0.7px;
-}
-.field input {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border2);
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 13.5px;
-  font-family: var(--font);
-  color: var(--text);
-  outline: none;
-  transition: all 0.15s;
-}
-.field input:focus {
-  border-color: var(--blue);
-  background: rgba(59,130,246,0.05);
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
-}
-.field input::placeholder { color: var(--text3); }
-
-.price-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(16,185,129,0.06);
-  border: 1px solid rgba(16,185,129,0.15);
-  border-radius: 9px;
-  padding: 12px 14px;
-  margin: 14px 0;
-}
-.price-label { font-size: 13px; color: var(--text2); font-weight: 500; }
-.price-val {
-  font-family: var(--mono);
-  font-size: 22px;
-  font-weight: 500;
-  color: var(--emerald2);
-}
-
-.submit-btn {
-  width: 100%;
-  background: linear-gradient(135deg, var(--blue3), var(--blue));
-  color: white;
-  border: none;
-  padding: 14px;
-  border-radius: 9px;
-  font-size: 14.5px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: var(--font);
-  letter-spacing: -0.2px;
-  transition: all 0.2s;
-  box-shadow: 0 4px 20px rgba(59,130,246,0.25);
-  position: relative;
-  overflow: hidden;
-}
-.submit-btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.08));
-  pointer-events: none;
-}
-.submit-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 28px rgba(59,130,246,0.35);
-}
-
-.card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
-.card-footer span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  color: var(--text3);
-  font-weight: 500;
-}
-
-/* ══════════════════════════════════════
-   STATS STRIP
-══════════════════════════════════════ */
-.stats-strip {
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  background: var(--bg1);
-  padding: 0 max(5%,20px);
-}
-.stats-inner {
-  max-width: 1160px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4,1fr);
-}
-.stat {
-  padding: 22px 16px;
-  text-align: center;
-  border-right: 1px solid var(--border);
-  position: relative;
-}
-.stat:last-child { border-right: none; }
-.stat-n {
-  font-size: 2.2rem;
-  font-weight: 800;
-  letter-spacing: -1.5px;
-  line-height: 1;
-  margin-bottom: 5px;
-}
-.stat-n.r { color: var(--red); }
-.stat-n.a { color: var(--amber); }
-.stat-n.b { color: var(--blue2); }
-.stat-n.g { color: var(--emerald2); }
-.stat-l {
-  font-size: 12px;
-  color: var(--text3);
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-/* ══════════════════════════════════════
-   SECTION BASE
-══════════════════════════════════════ */
-.section {
-  padding: 100px max(5%,20px);
-}
-.section-inner { max-width: 1160px; margin: 0 auto; }
-
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--blue2);
-  margin-bottom: 14px;
-}
-.eyebrow::before {
-  content: '';
-  width: 20px; height: 1px;
-  background: var(--blue);
-}
-
-h2 {
-  font-size: clamp(1.9rem, 3vw, 2.8rem);
-  font-weight: 800;
-  letter-spacing: -1px;
-  line-height: 1.1;
-  margin-bottom: 14px;
-  color: var(--text);
-}
-h2 .serif {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 400;
-  color: var(--blue2);
-  letter-spacing: -0.3px;
-}
-.section-p {
-  font-size: 1rem;
-  color: var(--text2);
-  max-width: 520px;
-  line-height: 1.78;
-  margin-bottom: 56px;
-}
-
-/* ══════════════════════════════════════
-   HOW IT WORKS
-══════════════════════════════════════ */
-.how-section { background: var(--bg); }
-.steps-grid {
-  display: grid;
-  grid-template-columns: repeat(4,1fr);
-  gap: 16px;
-}
-.step-card {
-  background: var(--bg1);
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-lg);
-  padding: 28px 24px 24px;
-  position: relative;
-  transition: all 0.25s;
-  overflow: hidden;
-}
-.step-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--blue3), var(--blue), var(--indigo));
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.step-card:hover::before { opacity: 1; }
-.step-card:hover {
-  border-color: rgba(59,130,246,0.25);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
-}
-.step-n {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--text3);
-  font-weight: 500;
-  margin-bottom: 0;
-}
-.step-illus {
-  margin: 16px 0 18px;
-  display: flex;
-  align-items: center;
-}
-.step-title {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--text);
-  margin-bottom: 9px;
-  letter-spacing: -0.4px;
-  line-height: 1.2;
-}
-.step-desc {
-  font-size: 13.5px;
-  color: var(--text2);
-  line-height: 1.65;
-}
-.step-connector {
-  position: absolute;
-  top: 44px;
-  right: -11px;
-  width: 22px;
-  height: 22px;
-  background: var(--bg1);
-  border: 1px solid var(--border2);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  z-index: 2;
-}
-
-/* New step card internals */
-.step-top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-.step-badge { font-size: 10px; font-weight: 600; padding: 2px 9px; border-radius: 20px; font-family: var(--mono); letter-spacing: 0.2px; }
-.step-badge.you { background: rgba(255,255,255,0.06); color: var(--text3); border: 1px solid var(--border2); }
-.step-badge.auto { background: rgba(16,185,129,0.1); color: var(--emerald2); border: 1px solid rgba(16,185,129,0.2); }
-.step-icon-wrap { width: 50px; height: 50px; border-radius: 13px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; border: 1px solid var(--border2); background: rgba(255,255,255,0.03); }
-.step-detail { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
-.step-detail-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text2); margin-bottom: 7px; }
-.step-detail-row:last-child { margin-bottom: 0; }
-.sdr-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-.sdr-dot.blue { background: var(--blue2); }
-.sdr-dot.green { background: var(--emerald2); }
-.sdr-dot.amber { background: var(--amber); }
-.steps-footer-bar { display: flex; align-items: center; gap: 20px; margin-top: 16px; padding: 14px 20px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: var(--radius); flex-wrap: wrap; }
-.sfb-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text2); }
-.sfb-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.sfb-dot.green { background: var(--emerald2); }
-.sfb-dot.blue { background: var(--blue2); }
-.sfb-divider { width: 1px; height: 20px; background: var(--border2); }
-
-/* ══════════════════════════════════════
-   BENTO FEATURES
-══════════════════════════════════════ */
-.bento-section { background: var(--bg1); }
-.bento-section h2, .bento-section .eyebrow { /* inherits */ }
-.bento-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-.bento-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 26px;
-  transition: all 0.2s;
-  position: relative;
-  overflow: hidden;
-}
-.bento-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(59,130,246,0.4), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.bento-card:hover::before { opacity: 1; }
-.bento-card:hover {
-  border-color: rgba(59,130,246,0.2);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-}
-
-
-.bento-icon {
-  width: 44px; height: 44px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  margin-bottom: 16px;
-}
-.bento-icon.blue { background: rgba(59,130,246,0.12); }
-.bento-icon.emerald { background: rgba(16,185,129,0.12); }
-.bento-icon.amber { background: rgba(245,158,11,0.12); }
-.bento-icon.red { background: rgba(239,68,68,0.1); }
-.bento-icon.indigo { background: rgba(99,102,241,0.12); }
-.bento-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 8px;
-  letter-spacing: -0.2px;
-}
-.bento-desc {
-  font-size: 13.5px;
-  color: var(--text2);
-  line-height: 1.65;
-}
-.bento-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 12px;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 9px;
-  border-radius: 100px;
-  font-family: var(--mono);
-}
-.bento-tag.emerald {
-  background: rgba(16,185,129,0.1);
-  color: var(--emerald2);
-  border: 1px solid rgba(16,185,129,0.2);
-}
-.bento-tag.blue {
-  background: rgba(59,130,246,0.1);
-  color: var(--blue2);
-  border: 1px solid rgba(59,130,246,0.2);
-}
-
-/* Live status demo in bento */
-.status-demo {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.status-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 9px 12px;
-}
-.status-addr { font-size: 12px; color: var(--text2); font-family: var(--mono); }
-.status-badge {
-  font-size: 10.5px;
-  font-weight: 700;
-  padding: 2px 9px;
-  border-radius: 20px;
-  font-family: var(--mono);
-}
-.status-badge.read { background: rgba(16,185,129,0.1); color: var(--emerald2); border: 1px solid rgba(16,185,129,0.2); }
-.status-badge.sent { background: rgba(245,158,11,0.1); color: var(--amber2); border: 1px solid rgba(245,158,11,0.2); }
-.status-badge.opened { background: rgba(59,130,246,0.1); color: var(--blue2); border: 1px solid rgba(59,130,246,0.2); }
-
-/* ══════════════════════════════════════
-   PRICING
-══════════════════════════════════════ */
-.pricing-section { background: var(--bg); }
-.pricing-section h2, .pricing-section .eyebrow, .pricing-section .section-p { /* inherits */ }
-.pricing-card {
-  max-width: 520px;
-  margin: 0 auto;
-  background: var(--bg1);
-  border: 1px solid rgba(59,130,246,0.3);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: 0 0 80px rgba(59,130,246,0.08), 0 32px 80px rgba(0,0,0,0.4);
-  position: relative;
-}
-.pricing-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radius-lg);
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(59,130,246,0.5) 0%, transparent 50%, rgba(99,102,241,0.3) 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-.pricing-top {
-  background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(99,102,241,0.06));
-  padding: 36px 36px 28px;
-  text-align: center;
-  border-bottom: 1px solid var(--border);
-}
-.pricing-name {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--blue2);
-  margin-bottom: 12px;
-  font-family: var(--mono);
-}
-.pricing-amount {
-  font-size: 5rem;
-  font-weight: 800;
-  letter-spacing: -3px;
-  line-height: 1;
-  color: var(--text);
-  margin-bottom: 8px;
-}
-.pricing-amount sup {
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: 0;
-  color: var(--text2);
-  vertical-align: super;
-}
-.pricing-note { font-size: 14px; color: var(--text3); }
-
-.pricing-body { padding: 32px 36px; }
-.pricing-list {
-  list-style: none;
-  margin-bottom: 28px;
-}
-.pricing-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 9px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 14px;
-  color: var(--text2);
-  line-height: 1.5;
-}
-.pricing-list li:last-child { border-bottom: none; }
-.li-check {
-  width: 18px; height: 18px;
-  background: rgba(16,185,129,0.12);
-  border: 1px solid rgba(16,185,129,0.25);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px;
-  color: var(--emerald2);
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.fine-box {
-  background: rgba(239,68,68,0.06);
-  border: 1px solid rgba(239,68,68,0.15);
-  border-radius: 9px;
-  padding: 12px 16px;
-  text-align: center;
-  font-size: 13px;
-  color: var(--red2);
-  font-weight: 500;
-  margin-bottom: 20px;
-  line-height: 1.5;
-}
-
-.pricing-btn {
-  width: 100%;
-  background: linear-gradient(135deg, var(--blue3), var(--blue));
-  color: white;
-  border: none;
-  padding: 16px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: var(--font);
-  letter-spacing: -0.3px;
-  transition: all 0.2s;
-  box-shadow: 0 4px 20px rgba(59,130,246,0.3);
-}
-.pricing-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 36px rgba(59,130,246,0.4);
-}
-.pricing-security {
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  margin-top: 14px;
-  font-size: 11.5px;
-  color: var(--text3);
-  font-weight: 500;
-}
-
-/* ════════════════��═════════════════════
-   FAQ
-══════════════════════════════════════ */
-.faq-section { background: var(--bg1); }
-.faq-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-.faq-item {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-.faq-item:hover { border-color: rgba(59,130,246,0.3); }
-.faq-q {
-  padding: 18px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  letter-spacing: -0.1px;
-}
-.faq-arrow {
-  font-size: 12px;
-  color: var(--text3);
-  transition: transform 0.2s;
-  flex-shrink: 0;
-}
-.faq-item.open .faq-arrow { transform: rotate(180deg); color: var(--blue2); }
-.faq-a {
-  display: none;
-  padding: 14px 20px 18px;
-  font-size: 13.5px;
-  color: var(--text2);
-  line-height: 1.7;
-  border-top: 1px solid var(--border);
-}
-.faq-item.open .faq-a { display: block !important; padding: 14px 20px 18px; }
-.faq-item.open .faq-q { color: var(--blue2); }
-.faq-item.open { border-color: rgba(59,130,246,0.3); }
-
-/* ══════════════════════════════════════
-   POST-DEADLINE CTA
-══════════════════════════════════════ */
-.post-deadline {
-  background: linear-gradient(135deg, #1a0505, #200a0a);
-  border-top: 1px solid rgba(239,68,68,0.15);
-  border-bottom: 1px solid rgba(239,68,68,0.15);
-  padding: 64px max(5%,20px);
-  position: relative;
-  overflow: hidden;
-}
-.post-deadline::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(239,68,68,0.07), transparent);
-  pointer-events: none;
-}
-.post-inner {
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: center;
-  position: relative;
-  z-index: 1;
-}
-.post-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(239,68,68,0.1);
-  border: 1px solid rgba(239,68,68,0.2);
-  color: #fca5a5;
-  padding: 4px 14px;
-  border-radius: 100px;
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  margin-bottom: 20px;
-  font-family: var(--mono);
-}
-.post-inner h2 { color: var(--text); margin-bottom: 14px; }
-.post-inner p {
-  color: rgba(255,255,255,0.55);
-  font-size: 15px;
-  line-height: 1.75;
-  margin-bottom: 28px;
-}
-.post-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #dc2626;
-  color: white;
-  padding: 14px 28px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font);
-  transition: all 0.2s;
-  box-shadow: 0 4px 20px rgba(220,38,38,0.3);
-}
-.post-btn:hover {
-  background: #b91c1c;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 28px rgba(220,38,38,0.35);
-}
-
-/* ══════════════════════════════════════
-   FOOTER
-══════════════════════════════════════ */
-footer {
-  background: var(--bg);
-  border-top: 1px solid var(--border);
-  padding: 40px max(5%,20px);
-}
-.footer-inner {
-  max-width: 1160px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-.footer-links {
-  display: flex;
-  gap: 20px;
-  list-style: none;
-}
-.footer-links a {
-  color: var(--text3);
-  text-decoration: none;
-  font-size: 13px;
-  transition: color 0.15s;
-}
-.footer-links a:hover { color: var(--text2); }
-.footer-copy { font-size: 12px; color: var(--text3); }
-.footer-disclaimer {
-  max-width: 1160px;
-  margin: 16px auto 0;
-  font-size: 11px;
-  color: var(--text3);
-  line-height: 1.6;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
-
-/* ══════════════════════════════════════
-   SCROLL ANIMATIONS
-══════════════════════════════════════ */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(22px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.reveal {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal.hidden {
-  opacity: 0;
-  transform: translateY(20px);
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ══════════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════════ */
-@media (max-width: 1024px) {
-  .hero-inner { grid-template-columns: 1fr; }
-  .hero-card { max-width: 500px; }
-  .steps-grid { grid-template-columns: 1fr 1fr; }
-  .step-connector { display: none; }
-  .bento-grid { grid-template-columns: 1fr 1fr; }
-  
-}
-@media (max-width: 900px) {
-  .bar { font-size: 11.5px; }
-  .nav-links { display: none; }
-  .hamburger { display: flex; }
-
-
-  .hero { padding: 60px max(5%,16px) 60px; }
-  h1.hero-h { font-size: 2.3rem; letter-spacing: -0.8px; }
-  .stats-inner { grid-template-columns: 1fr 1fr; }
-  .stat:nth-child(2) { border-right: none; }
-  .steps-grid { grid-template-columns: 1fr; }
-  .bento-grid { grid-template-columns: 1fr; }
-  .bento-card.wide { grid-column: span 1; }
-  .faq-grid { grid-template-columns: 1fr; }
-  .field-row { grid-template-columns: 1fr; }
-  .pricing-amount { font-size: 4rem; }
-  .pricing-body { padding: 24px; }
-  .pricing-top { padding: 28px 24px; }
-}
-
-/* ══════════════════════════════════════
-   STEPS V2 — BOLD VERTICAL TIMELINE
-══════════════════════════════════════ */
-.steps-v2 {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  position: relative;
-  max-width: 760px;
-}
-.step-v2 {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 0 28px;
-  position: relative;
-}
-.step-v2-left {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-}
-.step-v2-icon-wrap {
-  width: 68px;
-  height: 68px;
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 1;
-  transition: transform 0.2s;
-}
-.step-v2:hover .step-v2-icon-wrap { transform: scale(1.05); }
-.step-v2-icon-wrap.s1 {
-  background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05));
-  border: 1px solid rgba(59,130,246,0.3);
-  box-shadow: 0 0 30px rgba(59,130,246,0.12);
-}
-.step-v2-icon-wrap.s2 {
-  background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05));
-  border: 1px solid rgba(16,185,129,0.3);
-  box-shadow: 0 0 30px rgba(16,185,129,0.12);
-}
-.step-v2-icon-wrap.s3 {
-  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
-  border: 1px solid rgba(245,158,11,0.3);
-  box-shadow: 0 0 30px rgba(245,158,11,0.1);
-}
-.step-v2-icon-wrap.s4 {
-  background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(99,102,241,0.05));
-  border: 1px solid rgba(99,102,241,0.3);
-  box-shadow: 0 0 30px rgba(99,102,241,0.12);
-}
-.step-v2-line {
-  width: 1px;
-  flex: 1;
-  min-height: 40px;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
-  margin: 6px 0;
-}
-.step-v2.last .step-v2-line { display: none; }
-
-.step-v2-right {
-  padding: 10px 0 44px;
-}
-.step-v2.last .step-v2-right { padding-bottom: 0; }
-
-.step-v2-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.step-v2-num {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text3);
-  letter-spacing: 1px;
-}
-.step-v2-badge {
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2px 10px;
-  border-radius: 20px;
-  font-family: var(--mono);
-  letter-spacing: 0.3px;
-}
-.step-v2-badge.you {
-  background: rgba(255,255,255,0.06);
-  color: var(--text3);
-  border: 1px solid var(--border2);
-}
-.step-v2-badge.auto {
-  background: rgba(16,185,129,0.1);
-  color: var(--emerald2);
-  border: 1px solid rgba(16,185,129,0.2);
-}
-.step-v2-title {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--text);
-  letter-spacing: -0.5px;
-  margin-bottom: 8px;
-  line-height: 1.2;
-}
-.step-v2-desc {
-  font-size: 14.5px;
-  color: var(--text2);
-  line-height: 1.72;
-  margin-bottom: 14px;
-  max-width: 520px;
-}
-.step-v2-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-.spill {
-  font-size: 11.5px;
-  font-weight: 600;
-  padding: 4px 11px;
-  border-radius: 100px;
-  font-family: var(--mono);
-  background: rgba(59,130,246,0.08);
-  color: var(--blue2);
-  border: 1px solid rgba(59,130,246,0.15);
-}
-.spill.amber {
-  background: rgba(245,158,11,0.08);
-  color: var(--amber2);
-  border-color: rgba(245,158,11,0.2);
-}
-.spill.indigo {
-  background: rgba(99,102,241,0.1);
-  color: #a5b4fc;
-  border-color: rgba(99,102,241,0.2);
-}
-
-@media (max-width: 600px) {
-  .hamburger { display: flex; }
-  .nav-links { display: none; }
-
-  .step-v2 { grid-template-columns: 60px 1fr; gap: 0 16px; }
-  .step-v2-icon-wrap { width: 54px; height: 54px; border-radius: 14px; }
-  .step-v2-title { font-size: 1.05rem; }
-}
-
-
-/* ── HAMBURGER MOBILE MENU ── */
-.hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:10px; min-width:44px; min-height:44px; align-items:center; justify-content:center; }
-.hamburger span { display:block; width:24px; height:3px; background:#f1f5f9; height:2px; background:var(--text2); border-radius:2px; transition:all 0.3s; }
-.hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
-.hamburger.open span:nth-child(2) { opacity:0; }
-.hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
-.mobile-menu {
-  display:none;
-  position:fixed;
-  top:60px; left:0; right:0;
-  background:rgba(13,18,32,0.98);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border2);
-  padding:16px;
-  z-index:998;
-  flex-direction:column;
-  gap:4px;
-}
-.mobile-menu.open { display:flex; } .mm-inner{max-width:1160px;margin:0 auto;padding:0 5%}
-.mm-link{display:flex;align-items:center;justify-content:space-between;padding:13px 0;font-size:15px;font-weight:600;color:#94a3b8;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.05);transition:color 0.15s}
-.mm-link:hover{color:#f1f5f9}
-.mm-link-arrow{font-size:11px;color:#64748b}
-.mm-cta{display:flex;align-items:center;justify-content:center;background:#3b82f6;color:white;padding:13px;border-radius:9px;font-size:15px;font-weight:700;text-decoration:none;margin:14px 0 0;transition:background 0.15s}
-.mm-cta:hover{background:#2563eb}
-.mm-link {
-  display:flex; align-items:center; gap:10px;
-  padding:12px 14px; border-radius:10px;
-  text-decoration:none; font-size:15px; font-weight:600;
-  color:var(--text2); transition:all 0.15s;
-}
-.mm-link:hover { background:rgba(255,255,255,0.06); color:var(--text); }
-.mm-link.primary { background:var(--blue); color:white; margin-top:8px; justify-content:center; }
-.mm-link.primary:hover { background:#2563eb; }
-  .tenant-count-btn{background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;cursor:pointer;font-family:var(--font);text-align:center;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:2px}
-.tenant-count-btn:hover{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.3)}
-.tenant-count-btn.active{background:rgba(59,130,246,0.12);border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,0.1)}
-.tenant-count-btn.active span:first-child{color:var(--blue2)}
-.tenant-group{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
-.tenant-group-label{font-size:11px;font-weight:700;color:var(--blue2);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:10px;display:flex;align-items:center;gap:7px}
-.tenant-group-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue2);flex-shrink:0}
+.hcard{background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 0 0 1px rgba(59,130,246,0.1),0 32px 80px rgba(0,0,0,0.6),0 0 60px rgba(59,130,246,0.06);animation:fu .6s .1s ease both;position:relative}
+.hcard::before{content:'';position:absolute;inset:0;border-radius:var(--radius-lg);padding:1px;background:linear-gradient(135deg,rgba(59,130,246,0.3),transparent 50%,rgba(99,102,241,0.15));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.ctop{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(59,130,246,0.04)}
+.clogo{font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px}
+.clm{width:22px;height:22px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:white}
+.cstat{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#fca5a5;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);padding:3px 10px;border-radius:100px;font-family:var(--mono)}
+.cbody{padding:22px}
+/* tenant count */
+.tc-lbl{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;display:block}
+.tc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px}
+.tcb{background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:8px;padding:9px 4px;cursor:pointer;font-family:var(--font);text-align:center;transition:all .15s}
+.tcb:hover{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.3)}
+.tcb.active{background:rgba(59,130,246,0.12);border-color:var(--blue)}
+.tcb .tn{display:block;font-size:14px;font-weight:700;color:var(--text)}
+.tcb .tp{display:block;font-size:11px;font-family:var(--mono);color:var(--blue2);margin-top:2px}
+.tc-note{font-size:11px;color:var(--text3);margin-bottom:14px}
+/* fields */
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.f{display:flex;flex-direction:column;gap:5px}
+.f.full{grid-column:1/-1}
+.f label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.7px}
+.f input{background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:var(--font);color:var(--text);outline:none;transition:all .15s}
+.f input:focus{border-color:var(--blue);background:rgba(59,130,246,0.05);box-shadow:0 0 0 3px rgba(59,130,246,0.1)}
+.f input::placeholder{color:var(--text3)}
+.tgroups{margin-bottom:10px}
+.tg{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px}
+.tglbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--blue2);font-family:var(--mono);margin-bottom:10px}
+.psum{display:flex;align-items:center;justify-content:space-between;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);border-radius:9px;padding:12px 14px;margin:14px 0}
+.plbl{font-size:13px;color:var(--text2);font-weight:500}
+.psub{font-size:11px;color:var(--text3);margin-top:2px}
+.pval{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--emerald2)}
+.sbtn{width:100%;background:linear-gradient(135deg,var(--blue3),var(--blue));color:white;border:none;padding:14px;border-radius:9px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:var(--font);letter-spacing:-.2px;transition:all .2s;box-shadow:0 4px 20px rgba(59,130,246,0.25)}
+.sbtn:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(59,130,246,0.35)}
+.dor{display:flex;align-items:center;gap:10px;margin:10px 0;font-size:12px;color:var(--text3)}
+.dor::before,.dor::after{content:'';flex:1;height:1px;background:var(--border)}
+.cfoot{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap}
+.cfoot span{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text3);font-weight:500}
+/* stats */
+.ss{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg1);padding:0 max(5%,20px)}
+.si{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.st{padding:22px 16px;text-align:center;border-right:1px solid var(--border)}
+.st:last-child{border-right:none}
+.sn{font-size:2.2rem;font-weight:800;letter-spacing:-1.5px;line-height:1;margin-bottom:5px}
+.sn.r{color:var(--red)}.sn.a{color:var(--amber)}.sn.b{color:var(--blue2)}.sn.g{color:var(--emerald2)}
+.sl{font-size:12px;color:var(--text3);font-weight:500;line-height:1.4}
+/* sections */
+.sec{padding:100px max(5%,20px)}
+.sec-in{max-width:1160px;margin:0 auto}
+.ey{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue2);margin-bottom:14px}
+.ey::before{content:'';width:20px;height:1px;background:var(--blue)}
+h2{font-size:clamp(1.9rem,3vw,2.8rem);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:14px;color:var(--text)}
+h2 .sr{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--blue2);letter-spacing:-.3px}
+.sp{font-size:1rem;color:var(--text2);max-width:520px;line-height:1.78;margin-bottom:56px}
+/* steps */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.sc{background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:28px 24px 24px;position:relative;transition:all .25s;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue3),var(--blue),var(--indigo));opacity:0;transition:opacity .3s}
+.sc:hover::before{opacity:1}
+.sc:hover{border-color:rgba(59,130,246,0.25);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.35)}
+.str{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.sn2{font-family:var(--mono);font-size:11px;color:var(--text3);font-weight:500}
+.sbdg{font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;font-family:var(--mono);letter-spacing:.2px}
+.sbdg.you{background:rgba(255,255,255,0.06);color:var(--text3);border:1px solid var(--border2)}
+.sbdg.auto{background:rgba(16,185,129,0.1);color:var(--emerald2);border:1px solid rgba(16,185,129,0.2)}
+.siw{width:50px;height:50px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;border:1px solid var(--border2);background:rgba(255,255,255,0.03);font-size:22px}
+.stit{font-size:16px;font-weight:800;color:var(--text);margin-bottom:9px;letter-spacing:-.4px;line-height:1.2}
+.sdesc{font-size:13.5px;color:var(--text2);line-height:1.65}
+.sdet{margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+.sdr{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text2);margin-bottom:7px}
+.sdr:last-child{margin-bottom:0}
+.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dot.bl{background:var(--blue2)}.dot.gr{background:var(--emerald2)}.dot.am{background:var(--amber)}
+.sfb{display:flex;align-items:center;gap:20px;margin-top:16px;padding:14px 20px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius);flex-wrap:wrap}
+.sfbi{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2)}
+.sfbd{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sfbd.gr{background:var(--emerald2)}.sfbd.bl{background:var(--blue2)}
+.sfbdiv{width:1px;height:20px;background:var(--border2)}
+/* bento */
+.bg2{background:var(--bg1)}
+.bgrd{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.bc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:26px;transition:all .2s;position:relative;overflow:hidden}
+.bc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,0.4),transparent);opacity:0;transition:opacity .3s}
+.bc:hover::before{opacity:1}
+.bc:hover{border-color:rgba(59,130,246,0.2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+.bi{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
+.bi.bl{background:rgba(59,130,246,0.12)}.bi.em{background:rgba(16,185,129,0.12)}.bi.am{background:rgba(245,158,11,0.12)}.bi.rd{background:rgba(239,68,68,0.1)}.bi.in{background:rgba(99,102,241,0.12)}
+.bt{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.2px}
+.bd{font-size:13.5px;color:var(--text2);line-height:1.65}
+.btg{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;font-family:var(--mono)}
+.btg.em{background:rgba(16,185,129,0.1);color:var(--emerald2);border:1px solid rgba(16,185,129,0.2)}
+.btg.bl{background:rgba(59,130,246,0.1);color:var(--blue2);border:1px solid rgba(59,130,246,0.2)}
+.sdm{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.sr2{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:9px 12px}
+.sa{font-size:12px;color:var(--text2);font-family:var(--mono)}
+.sbg{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:20px;font-family:var(--mono)}
+.sbg.rd2{background:rgba(16,185,129,0.1);color:var(--emerald2);border:1px solid rgba(16,185,129,0.2)}
+.sbg.snt{background:rgba(245,158,11,0.1);color:var(--amber2);border:1px solid rgba(245,158,11,0.2)}
+.sbg.opn{background:rgba(59,130,246,0.1);color:var(--blue2);border:1px solid rgba(59,130,246,0.2)}
+/* pricing */
+.pcs{background:var(--bg)}
+.pcw{max-width:520px;margin:0 auto;background:var(--bg1);border:1px solid rgba(59,130,246,0.3);border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 0 80px rgba(59,130,246,0.08),0 32px 80px rgba(0,0,0,0.4);position:relative}
+.pcw::before{content:'';position:absolute;inset:0;border-radius:var(--radius-lg);padding:1px;background:linear-gradient(135deg,rgba(59,130,246,0.5) 0%,transparent 50%,rgba(99,102,241,0.3) 100%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.pt{background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(99,102,241,0.06));padding:36px 36px 28px;text-align:center;border-bottom:1px solid var(--border)}
+.pn{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue2);margin-bottom:12px;font-family:var(--mono)}
+.pa{font-size:5rem;font-weight:800;letter-spacing:-3px;line-height:1;color:var(--text);margin-bottom:8px}
+.pa sup{font-size:2rem;font-weight:600;letter-spacing:0;color:var(--text2);vertical-align:super}
+.pno{font-size:14px;color:var(--text3)}
+.pb{padding:32px 36px}
+.pl{list-style:none;margin-bottom:28px}
+.pl li{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text2);line-height:1.5}
+.pl li:last-child{border-bottom:none}
+.lc{width:18px;height:18px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--emerald2);flex-shrink:0;margin-top:2px;font-weight:700}
+.fb{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:14px 16px;margin-bottom:24px;font-size:13px;color:var(--red2);line-height:1.6}
+.pcb{display:block;width:100%;background:linear-gradient(135deg,var(--blue3),var(--blue));color:white;border:none;padding:15px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);text-decoration:none;text-align:center;transition:all .2s;box-shadow:0 4px 20px rgba(59,130,246,0.25)}
+.pcb:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(59,130,246,0.35)}
+.ptr{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px;flex-wrap:wrap}
+.ptr span{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px}
+.pnote{text-align:center;margin-top:28px;padding:18px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius)}
+.pnote p{font-size:13.5px;color:var(--text2);margin-bottom:6px}
+.pnote a{color:var(--blue2);text-decoration:none;font-weight:600;font-size:13px}
+/* faq */
+.fqs{background:var(--bg1)}
+.fql{max-width:720px}
+.fqi{border-bottom:1px solid var(--border)}
+.fqq{width:100%;background:none;border:none;padding:20px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;cursor:pointer;font-family:var(--font);font-size:15px;font-weight:600;color:var(--text);text-align:left;transition:color .15s}
+.fqq:hover{color:var(--blue2)}
+.fqic{font-size:18px;color:var(--text3);flex-shrink:0;transition:transform .2s,color .15s;font-family:var(--mono)}
+.fqq[aria-expanded="true"] .fqic{transform:rotate(45deg);color:var(--blue2)}
+.fqa{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.fqa p{padding-bottom:20px;font-size:14px;color:var(--text2);line-height:1.78}
+/* missed */
+.ms{background:linear-gradient(135deg,#1a0a0a,#200e0e);border-top:1px solid rgba(239,68,68,0.15);border-bottom:1px solid rgba(239,68,68,0.15);padding:80px max(5%,20px);text-align:center;position:relative;overflow:hidden}
+.ms::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(239,68,68,0.08),transparent 70%)}
+/* footer */
+footer{background:var(--bg1);border-top:1px solid var(--border);padding:40px max(5%,20px)}
+.fi{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.fl{display:flex;gap:4px;flex-wrap:wrap}
+.fl a{color:var(--text3);text-decoration:none;font-size:13px;padding:4px 10px;border-radius:6px;transition:color .15s}
+.fl a:hover{color:var(--text2)}
+.fc{font-size:13px;color:var(--text3)}
+.flg{font-size:12px;color:var(--text3);max-width:1160px;margin:20px auto 0;line-height:1.7}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr}.sg{grid-template-columns:1fr 1fr}.bgrd{grid-template-columns:1fr 1fr}.si{grid-template-columns:repeat(2,1fr)}.st:nth-child(2){border-right:none}.nav-links{display:none}.ham{display:block}}
+@media(max-width:560px){.sg,.bgrd{grid-template-columns:1fr}.si{grid-template-columns:1fr 1fr}.hero{padding:64px max(5%,20px) 56px}.fr{grid-template-columns:1fr}}
 </style>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "CompliantUK",
-  "description": "Landlord compliance service providing official Renters Rights Act 2025 Information Sheet delivery with proof of service certificates",
-  "url": "https://compliantuk.co.uk",
-  "areaServed": "England",
-  "priceRange": "£49-£150",
-  "serviceType": "Landlord Compliance Service",
-  "offers": [
-    {
-      "@type": "Offer",
-      "name": "Starter Compliance Pack",
-      "description": "Official Information Sheet delivery with proof of service certificate",
-      "price": "49",
-      "priceCurrency": "GBP"
-    },
-    {
-      "@type": "Offer", 
-      "name": "Complete Compliance Bundle",
-      "description": "Information Sheet plus Section 21 compliant tenancy agreement",
-      "price": "89",
-      "priceCurrency": "GBP"
-    }
-  ],
-  "faqPage": {
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is the Renters Rights Act Information Sheet?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The Renters Rights Act 2025 requires all private landlords in England to serve an official government Information Sheet to every tenant by 31 May 2026. Failure to comply carries fines up to £7,000."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I prove I served the Information Sheet?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "CompliantUK provides a timestamped proof-of-service certificate with IP address, device type, and exact read time — generated automatically when your tenant reads the document."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I send a link to the Information Sheet?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. GOV.UK guidance states that sending a web link is not valid. You must send the PDF as a direct attachment. CompliantUK does this automatically."
-        }
-      }
-    ]
-  }
-}
-</script>
 </head>
 <body>
-
-<!-- ANNOUNCEMENT BAR -->
-<div class="bar">
-  <span class="bar-dot"></span>
-  Renters' Rights Act 2026 is now in force —
-  <span class="bar-pill" id="live-countdown">Loading...</span>
-  until the 31 May deadline — fines from £4,000
+<div class="bar"><span class="bar-dot"></span>Renters' Rights Act 2026 is now in force —<span class="bar-pill" id="cd">Loading...</span>until the 31 May deadline — fines from £4,000</div>
+<nav><div class="nav-wrap"><a href="/" class="logo"><div class="logo-mark">✓</div><span class="logo-name">Compliant<span>UK</span></span></a><ul class="nav-links"><li><a href="#how-it-works">How it works</a></li><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#faq">FAQ</a></li><li><a href="/blog.html">Blog</a></li><li><a href="/login.html">Log in</a></li><li><a href="#get-compliant" class="nav-btn">Get compliant — £49</a></li></ul><button class="ham" onclick="toggleMenu()">☰</button></div></nav>
+<div class="mob" id="mob"><a href="#how-it-works" onclick="toggleMenu()">How it works ›</a><a href="#features" onclick="toggleMenu()">Features ›</a><a href="#pricing" onclick="toggleMenu()">Pricing ›</a><a href="#faq" onclick="toggleMenu()">FAQ ›</a><a href="/blog.html">Blog ›</a><a href="/bulk.html">Portfolio &amp; Agency ›</a><a href="/about.html">About ›</a><a href="/contact.html">Contact ›</a><a href="/login.html">Log in ›</a><a href="#get-compliant" onclick="toggleMenu()" style="color:var(--blue2);font-weight:700">Get compliant — £49 →</a></div>
+<section class="hero" id="get-compliant"><div class="hero-mesh"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="hero-inner">
+<div class="hero-left">
+<div class="hero-badge"><span class="bdot">⚡</span>Renters' Rights Act 2025 — Phase 1 Live</div>
+<h1 class="hh">Landlord compliance,<br><span class="sr">handled automatically.</span></h1>
+<p class="hero-p">Every private landlord in England must serve the official Information Sheet to their tenants by 31 May 2026 — with <strong>verifiable proof of delivery</strong>. We automate the entire process in minutes.</p>
+<div class="hero-ctas"><a href="#get-compliant" class="cta-p">Get compliant now — £49 →</a><a href="#how-it-works" class="cta-g">See how it works</a></div>
+<div class="trust"><span class="chip">🔒 SSL secured</span><span class="tdiv"></span><span class="chip">⚡ 24hr delivery</span><span class="tdiv"></span><span class="chip">🛡️ Legal proof certificate</span><span class="tdiv"></span><span class="chip">↩️ Money-back guarantee</span></div>
 </div>
+<div class="hcard">
+<div class="ctop"><div class="clogo"><div class="clm">✓</div>CompliantUK</div><div class="cstat"><span class="bar-dot"></span>31 MAY DEADLINE</div></div>
+<div class="cbody">
+<div class="fr" style="margin-bottom:10px"><div class="f"><label for="lf">First name *</label><input type="text" id="lf" placeholder="Jane" required></div><div class="f"><label for="ll">Last name *</label><input type="text" id="ll" placeholder="Smith" required></div></div>
+<div class="f" style="margin-bottom:10px"><label for="le">Your email *</label><input type="email" id="le" placeholder="you@example.com" required></div>
+<div class="f" style="margin-bottom:16px"><label for="pa">Property address *</label><input type="text" id="pa" placeholder="14 Maple Avenue, London, E1 2AB" required></div>
+<span class="tc-lbl">Number of tenants on this tenancy *</span>
+<div class="tc-grid"><button class="tcb active" data-n="1" onclick="setCount(1)"><span class="tn">1</span><span class="tp">£49</span></button><button class="tcb" data-n="2" onclick="setCount(2)"><span class="tn">2</span><span class="tp">£78</span></button><button class="tcb" data-n="3" onclick="setCount(3)"><span class="tn">3</span><span class="tp">£97</span></button><button class="tcb" data-n="4" onclick="setCount(4)"><span class="tn">4</span><span class="tp">£116</span></button></div>
+<p class="tc-note">Max 4 tenants per tenancy agreement under current legislation</p>
+<div class="tgroups" id="tg"></div>
+<div class="psum"><div><div class="plbl" id="plbl">1 tenant — Starter compliance pack</div><div class="psub">Info Sheet · Proof certificate · Each tenant emailed individually</div></div><div class="pval" id="pval">£49</div></div>
+<button class="sbtn" onclick="handlePay()">Pay <span id="bprice">£49</span> via Card — Become compliant instantly</button>
+<div class="dor">OR</div>
+<div id="paypal-button-container"></div>
+<div class="cfoot"><span>🔒 SSL</span><span>✓ Stripe</span><span>✓ PayPal</span><span>🛡️ Guarantee</span><span>⚡ Instant</span></div>
+</div></div></div></section>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-wrap">
-    <a href="#" class="logo">
-      <div class="logo-mark">✓</div>
-      <span class="logo-name">Compliant<span>UK</span></span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="#how-it-works">How it works</a></li>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#pricing">Pricing</a></li>
-      <li><a href="#faq">FAQ</a></li>
-      <li><a href="blog.html">Blog</a></li>
-      <li><a href="login.html" class="nav-btn">Log in</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
+<div class="ss"><div class="si"><div class="st"><div class="sn r">£7,000</div><div class="sl">Maximum fine for non-compliance</div></div><div class="st"><div class="sn a" id="ds">33</div><div class="sl">Days left until the deadline</div></div><div class="st"><div class="sn b">2.3M</div><div class="sl">Landlords affected in England</div></div><div class="st"><div class="sn g">10 min</div><div class="sl">To become fully compliant</div></div></div></div>
 
-<!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobile-menu">
-  <div class="mm-inner">
-    <a href="#how-it-works" class="mm-link" onclick="closeMenu()">How it works <span class="mm-link-arrow">›</span></a>
-    <a href="#features" class="mm-link" onclick="closeMenu()">Features <span class="mm-link-arrow">›</span></a>
-    <a href="#pricing" class="mm-link" onclick="closeMenu()">Pricing <span class="mm-link-arrow">›</span></a>
-    <a href="blog.html" class="mm-link" onclick="closeMenu()">Blog <span class="mm-link-arrow">›</span></a>
-    <a href="bulk.html" class="mm-link" onclick="closeMenu()">Portfolio & Agency <span class="mm-link-arrow">›</span></a>
-    <a href="about.html" class="mm-link" onclick="closeMenu()">About <span class="mm-link-arrow">›</span></a>
-    <a href="contact.html" class="mm-link" onclick="closeMenu()">Contact <span class="mm-link-arrow">›</span></a>
-    <a href="login.html" class="mm-link" onclick="closeMenu()">Log in <span class="mm-link-arrow">›</span></a>
-    <a href="#get-compliant" class="mm-cta" onclick="closeMenu()">Get compliant — £49</a>
-  </div>
+<section class="sec" style="background:var(--bg)" id="how-it-works"><div class="sec-in">
+<div class="ey">How it works</div>
+<h2>From payment to proof <span class="sr">in four steps</span></h2>
+<p class="sp">The entire process is automated. Once you pay, we handle delivery, tracking, and certification — no phone calls, no waiting, no manual work from you.</p>
+<div class="sg">
+<div class="sc"><div class="str"><span class="sn2">01</span><span class="sbdg you">You</span></div><div class="siw">📝</div><div class="stit">Enter your details</div><div class="sdesc">Your name, property address, and each tenant's name and email. Select the number of tenants on the tenancy — up to 4. Takes under 2 minutes.</div><div class="sdet"><div class="sdr"><span class="dot bl"></span>Landlord info</div><div class="sdr"><span class="dot bl"></span>Property address</div><div class="sdr"><span class="dot bl"></span>All tenant details</div></div></div>
+<div class="sc"><div class="str"><span class="sn2">02</span><span class="sbdg you">You</span></div><div class="siw">💳</div><div class="stit">Pay securely</div><div class="sdesc">One-off payment via Stripe or PayPal. No subscriptions, no hidden fees. Price is based on the number of tenants on the tenancy.</div><div class="sdet"><div class="sdr"><span class="dot bl"></span>Visa / Mastercard</div><div class="sdr"><span class="dot bl"></span>Apple Pay</div><div class="sdr"><span class="dot am"></span>PayPal</div></div></div>
+<div class="sc"><div class="str"><span class="sn2">03</span><span class="sbdg auto">Automatic</span></div><div class="siw">📧</div><div class="stit">Document delivered to each tenant</div><div class="sdesc">The official GOV.UK Information Sheet is emailed individually to every tenant — as a full PDF attachment with a personalised covering letter. Read-tracking activates instantly.</div><div class="sdet"><div class="sdr"><span class="dot gr"></span>PDF attachment</div><div class="sdr"><span class="dot gr"></span>Covering letter</div><div class="sdr"><span class="dot am"></span>48hr reminder</div></div></div>
+<div class="sc"><div class="str"><span class="sn2">04</span><span class="sbdg auto">Automatic</span></div><div class="siw">🏅</div><div class="stit">Legal proof certificate issued</div><div class="sdesc">A timestamped certificate lists the landlord's name, property address, and all tenants. Includes IP address, device, and exact read time. Stored in your dashboard forever.</div><div class="sdet"><div class="sdr"><span class="dot gr"></span>Timestamp logged</div><div class="sdr"><span class="dot gr"></span>IP recorded</div><div class="sdr"><span class="dot gr"></span>PDF certificate</div></div></div>
 </div>
+<div class="sfb"><div class="sfbi"><span class="sfbd gr"></span>Steps 3 and 4 are fully automated — zero effort from you</div><div class="sfbdiv"></div><div class="sfbi"><span class="sfbd bl"></span>Total time from payment to proof: under 10 minutes</div></div>
+</div></section>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-mesh">
-    <div class="mesh-blob mesh-blob-1"></div>
-    <div class="mesh-blob mesh-blob-2"></div>
-    <div class="mesh-blob mesh-blob-3"></div>
-  </div>
+<section class="sec bg2" id="features"><div class="sec-in">
+<div class="ey">What's included</div>
+<h2>Everything you need to <span class="sr">prove compliance</span></h2>
+<p class="sp">The £49 Starter Pack covers every legal requirement — including the proof-of-delivery system that protects you if a tenant or council ever disputes receipt.</p>
+<div class="bgrd">
+<div class="bc"><div class="bi bl">📄</div><div class="bt">Official GOV.UK Information Sheet</div><div class="bd">The exact document from GOV.UK — the only version legally valid under the Renters' Rights Act 2025. We send it as a full PDF attachment to every tenant individually. Sending a link is explicitly invalid and will not protect you from a fine.</div><span class="btg em">✓ Only legally valid version</span></div>
+<div class="bc"><div class="bi em">🏅</div><div class="bt">Proof-of-service certificate</div><div class="bd">Timestamped with IP address, device type, and exact read time. Lists the landlord's name, property address, and all tenants on the tenancy. Generated automatically the moment your tenant reads the document. Download as PDF anytime.</div><span class="btg bl">⚡ Auto-generated</span></div>
+<div class="bc"><div class="bi bl">📡</div><div class="bt">Real-time delivery tracking</div><div class="bd">Your dashboard updates live as tenants open and read the document. Know the exact moment you're legally covered for every tenant on the tenancy.</div><div class="sdm"><div class="sr2"><span class="sa">14 Maple Ave...</span><span class="sbg rd2">✓ Read</span></div><div class="sr2"><span class="sa">7 Birch Close...</span><span class="sbg opn">● Opened</span></div><div class="sr2"><span class="sa">91 Cedar Drive...</span><span class="sbg snt">→ Sent</span></div><div class="sr2"><span class="sa">3 Elm Road...</span><span class="sbg snt">→ Sent</span></div></div><span class="btg bl">↻ Updates in real time</span></div>
+<div class="bc"><div class="bi am">✉️</div><div class="bt">Personalised covering letter per tenant</div><div class="bd">A professional letter addressed to each specific tenant by name, explaining what they're receiving and why — drafted and sent automatically on your behalf.</div></div>
+<div class="bc"><div class="bi rd">⏰</div><div class="bt">48-hour auto-reminder</div><div class="bd">If any tenant hasn't opened the document within 48 hours, we send a polite reminder automatically. No action needed from you.</div></div>
+<div class="bc"><div class="bi in">🏠</div><div class="bt">Landlord dashboard — all properties in one place</div><div class="bd">Log in anytime to see the live compliance status of every property in your portfolio. Download certificates, track per-tenant delivery, and manage everything from one clean interface.</div><span class="btg bl">✓ Access anytime · Live</span></div>
+</div></div></section>
 
-  <div class="hero-inner">
-    <div class="hero-left">
-      <div class="hero-badge">
-        <span class="badge-dot">⚡</span>
-        Renters' Rights Act 2025 — Phase 1 Live
-      </div>
+<section class="sec pcs" id="pricing"><div class="sec-in">
+<div class="ey">Pricing</div>
+<h2>Simple, <span class="sr">transparent pricing</span></h2>
+<p class="sp">One price. Everything included. The fine for non-compliance starts at £4,000. This is £49.</p>
+<div class="pcw"><div class="pt"><div class="pn">Starter Pack</div><div class="pa"><sup>£</sup>49</div><div class="pno">Per property · One-off payment · No subscription · Up to 4 tenants</div></div>
+<div class="pb"><ul class="pl"><li><span class="lc">✓</span>Official GOV.UK Information Sheet — only valid version</li><li><span class="lc">✓</span>Personalised covering letter for each tenant individually</li><li><span class="lc">✓</span>Automated email delivery to every tenant's inbox</li><li><span class="lc">✓</span>Real-time open and read tracking per tenant</li><li><span class="lc">✓</span>48-hour auto-reminder if tenant hasn't read</li><li><span class="lc">✓</span>Timestamped proof-of-service certificate (all tenants listed)</li><li><span class="lc">✓</span>Landlord dashboard access — all properties</li><li><span class="lc">✓</span>Certificate download for your records</li></ul>
+<div class="fb">⚠️ The government's starting fine for non-compliance is <strong>£4,000</strong>. Maximum penalty is <strong>£7,000</strong>. Repeated breaches carry fines up to <strong>£40,000</strong>.</div>
+<a href="#get-compliant" class="pcb">Get compliant now — £49 →</a>
+<div class="ptr"><span>🔒 SSL secured</span><span>✓ Stripe payments</span><span>🛡️ Money-back guarantee</span></div>
+<div class="pnote"><p>Managing multiple properties?</p><p style="font-size:12px;color:var(--text3);margin-bottom:8px">Portfolio from £44/property · Silver, Bronze, Gold &amp; Platinum plans · Up to 100 properties</p><a href="/bulk.html">View portfolio &amp; agency pricing →</a></div>
+</div></div></div></section>
 
-      <h1 class="hero-h">
-        Landlord compliance,<br>
-        <span class="serif">handled automatically.</span>
-      </h1>
+<section class="sec fqs" id="faq"><div class="sec-in">
+<div class="ey">FAQ</div><h2>Common <span class="sr">questions</span></h2>
+<p class="sp">Everything landlords ask before getting compliant.</p>
+<div class="fql">
+<div class="fqi"><button class="fqq" aria-expanded="false" onclick="faq(this)">What exactly is the Information Sheet and why do I need to send it?<span class="fqic">+</span></button><div class="fqa"><p>The Renters' Rights Act 2025 came into force on 1 May 2026. It requires all private landlords in England to provide the official government Information Sheet to every tenant by 31 May 2026. The document explains tenants' new rights under the Act. Failure to comply carries a fine of up to £7,000.</p></div></div>
+<div class="fqi"><button class="fqq" aria-expanded="false" onclick="faq(this)">Can't I just email the document myself?<span class="fqic">+</span></button><div class="fqa"><p>You can — but the law places the burden of proof entirely on you. If your tenant claims they never received it, a standard email provides no legal protection. Our service provides a timestamped proof-of-service certificate with IP address, device, and exact read time — far stronger evidence than a forwarded email.</p></div></div>
+<div class="fqi"><button class="fqq" aria-expanded="false" onclick="faq(this)">Can I just send a link to the PDF?<span class="fqic">+</span></button><div class="fqa"><p>No. GOV.UK guidance explicitly states that sending a web link to the document is not valid. You must send the PDF as a direct attachment. Our system does this automatically and correctly.</p></div></div>
+<div class="fqi"><button class="fqq" aria-expanded="false" onclick="faq(this)">What if my tenant doesn't open it?<span class="fqic">+</span></button><div class="fqa"><p>We send an automatic reminder to your tenant after 48 hours if they haven't opened the document. Your dashboard shows the live status so you know exactly where things stand. The fact of delivery is recorded regardless of whether the tenant reads it.</p></div></div>
+<div class="fqi"><button class="fqq" aria-expanded="false" onclick="faq(this)">I have multiple tenants on one tenancy — how does that work?<span class="fqic">+</span></button><div class="fqa"><p>Select how many tenants are on the tenancy (up to 4) and enter each tenant's name and email. We email each tenant individually with a personalised covering letter. Your proof-of-service certificate lists all tenants. Pricing: 1 tenant £49, 2 tenants £78, 3 tenants £97, 4 tenants £116.</p></div></div>
+<div class="fqi"><button class="fqq" aria-expanded="false" onclick="faq(this)">I have multiple properties — how does that work?<span class="fqic">+</span></button><div class="fqa"><p>Each property is a separate order. Your dashboard shows all properties. If you have 2 or more properties, see our <a href="/bulk.html" style="color:var(--blue2)">portfolio pricing</a> — from £44 per property (Silver, 2–10 properties).</p></div></div>
+<div class="fqi"><button class="fqq" aria-expanded="false" onclick="faq(this)">The deadline has already passed — is it too late?<span class="fqic">+</span></button><div class="fqa"><p>Late service is significantly better than no service. Landlords who can demonstrate they acted promptly — even after the deadline — are in a far stronger position if challenged. We can process retrospective packs with full documentation. Act today.</p></div></div>
+<div class="fqi"><button class="fqq" aria-expanded="false" onclick="faq(this)">Is this legal advice?<span class="fqic">+</span></button><div class="fqa"><p>No. CompliantUK provides document delivery and compliance tracking services. We are not solicitors and this is not legal advice. For specific legal questions about your situation, we recommend consulting a qualified solicitor.</p></div></div>
+<div class="fqi"><button class="fqq" aria-expanded="false" onclick="faq(this)">What about new tenancies starting after 1 May 2026?<span class="fqic">+</span></button><div class="fqa"><p>For tenancies starting on or after 1 May 2026, different requirements apply — you must provide certain written information before the tenancy is agreed, usually in the tenancy agreement. Contact us for guidance on new tenancies.</p></div></div>
+</div></div></section>
 
-      <p class="hero-p">
-        Every private landlord in England must serve the official Information Sheet to their tenants by 31 May 2026 — with <strong style="color:var(--text);font-weight:600;">verifiable proof of delivery</strong>. We automate the entire process in minutes.
-      </p>
+<section class="ms"><div style="position:relative;z-index:1;text-align:center"><div class="ey" style="justify-content:center">Missed the deadline?</div><h2>You may already be <span class="sr">in breach.</span> Act now.</h2><p class="sp" style="margin:0 auto 32px;color:var(--text2)">Local authorities have had new investigatory powers since December 2025. Tenants are increasingly aware of their rights. Late service is still far better than no service — and acting with documented proof puts you in a far stronger position.</p><a href="#get-compliant" class="cta-p" style="margin:0 auto">Rectify it now — £49 →</a></div></section>
 
-      <div class="hero-ctas">
-        <a href="#get-compliant" class="cta-primary">
-          Get compliant now — £49
-          <span>→</span>
-        </a>
-        <a href="#how-it-works" class="cta-ghost">
-          See how it works
-        </a>
-      </div>
-
-      <div class="hero-trust">
-        <span class="trust-chip"><span class="icon">🔒</span> SSL secured</span>
-        <span class="trust-divider"></span>
-        <span class="trust-chip"><span class="icon">⚡</span> 24hr delivery</span>
-        <span class="trust-divider"></span>
-        <span class="trust-chip"><span class="icon">🛡️</span> Legal proof certificate</span>
-        <span class="trust-divider"></span>
-        <span class="trust-chip"><span class="icon">↩️</span> Money-back guarantee</span>
-      </div>
-    </div>
-
-    <!-- CHECKOUT CARD -->
-    <!-- CHECKOUT CARD -->
-    <div class="hero-card" id="get-compliant">
-      <div class="card-top">
-        <div class="card-logo"><div class="card-logo-mark">✓</div>CompliantUK</div>
-        <div class="card-status"><span class="bar-dot"></span>31 MAY DEADLINE</div>
-      </div>
-
-      <div class="card-body">
-        <div id="form-error" style="display:none;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:#fca5a5;"></div>
-
-        <!-- Landlord details -->
-        <div class="field-row">
-          <div class="field"><label>First name *</label><input type="text" id="f-firstname" placeholder="John" autocomplete="given-name" /></div>
-          <div class="field"><label>Last name *</label><input type="text" id="f-lastname" placeholder="Smith" autocomplete="family-name" /></div>
-        </div>
-        <div class="field-row">
-          <div class="field full"><label>Your email *</label><input type="email" id="f-email" placeholder="you@email.com" autocomplete="email" /></div>
-        </div>
-        <div class="field-row">
-          <div class="field full"><label>Property address *</label><input type="text" id="f-address" placeholder="12 Oak St, Birmingham, B1 1AA" autocomplete="street-address" /></div>
-        </div>
-
-        <!-- Tenant count selector -->
-        <div style="margin-bottom:14px;">
-          <label style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;display:block;margin-bottom:8px;">Number of tenants on this tenancy *</label>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
-            <button type="button" class="tenant-count-btn active" onclick="setTenantCount(1,this)">
-              <span style="font-size:18px;font-weight:800;color:var(--text);display:block;">1</span>
-              <span style="font-size:10px;color:var(--emerald2);font-family:var(--mono);font-weight:700;">£49</span>
-            </button>
-            <button type="button" class="tenant-count-btn" onclick="setTenantCount(2,this)">
-              <span style="font-size:18px;font-weight:800;color:var(--text);display:block;">2</span>
-              <span style="font-size:10px;color:var(--blue2);font-family:var(--mono);font-weight:700;">£78</span>
-            </button>
-            <button type="button" class="tenant-count-btn" onclick="setTenantCount(3,this)">
-              <span style="font-size:18px;font-weight:800;color:var(--text);display:block;">3</span>
-              <span style="font-size:10px;color:var(--blue2);font-family:var(--mono);font-weight:700;">£97</span>
-            </button>
-            <button type="button" class="tenant-count-btn" onclick="setTenantCount(4,this)">
-              <span style="font-size:18px;font-weight:800;color:var(--text);display:block;">4</span>
-              <span style="font-size:10px;color:var(--blue2);font-family:var(--mono);font-weight:700;">£116</span>
-            </button>
-          </div>
-          <div style="font-size:11px;color:var(--text3);margin-top:7px;">Max 4 tenants per tenancy agreement under current legislation</div>
-        </div>
-
-        <!-- Dynamic tenant fields -->
-        <div id="tenant-fields"></div>
-
-        <!-- Price summary -->
-        <div class="price-summary">
-          <div>
-            <div class="price-label" id="price-label">1 tenant — Starter compliance pack</div>
-            <div style="font-size:11px;color:var(--text3);margin-top:2px" id="price-includes">Info Sheet · Proof certificate · Each tenant emailed individually</div>
-          </div>
-          <span class="price-val" id="price-display">£49</span>
-        </div>
-
-        <div style="margin-top:16px;">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:10px;text-align:center;">Choose payment method</div>
-          <div id="paypal-button-container"></div>
-          <div style="display:flex;align-items:center;gap:10px;margin:10px 0;">
-            <div style="flex:1;height:1px;background:var(--border2);"></div>
-            <span style="font-size:11px;color:var(--text3);font-weight:600;">OR</span>
-            <div style="flex:1;height:1px;background:var(--border2);"></div>
-          </div>
-          <button class="submit-btn" id="checkout-btn" onclick="handleCheckout(this)">Pay £49 via Card — Become compliant instantly</button>
-        </div>
-
-        <div class="card-footer">
-          <span>🔒 SSL</span><span>✓ Stripe</span><span>✓ PayPal</span><span>🛡️ Guarantee</span><span>⚡ Instant</span>
-        </div>
-      </div>
-    </div>
-
-</section>
-
-<!-- STATS STRIP -->
-<div class="stats-strip">
-  <div class="stats-inner">
-    <div class="stat reveal">
-      <div class="stat-n r">£7,000</div>
-      <div class="stat-l">Maximum fine for non-compliance</div>
-    </div>
-    <div class="stat reveal" style="transition-delay:0.08s">
-      <div class="stat-n a" id="days-num">33</div>
-      <div class="stat-l">Days left until the deadline</div>
-    </div>
-    <div class="stat reveal" style="transition-delay:0.16s">
-      <div class="stat-n b">2.3M</div>
-      <div class="stat-l">Landlords affected in England</div>
-    </div>
-    <div class="stat reveal" style="transition-delay:0.24s">
-      <div class="stat-n g">10 min</div>
-      <div class="stat-l">To become fully compliant</div>
-    </div>
-  </div>
-</div>
-
-<!-- HOW IT WORKS -->
-<section class="section how-section" id="how-it-works">
-  <div class="section-inner">
-    <div class="eyebrow reveal">How it works</div>
-    <h2 class="reveal">From payment to <span class="serif">proof</span> in four steps</h2>
-    <p class="section-p reveal">The entire process is automated. Once you pay, we handle delivery, tracking, and certification — no phone calls, no waiting, no manual work from you.</p>
-
-    <div class="steps-v2 reveal">
-
-      <!-- STEP 1 -->
-      <div class="step-v2">
-        <div class="step-v2-left">
-          <div class="step-v2-icon-wrap s1">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="5" y="3" width="22" height="28" rx="3" fill="rgba(59,130,246,0.12)" stroke="#3b82f6" stroke-width="1.5"/>
-              <line x1="10" y1="11" x2="22" y2="11" stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round"/>
-              <line x1="10" y1="16" x2="19" y2="16" stroke="rgba(96,165,250,0.5)" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="10" y1="21" x2="16" y2="21" stroke="rgba(96,165,250,0.35)" stroke-width="1.5" stroke-linecap="round"/>
-              <circle cx="27" cy="27" r="7" fill="#0d1220" stroke="#3b82f6" stroke-width="1.5"/>
-              <line x1="27" y1="24" x2="27" y2="30" stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round"/>
-              <line x1="24" y1="27" x2="30" y2="27" stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="step-v2-line"></div>
-        </div>
-        <div class="step-v2-right">
-          <div class="step-v2-header">
-            <span class="step-v2-num">01</span>
-            <span class="step-v2-badge you">You</span>
-          </div>
-          <div class="step-v2-title">Enter your details</div>
-          <div class="step-v2-desc">Your name, property address, and your tenant's name and email. Takes under 2 minutes on any device.</div>
-          <div class="step-v2-pills">
-            <span class="spill">Landlord info</span>
-            <span class="spill">Property address</span>
-            <span class="spill">Tenant details</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- STEP 2 -->
-      <div class="step-v2">
-        <div class="step-v2-left">
-          <div class="step-v2-icon-wrap s2">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="9" width="28" height="19" rx="3" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1.5"/>
-              <path d="M4 14h28" stroke="#10b981" stroke-width="1.5"/>
-              <rect x="8" y="19" width="8" height="5" rx="1.5" fill="rgba(52,211,153,0.3)"/>
-              <rect x="20" y="19" width="8" height="5" rx="1.5" fill="rgba(52,211,153,0.15)"/>
-              <path d="M12 9V6M24 9V6" stroke="#10b981" stroke-width="1.8" stroke-linecap="round"/>
-              <circle cx="28" cy="28" r="6.5" fill="#0d1220"/>
-              <circle cx="28" cy="28" r="6.5" stroke="#10b981" stroke-width="1.5"/>
-              <path d="M25.5 28l1.8 1.8 3.6-3.6" stroke="#34d399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="step-v2-line"></div>
-        </div>
-        <div class="step-v2-right">
-          <div class="step-v2-header">
-            <span class="step-v2-num">02</span>
-            <span class="step-v2-badge you">You</span>
-          </div>
-          <div class="step-v2-title">Pay securely — £49</div>
-          <div class="step-v2-desc">One-off payment via Stripe. No subscriptions, no hidden fees. Accepted on all devices in seconds.</div>
-          <div class="step-v2-pills">
-            <span class="spill">Visa / Mastercard</span>
-            <span class="spill">Apple Pay</span>
-            <span class="spill">Google Pay</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- STEP 3 -->
-      <div class="step-v2">
-        <div class="step-v2-left">
-          <div class="step-v2-icon-wrap s3">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 10a3 3 0 0 1 3-3h22a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V10z" fill="rgba(245,158,11,0.1)" stroke="#f59e0b" stroke-width="1.5"/>
-              <path d="M4 12l14 10 14-10" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M22 13l4 4-4 4" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="28" cy="8" r="5.5" fill="#0d1220" stroke="#f59e0b" stroke-width="1.5"/>
-              <rect x="27.2" y="5.5" width="1.6" height="4" rx="0.8" fill="#fbbf24"/>
-              <circle cx="28" cy="11" r="0.9" fill="#fbbf24"/>
-            </svg>
-          </div>
-          <div class="step-v2-line"></div>
-        </div>
-        <div class="step-v2-right">
-          <div class="step-v2-header">
-            <span class="step-v2-num">03</span>
-            <span class="step-v2-badge auto">Automatic</span>
-          </div>
-          <div class="step-v2-title">Document delivered to tenant</div>
-          <div class="step-v2-desc">The official GOV.UK Information Sheet is emailed directly to your tenant — as a full PDF attachment, not a link. Read-tracking activates instantly.</div>
-          <div class="step-v2-pills">
-            <span class="spill amber">PDF attachment</span>
-            <span class="spill amber">Covering letter</span>
-            <span class="spill amber">48hr reminder</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- STEP 4 -->
-      <div class="step-v2 last">
-        <div class="step-v2-left">
-          <div class="step-v2-icon-wrap s4">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 3L5 9v9c0 7.2 5.5 13.9 13 15.5C25.5 31.9 31 25.2 31 18V9L18 3z" fill="rgba(99,102,241,0.12)" stroke="#6366f1" stroke-width="1.5"/>
-              <path d="M12 18l4.5 4.5 8-8" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="27" cy="9" r="6" fill="#0d1220" stroke="#6366f1" stroke-width="1.5"/>
-              <path d="M25 9h4M27 7v4" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </div>
-        </div>
-        <div class="step-v2-right">
-          <div class="step-v2-header">
-            <span class="step-v2-num">04</span>
-            <span class="step-v2-badge auto">Automatic</span>
-          </div>
-          <div class="step-v2-title">Legal proof certificate issued</div>
-          <div class="step-v2-desc">The moment your tenant reads the document, a timestamped certificate is generated — with IP address, device, and exact read time. Stored in your dashboard forever.</div>
-          <div class="step-v2-pills">
-            <span class="spill indigo">Timestamp logged</span>
-            <span class="spill indigo">IP recorded</span>
-            <span class="spill indigo">PDF certificate</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Footer bar -->
-    <div class="steps-footer-bar reveal">
-      <div class="sfb-item">
-        <span class="sfb-dot green"></span>
-        Steps 3 and 4 are fully automated — zero effort from you
-      </div>
-      <div class="sfb-divider"></div>
-      <div class="sfb-item">
-        <span class="sfb-dot blue"></span>
-        Total time from payment to proof: under 10 minutes
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- BENTO FEATURES -->
-<section class="section bento-section" id="features">
-  <div class="section-inner">
-    <div class="eyebrow reveal">What's included</div>
-    <h2 class="reveal">Everything you need to <span class="serif">prove</span> compliance</h2>
-    <p class="section-p reveal">The £49 Starter Pack covers every legal requirement — including the proof-of-delivery system that protects you if a tenant or council ever disputes receipt.</p>
-
-    <div class="bento-grid reveal">
-
-      <!-- Wide — Official document -->
-      <div class="bento-card">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;">
-          <div style="flex:1;min-width:200px;">
-            <div class="bento-icon blue">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <rect x="2" y="1" width="14" height="18" rx="2" stroke="var(--blue2)" stroke-width="1.4" fill="none"/>
-                <path d="M5 6h8M5 9h6M5 12h7M5 15h4" stroke="var(--blue2)" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
-                <circle cx="17" cy="17" r="4" fill="rgba(16,185,129,0.15)" stroke="var(--emerald2)" stroke-width="1.2"/>
-                <path d="M15.2 17l1.2 1.2 2.4-2.4" stroke="var(--emerald2)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <div class="bento-title">Official GOV.UK Information Sheet</div>
-            <div class="bento-desc">The exact document from GOV.UK — the only version legally valid under the Renters' Rights Act 2025. We send it as a full PDF attachment directly to your tenant's inbox. Sending a link is explicitly invalid and will not protect you from a fine.</div>
-            <span class="bento-tag blue">✓ Only legally valid version</span>
-          </div>
-          <div style="flex-shrink:0;">
-            <svg width="80" height="90" viewBox="0 0 80 90" fill="none">
-              <rect x="8" y="4" width="52" height="68" rx="5" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)" stroke-width="1.5"/>
-              <rect x="16" y="16" width="36" height="3" rx="1.5" fill="rgba(59,130,246,0.4)"/>
-              <rect x="16" y="23" width="28" height="2" rx="1" fill="rgba(255,255,255,0.1)"/>
-              <rect x="16" y="28" width="32" height="2" rx="1" fill="rgba(255,255,255,0.1)"/>
-              <rect x="16" y="33" width="24" height="2" rx="1" fill="rgba(255,255,255,0.1)"/>
-              <rect x="16" y="38" width="30" height="2" rx="1" fill="rgba(255,255,255,0.08)"/>
-              <rect x="16" y="43" width="26" height="2" rx="1" fill="rgba(255,255,255,0.08)"/>
-              <rect x="16" y="48" width="28" height="2" rx="1" fill="rgba(255,255,255,0.08)"/>
-              <rect x="16" y="58" width="36" height="8" rx="3" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.25)" stroke-width="1"/>
-              <text x="34" y="64" font-size="7" fill="rgba(59,130,246,0.7)" text-anchor="middle" font-family="sans-serif">GOV.UK</text>
-              <circle cx="62" cy="72" r="14" fill="rgba(16,185,129,0.12)" stroke="rgba(16,185,129,0.3)" stroke-width="1.5"/>
-              <path d="M55 72l5 5 10-10" stroke="var(--emerald2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Certificate -->
-      <div class="bento-card">
-        <div class="bento-icon emerald">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <path d="M11 2L3 6v7c0 5 3.5 8.5 8 9.5 4.5-1 8-4.5 8-9.5V6L11 2z" stroke="var(--emerald2)" stroke-width="1.4" fill="rgba(16,185,129,0.1)"/>
-            <path d="M7.5 11l2.5 2.5 4.5-4.5" stroke="var(--emerald2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="bento-title">Proof-of-service certificate</div>
-        <div class="bento-desc">Timestamped with IP address, device type, and exact read time. Generated automatically the moment your tenant reads the document. Download as PDF anytime.</div>
-        <span class="bento-tag emerald">⚡ Auto-generated</span>
-      </div>
-
-      <!-- Live tracking — tall with demo -->
-      <div class="bento-card">
-        <div class="bento-icon blue">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <circle cx="11" cy="11" r="9" stroke="var(--blue2)" stroke-width="1.4" fill="rgba(59,130,246,0.08)"/>
-            <circle cx="11" cy="11" r="3" fill="var(--blue2)" opacity="0.6"/>
-            <circle cx="11" cy="11" r="6" stroke="var(--blue2)" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.4"/>
-          </svg>
-        </div>
-        <div class="bento-title">Real-time delivery tracking</div>
-        <div class="bento-desc">Your dashboard updates live as tenants open and read the document. Know the exact moment you're legally covered.</div>
-        <div class="status-demo">
-          <div class="status-row">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="var(--emerald2)" stroke-width="1" fill="none"/><path d="M1 5l6 4 6-4" stroke="var(--emerald2)" stroke-width="1" opacity="0.6"/></svg>
-              <span class="status-addr">14 Maple Ave...</span>
-            </div>
-            <span class="status-badge read">✓ Read</span>
-          </div>
-          <div class="status-row">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="var(--blue2)" stroke-width="1" fill="none"/><path d="M1 5l6 4 6-4" stroke="var(--blue2)" stroke-width="1" opacity="0.6"/></svg>
-              <span class="status-addr">7 Birch Close...</span>
-            </div>
-            <span class="status-badge opened">● Opened</span>
-          </div>
-          <div class="status-row">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="var(--amber)" stroke-width="1" fill="none"/><path d="M1 5l6 4 6-4" stroke="var(--amber)" stroke-width="1" opacity="0.6"/></svg>
-              <span class="status-addr">91 Cedar Drive...</span>
-            </div>
-            <span class="status-badge sent">→ Sent</span>
-          </div>
-          <div class="status-row">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="var(--amber)" stroke-width="1" fill="none"/><path d="M1 5l6 4 6-4" stroke="var(--amber)" stroke-width="1" opacity="0.6"/></svg>
-              <span class="status-addr">3 Elm Road...</span>
-            </div>
-            <span class="status-badge sent">→ Sent</span>
-          </div>
-        </div>
-        <span class="bento-tag blue" style="margin-top:14px">↻ Updates in real time</span>
-      </div>
-
-      <!-- Covering letter -->
-      <div class="bento-card">
-        <div class="bento-icon amber">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <rect x="2" y="4" width="18" height="14" rx="2" stroke="var(--amber)" stroke-width="1.4" fill="rgba(245,158,11,0.08)"/>
-            <path d="M2 7l9 6 9-6" stroke="var(--amber)" stroke-width="1.4" stroke-linecap="round" opacity="0.7"/>
-            <circle cx="17" cy="16" r="4" fill="rgba(245,158,11,0.15)" stroke="var(--amber2)" stroke-width="1.2"/>
-            <path d="M15.2 16h3.6M17 14.2v3.6" stroke="var(--amber2)" stroke-width="1.3" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="bento-title">Personalised covering letter</div>
-        <div class="bento-desc">A professional letter addressed to your specific tenant, explaining what they're receiving and why — drafted and sent automatically on your behalf.</div>
-      </div>
-
-      <!-- Auto reminder -->
-      <div class="bento-card">
-        <div class="bento-icon indigo">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            <path d="M11 2a7 7 0 0 1 7 7c0 5 2 6 2 6H2s2-1 2-6a7 7 0 0 1 7-7z" stroke="var(--indigo)" stroke-width="1.4" fill="rgba(99,102,241,0.1)"/>
-            <path d="M9 18a2 2 0 0 0 4 0" stroke="var(--indigo)" stroke-width="1.4" stroke-linecap="round"/>
-            <circle cx="16" cy="5" r="3" fill="rgba(239,68,68,0.15)" stroke="var(--red)" stroke-width="1.2"/>
-            <path d="M16 3.5v2M16 6.5v.5" stroke="var(--red)" stroke-width="1.2" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="bento-title">48-hour auto-reminder</div>
-        <div class="bento-desc">If your tenant hasn't opened the document within 48 hours, we send a polite reminder automatically. No action needed from you.</div>
-      </div>
-
-      <!-- Wide — Dashboard -->
-      <div class="bento-card">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;">
-          <div style="flex:1;min-width:200px;">
-            <div class="bento-icon emerald">
-              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                <rect x="2" y="2" width="8" height="8" rx="2" fill="rgba(16,185,129,0.15)" stroke="var(--emerald2)" stroke-width="1.3"/>
-                <rect x="12" y="2" width="8" height="8" rx="2" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.3)" stroke-width="1.3"/>
-                <rect x="2" y="12" width="8" height="8" rx="2" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.3)" stroke-width="1.3"/>
-                <rect x="12" y="12" width="8" height="8" rx="2" fill="rgba(16,185,129,0.15)" stroke="var(--emerald2)" stroke-width="1.3"/>
-              </svg>
-            </div>
-            <div class="bento-title">Landlord dashboard — all properties in one place</div>
-            <div class="bento-desc">Log in anytime to see the live compliance status of every property in your portfolio. Download certificates, track delivery, and manage multiple tenants from one clean interface. Your complete compliance record, always accessible.</div>
-            <span class="bento-tag emerald">✓ Access anytime</span>
-          </div>
-          <div style="flex-shrink:0;">
-            <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
-              <rect x="2" y="2" width="116" height="76" rx="6" fill="rgba(13,18,32,0.8)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <rect x="8" y="8" width="104" height="12" rx="3" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.15)" stroke-width="0.5"/>
-              <rect x="12" y="11" width="30" height="6" rx="1.5" fill="rgba(59,130,246,0.3)"/>
-              <rect x="8" y="26" width="50" height="20" rx="3" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.15)" stroke-width="0.5"/>
-              <rect x="12" y="30" width="20" height="2" rx="1" fill="rgba(16,185,129,0.4)"/>
-              <rect x="12" y="34" width="14" height="2" rx="1" fill="rgba(255,255,255,0.1)"/>
-              <rect x="12" y="38" width="16" height="4" rx="1" fill="rgba(16,185,129,0.2)"/>
-              <rect x="62" y="26" width="50" height="20" rx="3" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.15)" stroke-width="0.5"/>
-              <rect x="66" y="30" width="20" height="2" rx="1" fill="rgba(59,130,246,0.4)"/>
-              <rect x="66" y="34" width="14" height="2" rx="1" fill="rgba(255,255,255,0.1)"/>
-              <rect x="66" y="38" width="16" height="4" rx="1" fill="rgba(59,130,246,0.2)"/>
-              <rect x="8" y="52" width="104" height="22" rx="3" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
-              <rect x="12" y="56" width="60" height="2" rx="1" fill="rgba(255,255,255,0.08)"/>
-              <rect x="12" y="61" width="45" height="2" rx="1" fill="rgba(255,255,255,0.06)"/>
-              <rect x="12" y="66" width="50" height="2" rx="1" fill="rgba(255,255,255,0.06)"/>
-              <rect x="90" y="55" width="18" height="8" rx="2" fill="rgba(16,185,129,0.15)" stroke="rgba(16,185,129,0.25)" stroke-width="0.5"/>
-              <text x="99" y="61" font-size="5" fill="rgba(16,185,129,0.7)" text-anchor="middle" font-family="sans-serif">Live</text>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section class="section pricing-section" id="pricing">
-  <div class="section-inner" style="text-align:center;">
-    <div class="eyebrow reveal" style="justify-content:center;">Pricing</div>
-    <h2 class="reveal">Simple, transparent <span class="serif">pricing</span></h2>
-    <p class="section-p reveal" style="margin-left:auto;margin-right:auto;text-align:center;">One price. Everything included. The fine for non-compliance starts at £4,000. This is £49.</p>
-
-    <div class="pricing-card reveal">
-      <div class="pricing-top">
-        <div class="pricing-name">Starter Pack</div>
-        <div class="pricing-amount"><sup>£</sup>49</div>
-        <div class="pricing-note">Per property · One-off payment · No subscription</div>
-      </div>
-      <div class="pricing-body">
-        <ul class="pricing-list">
-          <li><span class="li-check">✓</span> Official GOV.UK Information Sheet — only valid version</li>
-          <li><span class="li-check">✓</span> Personalised covering letter for your tenant</li>
-          <li><span class="li-check">✓</span> Automated email delivery directly to tenant inbox</li>
-          <li><span class="li-check">✓</span> Real-time open and read tracking</li>
-          <li><span class="li-check">✓</span> 48-hour auto-reminder if tenant hasn't read</li>
-          <li><span class="li-check">✓</span> Timestamped proof-of-service certificate</li>
-          <li><span class="li-check">✓</span> Landlord dashboard access — all properties</li>
-          <li><span class="li-check">✓</span> Certificate download for your records</li>
-        </ul>
-
-        <div class="fine-box">
-          ⚠️ The government's starting fine for non-compliance is <strong>£4,000</strong>. Maximum penalty is <strong>£7,000</strong>. Repeated breaches carry fines up to <strong>£40,000</strong>.
-        </div>
-
-        <button class="pricing-btn" onclick="document.getElementById('get-compliant').scrollIntoView({behavior:'smooth'})">
-          Get compliant now — £49 →
-        </button>
-
-        <div class="pricing-security">
-          <span>🔒 SSL secured</span>
-          <span>✓ Stripe payments</span>
-          <span>🛡️ Money-back guarantee</span>
-        </div>
-
-        <div style="margin-top:24px;padding:18px 20px;background:rgba(255,255,255,0.03);border:1px solid var(--border2);border-radius:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px">Managing multiple properties?</div>
-            <div style="font-size:13px;color:var(--text2)">Portfolio from £35/property · Agency plans from £25 · Unlimited retainer £150/mo</div>
-          </div>
-          <a href="bulk.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:var(--blue2);padding:9px 18px;border-radius:8px;font-size:13.5px;font-weight:700;text-decoration:none;transition:all 0.2s;white-space:nowrap" onmouseover="this.style.background='rgba(59,130,246,0.18)'" onmouseout="this.style.background='rgba(59,130,246,0.1)'">View portfolio pricing →</a>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="section faq-section" id="faq">
-  <div class="section-inner">
-    <div class="eyebrow reveal">FAQ</div>
-    <h2 class="reveal">Common <span class="serif">questions</span></h2>
-    <p class="section-p reveal">Everything landlords ask before getting compliant.</p>
-
-    <div class="faq-grid reveal">
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          What exactly is the Information Sheet and why do I need to send it?
-          <span class="faq-arrow">▼</span>
-        </div>
-        <div class="faq-a">The Renters' Rights Act 2025 came into force on 1 May 2026. It requires all private landlords in England to provide the official government Information Sheet to every tenant by 31 May 2026. The document explains tenants' new rights under the Act. Failure to comply carries a fine of up to £7,000.</div>
-      </div>
-
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          Can't I just email the document myself?
-          <span class="faq-arrow">▼</span>
-        </div>
-        <div class="faq-a">You can — but the law places the burden of proof entirely on you. If your tenant claims they never received it, a standard email provides no legal protection. Our service provides a timestamped proof-of-service certificate with IP address, device, and exact read time — far stronger evidence than a forwarded email.</div>
-      </div>
-
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          Can I just send a link to the PDF?
-          <span class="faq-arrow">▼</span>
-        </div>
-        <div class="faq-a">No. GOV.UK guidance explicitly states that sending a web link to the document is not valid. You must send the PDF as a direct attachment. Our system does this automatically and correctly.</div>
-      </div>
-
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          What if my tenant doesn't open it?
-          <span class="faq-arrow">▼</span>
-        </div>
-        <div class="faq-a">We send an automatic reminder to your tenant after 48 hours if they haven't opened the document. Your dashboard shows the live status so you know exactly where things stand. The fact of delivery is recorded regardless of whether the tenant reads it.</div>
-      </div>
-
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          I have multiple properties — how does that work?
-          <span class="faq-arrow">▼</span>
-        </div>
-        <div class="faq-a">Each property is processed as a separate order. Your dashboard shows all properties in one place. If you have 5 or more properties, contact us for a portfolio discount before ordering.</div>
-      </div>
-
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          The deadline has already passed — is it too late?
-          <span class="faq-arrow">▼</span>
-        </div>
-        <div class="faq-a">Late service is significantly better than no service. Landlords who can demonstrate they acted promptly — even after the deadline — are in a far stronger position if challenged. We can process retrospective packs with full documentation. Act today.</div>
-      </div>
-
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          Is this legal advice?
-          <span class="faq-arrow">▼</span>
-        </div>
-        <div class="faq-a">No. CompliantUK provides document delivery and compliance tracking services. We are not solicitors and this is not legal advice. For specific legal questions about your situation, we recommend consulting a qualified solicitor.</div>
-      </div>
-
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          What about new tenancies starting after 1 May 2026?
-          <span class="faq-arrow">▼</span>
-        </div>
-        <div class="faq-a">For tenancies starting on or after 1 May 2026, different requirements apply — you must provide certain written information before the tenancy is agreed, usually in the tenancy agreement. Contact us for guidance on new tenancies.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- POST-DEADLINE CTA -->
-<section class="post-deadline">
-  <div class="post-inner">
-    <div class="post-tag">
-      <span class="bar-dot"></span>
-      Missed the deadline?
-    </div>
-    <h2>You may already be in breach.<br><span class="serif">Act now.</span></h2>
-    <p>Local authorities have had new investigatory powers since December 2025. Tenants are increasingly aware of their rights. Late service is still far better than no service — and acting with documented proof puts you in a far stronger position.</p>
-    <button class="post-btn" onclick="document.getElementById('get-compliant').scrollIntoView({behavior:'smooth'})">
-      Rectify it now — £49 →
-    </button>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <div class="logo">
-      <div class="logo-mark">✓</div>
-      <span class="logo-name">Compliant<span>UK</span></span>
-    </div>
-    <ul class="footer-links">
-      <li><a href="about.html">About</a></li>
-      <li><a href="privacy.html">Privacy</a></li>
-      <li><a href="terms.html">Terms</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <li><a href="login.html">Log in</a></li>
-    </ul>
-    <div class="footer-copy">© 2026 CompliantUK. All rights reserved.</div>
-  </div>
-  <div class="footer-disclaimer">
-    CompliantUK provides document delivery and compliance tracking services for private landlords in England. We are not solicitors and nothing on this website constitutes legal advice. Always consult a qualified solicitor for advice specific to your circumstances. The Renters' Rights Act 2025 information provided is for general guidance only and may be subject to change.
-  </div>
-</footer>
+<footer><div class="fi"><a href="/" class="logo"><div class="logo-mark">✓</div><span class="logo-name">Compliant<span>UK</span></span></a><div class="fl"><a href="/about.html">About</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/contact.html">Contact</a><a href="/login.html">Log in</a></div><span class="fc">© 2026 CompliantUK. All rights reserved.</span></div><p class="flg">CompliantUK provides document delivery and compliance tracking services for private landlords in England. We are not solicitors and nothing on this website constitutes legal advice. Always consult a qualified solicitor for advice specific to your circumstances. The Renters' Rights Act 2025 information provided is for general guidance only and may be subject to change.</p></footer>
 
 <script>
-// ── COUNTDOWN ──────────────────────────────────────────────────────────────
-function updateCountdown() {
-  try {
-    var deadline = new Date('2026-05-31T23:59:59');
-    var now = new Date();
-    var diff = deadline - now;
-    var cdEl = document.getElementById('live-countdown');
-    var daysEl = document.getElementById('days-num');
-
-    if (diff <= 0) {
-      if (cdEl) cdEl.textContent = 'DEADLINE PASSED';
-      if (daysEl) daysEl.textContent = '0';
-      return;
-    }
-
-    var days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-    if (cdEl) cdEl.textContent = days + 'd ' + hours + 'h ' + mins + 'm';
-    if (daysEl) daysEl.textContent = days;
-  } catch(e) {
-    console.log('Countdown error:', e);
-  }
-}
-// Run countdown immediately and on interval
-function startCountdown() {
-  updateCountdown();
-  setInterval(updateCountdown, 10000);
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', startCountdown);
-} else {
-  startCountdown();
-}
-
-// ── SCROLL REVEAL ─────────────────────────────────────────────────────────
-// Only use scroll animations if IntersectionObserver is supported
-if ('IntersectionObserver' in window) {
-  document.querySelectorAll('.reveal').forEach(el => {
-    el.classList.add('hidden');
-  });
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.remove('hidden');
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-}
-
-// ── FAQ ───────────────────────────────────────────────────────────────────
-function toggleFaq(el) {
-  const isOpen = el.classList.contains('open');
-  // Close all open items
-  document.querySelectorAll('.faq-item').forEach(function(item) {
-    item.classList.remove('open');
-  });
-  // Open clicked item if it wasn't already open
-  if (!isOpen) {
-    el.classList.add('open');
-  }
-}
-
-// ── TAB SWITCHING ────────────────────────────────────────────────────────
-function switchTab(tab, btn) {
-  document.querySelectorAll('.card-tab').forEach(function(t){ t.classList.remove('active'); });
-  btn.classList.add('active');
-  document.getElementById('tab-starter').style.display = tab === 'starter' ? 'block' : 'none';
-  document.getElementById('tab-tenancy').style.display = tab === 'tenancy' ? 'block' : 'none';
-}
-
-// ── BUNDLE CHECKOUT ───────────────────────────────────────────────────────
-function handleBundleCheckout(btn) {
-  hideError();
-  var firstName   = document.getElementById('b-firstname').value.trim();
-  var lastName    = document.getElementById('b-lastname').value.trim();
-  var email       = document.getElementById('b-email').value.trim();
-  var address     = document.getElementById('b-address').value.trim();
-  var tenantName  = document.getElementById('b-tenant-name').value.trim();
-  var tenantEmail = document.getElementById('b-tenant-email').value.trim();
-
-  if (!firstName || !lastName) { showError('Please enter your full name.'); return; }
-  if (!email || !validateEmail(email)) { showError('Please enter a valid email address.'); return; }
-  if (!address) { showError('Please enter the property address.'); return; }
-  if (!tenantName) { showError('Please enter your tenant name.'); return; }
-  if (!tenantEmail || !validateEmail(tenantEmail)) { showError('Please enter a valid tenant email address.'); return; }
-  if (email.toLowerCase() === tenantEmail.toLowerCase()) { showError('Your email and tenant email cannot be the same.'); return; }
-
-  btn.textContent = 'Redirecting to secure checkout...';
-  btn.disabled = true;
-  btn.style.opacity = '0.8';
-
-  var BUNDLE_LINK = 'https://buy.stripe.com/14A5kv9hdfne7nG8i39bO02';
-  var stripeUrl = BUNDLE_LINK + '?prefilled_email=' + encodeURIComponent(email) + '&client_reference_id=bundle_' + encodeURIComponent(address.substring(0, 40));
-
-  setTimeout(function() { window.location.href = stripeUrl; }, 800);
-}
-
-// ── CHECKOUT ──────────────────────────────────────────────────────────────
-function showError(msg) {
-  const el = document.getElementById('form-error');
-  el.textContent = msg;
-  el.style.display = 'block';
-  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-function hideError() {
-  const el = document.getElementById('form-error');
-  if (el) el.style.display = 'none';
-}
-
-function validateEmail(email) {
-  return email.indexOf('@') > 0 && email.indexOf('.') > email.indexOf('@');
-}
-
-// ── STRIPE LINKS & PRICING ──
-var STRIPE_LINKS = {
-  1: 'https://buy.stripe.com/14A5kv9hdfne7nG8i39bO02',
-  2: 'https://buy.stripe.com/8x26oz50Xdf6cI00PB9bO05',
-  3: 'https://buy.stripe.com/8x2cMXfFBcb2azSgOz9bO04',
-  4: 'https://buy.stripe.com/cNieV5bpl7UM4budCn9bO03'
-};
-var PRICES = {1:49, 2:78, 3:97, 4:116};
-var currentTenantCount = 1;
-
-// ── TENANT SELECTOR ──
-function setTenantCount(count, btn) {
-  currentTenantCount = count;
-  document.querySelectorAll('.tenant-count-btn').forEach(function(b){ b.classList.remove('active'); });
-  btn.classList.add('active');
-  var price = PRICES[count];
-  document.getElementById('price-display').textContent = '£' + price;
-  document.getElementById('price-label').textContent = count + ' tenant' + (count > 1 ? 's' : '') + ' — Compliance pack';
-  document.getElementById('price-includes').textContent = count > 1 ? 'Info Sheet · Proof certificate · Each tenant emailed individually' : 'Info Sheet · Proof certificate · Tracking';
-  document.getElementById('checkout-btn').textContent = 'Pay £' + price + ' via Card — Become compliant instantly';
-  renderTenantFields(count);
-}
-
-function renderTenantFields(count) {
-  var container = document.getElementById('tenant-fields');
-  var html = '';
-  for (var i = 1; i <= count; i++) {
-    var label = count === 1 ? 'Tenant' : 'Tenant ' + i;
-    html += '<div class="tenant-group">';
-    html += '<div class="tenant-group-label">' + label + '</div>';
-    html += '<div class="field-row">';
-    html += '<div class="field"><label>Name *</label><input type="text" id="f-tenant-name-' + i + '" placeholder="Jane Smith" /></div>';
-    html += '<div class="field"><label>Email *</label><input type="email" id="f-tenant-email-' + i + '" placeholder="tenant@email.com" /></div>';
-    html += '</div></div>';
-  }
-  container.innerHTML = html;
-}
-
-// ── VALIDATION & CHECKOUT ──
-function handleCheckout(btn) {
-  hideError();
-  var firstName = document.getElementById('f-firstname').value.trim();
-  var lastName  = document.getElementById('f-lastname').value.trim();
-  var email     = document.getElementById('f-email').value.trim();
-  var address   = document.getElementById('f-address').value.trim();
-  if (!firstName || !lastName) { showError('Please enter your full name.'); return; }
-  if (!email || !validateEmail(email)) { showError('Please enter a valid email address.'); return; }
-  if (!address) { showError('Please enter the property address.'); return; }
-  var tenants = [];
-  for (var i = 1; i <= currentTenantCount; i++) {
-    var tName  = document.getElementById('f-tenant-name-' + i).value.trim();
-    var tEmail = document.getElementById('f-tenant-email-' + i).value.trim();
-    if (!tName) { showError('Please enter the name for Tenant ' + i + '.'); return; }
-    if (!tEmail || !validateEmail(tEmail)) { showError('Please enter a valid email for Tenant ' + i + '.'); return; }
-    if (tEmail.toLowerCase() === email.toLowerCase()) { showError('Tenant ' + i + ' email cannot be the same as your email.'); return; }
-    for (var j = 0; j < tenants.length; j++) {
-      if (tenants[j].email.toLowerCase() === tEmail.toLowerCase()) { showError('Tenant ' + i + ' has the same email as Tenant ' + (j+1) + '.'); return; }
-    }
-    tenants.push({ name: tName, email: tEmail });
-  }
-  try { sessionStorage.setItem('pendingOrder', JSON.stringify({ landlordName: firstName+' '+lastName, landlordEmail: email, propertyAddress: address, tenants: tenants, tenantCount: currentTenantCount, amount: PRICES[currentTenantCount]*100 })); } catch(e) {}
-  btn.textContent = 'Redirecting to secure checkout...';
-  btn.disabled = true;
-  btn.style.opacity = '0.8';
-  var stripeUrl = STRIPE_LINKS[currentTenantCount] + '?prefilled_email=' + encodeURIComponent(email) + '&client_reference_id=' + encodeURIComponent(address.substring(0,50));
-  setTimeout(function(){ window.location.href = stripeUrl; }, 800);
-}
-
-// Initialise tenant fields on load
-renderTenantFields(1);
-
-// ── NAV ACTIVE STATE ──────────────────────────────────────────────────────
-window.addEventListener('scroll', () => {
-  const nav = document.querySelector('nav');
-  if (window.scrollY > 20) {
-    nav.style.borderBottomColor = 'rgba(255,255,255,0.1)';
-  } else {
-    nav.style.borderBottomColor = 'rgba(255,255,255,0.07)';
-  }
-});// ── HAMBURGER MENU ────────────────────────────────────────────────────────
-function toggleMenu() {
-  var menu = document.getElementById('mobile-menu');
-  var burger = document.getElementById('hamburger');
-  var isOpen = menu.classList.contains('open');
-  if (isOpen) {
-    menu.classList.remove('open');
-    burger.classList.remove('open');
-  } else {
-    menu.classList.add('open');
-    burger.classList.add('open');
-  }
-}
-
-function closeMenu() {
-  var menu = document.getElementById('mobile-menu');
-  var burger = document.getElementById('hamburger');
-  menu.classList.remove('open');
-  burger.classList.remove('open');
-}
-
-document.addEventListener('click', function(e) {
-  var menu = document.getElementById('mobile-menu');
-  var burger = document.getElementById('hamburger');
-  if (menu && burger && !menu.contains(e.target) && !burger.contains(e.target)) {
-    menu.classList.remove('open');
-    burger.classList.remove('open');
-  }
-});
+const PRICES={1:49,2:78,3:97,4:116};
+let n=1;
+function updateCountdown(){const d=new Date('2026-05-31T23:59:59'),now=new Date(),diff=d-now;if(diff<=0){document.getElementById('cd').textContent='Deadline passed';return}const days=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000);document.getElementById('cd').textContent=`${days}d ${h}h ${m}m`;document.getElementById('ds').textContent=days}
+updateCountdown();setInterval(updateCountdown,60000);
+function setCount(x){n=x;document.querySelectorAll('.tcb').forEach(b=>b.classList.toggle('active',+b.dataset.n===x));renderTenants();updatePrice()}
+function renderTenants(){const c=document.getElementById('tg');let h='';for(let i=1;i<=n;i++)h+=`<div class="tg"><div class="tglbl">Tenant ${i}</div><div class="fr"><div class="f"><label>First name *</label><input type="text" id="t${i}f" placeholder="First name" required></div><div class="f"><label>Last name *</label><input type="text" id="t${i}l" placeholder="Last name" required></div></div><div class="f"><label>Email address *</label><input type="email" id="t${i}e" placeholder="tenant@example.com" required></div></div>`;c.innerHTML=h}
+function updatePrice(){const p=PRICES[n];document.getElementById('pval').textContent=`£${p}`;document.getElementById('bprice').textContent=`£${p}`;document.getElementById('plbl').textContent=`${n} tenant${n>1?'s':''} — Starter compliance pack`}
+function handlePay(){const lf=document.getElementById('lf').value.trim(),ll=document.getElementById('ll').value.trim(),le=document.getElementById('le').value.trim(),pa=document.getElementById('pa').value.trim();if(!lf||!ll||!le||!pa){alert('Please fill in all your details.');return}const tenants=[];for(let i=1;i<=n;i++){const f=document.getElementById(`t${i}f`).value.trim(),l=document.getElementById(`t${i}l`).value.trim(),e=document.getElementById(`t${i}e`).value.trim();if(!f||!l||!e){alert('Please fill in all tenant details.');return}tenants.push({first:f,last:l,email:e})}const order={landlordFirst:lf,landlordLast:ll,landlordEmail:le,propertyAddress:pa,tenantCount:n,tenants,price:PRICES[n]};sessionStorage.setItem('pendingOrder',JSON.stringify(order));window.location.href=`/api/create-checkout?tenants=${n}&price=${PRICES[n]}`}
+function faq(btn){const open=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',!open);const a=btn.nextElementSibling;a.style.maxHeight=open?'0':a.scrollHeight+'px'}
+function toggleMenu(){document.getElementById('mob').classList.toggle('open')}
+renderTenants();
 </script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js').then(function(reg) {
-      console.log('SW registered');
-    }).catch(function(err) {
-      console.log('SW error', err);
-    });
-  });
-}
-</script>
-
-<!-- PayPal Integration -->
-<script src="https://www.paypal.com/sdk/js?client-id=7Y8VFG3UKV55L&currency=GBP"></script>
-<script>
-if (window.paypal) {
-  paypal.Buttons({
-    createOrder: function(data, actions) {
-      var firstName = document.getElementById('f-firstname').value.trim();
-      var lastName = document.getElementById('f-lastname').value.trim();
-      var email = document.getElementById('f-email').value.trim();
-      var address = document.getElementById('f-address').value.trim();
-      var amount = (PRICES[currentTenantCount] || 49).toString();
-      if (!firstName || !lastName || !email || !address) { showError('Please fill in all required fields'); return; }
-      return actions.order.create({
-        purchase_units: [{
-          amount: { value: amount, currency_code: 'GBP' },
-          description: 'Renters Rights Act Compliance - ' + currentTenantCount + ' tenant(s)',
-          custom_id: address.substring(0,50)
-        }],
-        payer: { name: { given_name: firstName, surname: lastName }, email_address: email }
-      });
-    },
-    onApprove: function(data, actions) {
-      return actions.order.capture().then(function(orderData) {
-        var firstName = document.getElementById('f-firstname').value.trim();
-        var lastName = document.getElementById('f-lastname').value.trim();
-        var email = document.getElementById('f-email').value.trim();
-        var address = document.getElementById('f-address').value.trim();
-        var tenants = [];
-        for (var i = 1; i <= currentTenantCount; i++) {
-          var tName = document.getElementById('f-tenant-name-' + i).value.trim();
-          var tEmail = document.getElementById('f-tenant-email-' + i).value.trim();
-          tenants.push({ name: tName, email: tEmail });
-        }
-        fetch('/api/paypal-webhook', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderId: orderData.id,
-            customerName: firstName + ' ' + lastName,
-            customerEmail: email,
-            propertyAddress: address,
-            tenants: tenants,
-            amount: PRICES[currentTenantCount]
-          })
-        }).then(r => r.json()).then(d => {
-          if (d.success) { window.location.href = 'success.html'; }
-        }).catch(e => { showError('Payment processing failed'); });
-      });
-    },
-    onError: function(err) { console.error('PayPal error:', err); showError('PayPal encountered an issue. Please try paying by card instead, or contact support@compliantuk.co.uk'); }
-  }).render('#paypal-button-container');
-}
-</script>
-
 </body>
 </html>
+
