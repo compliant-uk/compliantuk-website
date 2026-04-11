@@ -19,7 +19,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 max(4%,20px)}
 .nw{max-width:1280px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .logo{display:flex;align-items:center;gap:9px;text-decoration:none}
-.lm{width:32px;height:32px;background:linear-gradient(135deg,var(--blue3),var(--blue));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:white}
+.lm{display:flex;align-items:center;justify-content:center;width:32px;height:32px}
 .ln{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.4px}.ln span{color:var(--blue2)}
 .nav-right{display:flex;align-items:center;gap:12px}
 .nav-badge{font-size:11px;font-weight:700;color:var(--text3);font-family:var(--mono);background:rgba(255,255,255,0.05);border:1px solid var(--border2);padding:4px 10px;border-radius:6px}
@@ -144,7 +144,7 @@ nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filt
 
 <nav>
   <div class="nw">
-    <a href="/" class="logo"><div class="lm">✓</div><span class="ln">Compliant<span>UK</span></span></a>
+    <a href="/" class="logo"><div class="lm"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><path d="M16 2L4 7v8c0 7.18 5.16 13.9 12 15.93C22.84 28.9 28 22.18 28 15V7L16 2z" fill="url(#sg)"/><polyline points="10,16 14,20 22,12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div><span class="ln">Compliant<span>UK</span></span></a>
     <div class="nav-right">
       <span class="nav-badge">LANDLORD DASHBOARD</span>
       <span class="nav-email" id="navEmail"></span>
