@@ -79,7 +79,15 @@ export default async function handler(req, res) {
   }
 
   const session = event.data.object;
-  const meta = session.metadata;
+  const meta = session.metadata || {};
+
+  // Fallback: read email from session if not in metadata
+  if (!meta.landlordEmail && session.customer_details?.email) {
+    meta.landlordEmail = session.customer_details.email;
+  }
+  if (!meta.landlordEmail && session.customer_email) {
+    meta.landlordEmail = session.customer_email;
+  }
 
   try {
     // ── Detect bulk vs single order ──────────────────────────────────────────
@@ -204,8 +212,8 @@ export default async function handler(req, res) {
 
     // ── Single property order ────────────────────────────────────────────────
     const {
-      landlordFirst,
-      landlordLast,
+      landlordFirst = session.customer_details?.name?.split(' ')[0] || 'Landlord',
+      landlordLast = session.customer_details?.name?.split(' ').slice(1).join(' ') || '',
       landlordEmail,
       propertyAddress,
       tenantCount,
