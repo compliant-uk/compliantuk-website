@@ -1,218 +1,221 @@
 // api/generate-certificate.js
-// Generates a branded PDF compliance certificate using pdf-lib
-// Called internally by send-documents.js after payment
+// Generates a professional proof-of-service certificate PDF
+// Called from track.js when tenant reads the document
 
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
-// Colour palette matching CompliantUK brand
-const BRAND_DARK   = rgb(0.102, 0.102, 0.180); // #1a1a2e
-const BRAND_BLUE   = rgb(0.231, 0.510, 0.965); // #3b82f6
-const BRAND_GREEN  = rgb(0.133, 0.773, 0.369); // #22c55e
-const BRAND_LIGHT  = rgb(0.973, 0.980, 0.992); // #f8fafc
-const WHITE        = rgb(1, 1, 1);
-const GREY         = rgb(0.392, 0.455, 0.545); // #64748b
-const BORDER_GREY  = rgb(0.886, 0.914, 0.941); // #e2e8f0
-
-function generateReferenceNumber() {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day   = String(date.getDate()).padStart(2, '0');
-  const rand  = Math.random().toString(36).substring(2, 7).toUpperCase();
-  return `CUK-${year}${month}${day}-${rand}`;
-}
-
-function formatDate(date = new Date()) {
-  return date.toLocaleDateString('en-GB', {
-    day: 'numeric', month: 'long', year: 'numeric'
-  });
-}
-
-export async function generateComplianceCertificate({
-  landlordName,
+/**
+ * Generate a proof-of-service certificate PDF
+ * @returns {Promise<Buffer>} PDF as a Buffer
+ */
+export async function generateCertificatePdf({
   propertyAddress,
-  tenantName,
-  plan,
-  paymentReference,
+  tenantFirst,
+  tenantLast,
+  tenantEmail,
+  sentAt,
+  readAt,
+  ipAddress,
+  device,
+  trackingId,
+  landlordId,
 }) {
   const pdfDoc = await PDFDocument.create();
-  const page   = pdfDoc.addPage([595, 842]); // A4
+  const page = pdfDoc.addPage([595, 842]); // A4
   const { width, height } = page.getSize();
 
-  const fontBold    = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const fontOblique = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-  const ref         = generateReferenceNumber();
-  const issuedDate  = formatDate();
+  // Colours
+  const navy     = rgb(0.031, 0.047, 0.078);  // #080c14
+  const blue     = rgb(0.231, 0.510, 0.965);  // #3b82f6
+  const blue2    = rgb(0.376, 0.647, 0.980);  // #60a5fa
+  const emerald  = rgb(0.063, 0.725, 0.506);  // #10b981
+  const slate    = rgb(0.580, 0.635, 0.722);  // #94a3b8
+  const dark     = rgb(0.063, 0.094, 0.157);  // #101828
+  const lightBg  = rgb(0.973, 0.984, 0.996);  // #f8fafc
+  const borderC  = rgb(0.882, 0.914, 0.941);  // #e2e8f0
+  const green    = rgb(0.166, 0.663, 0.376);  // #2aa760
+  const white    = rgb(1, 1, 1);
 
-  // ── Header band ──────────────────────────────────────────────────────────
-  page.drawRectangle({ x: 0, y: height - 100, width, height: 100, color: BRAND_DARK });
+  // ── HEADER BAND ──
+  page.drawRectangle({ x: 0, y: height - 120, width, height: 120, color: navy });
+
+  // Logo mark
+  page.drawRectangle({ x: 40, y: height - 85, width: 32, height: 32, color: blue, borderRadius: 6 });
+  page.drawText('✓', { x: 48, y: height - 68, size: 14, font: helveticaBold, color: white });
 
   // Logo text
-  page.drawText('CompliantUK', {
-    x: 40, y: height - 52,
-    size: 22, font: fontBold, color: WHITE,
+  page.drawText('CompliantUK', { x: 80, y: height - 72, size: 16, font: helveticaBold, color: white });
+
+  // Header right: certificate label
+  page.drawText('PROOF OF SERVICE CERTIFICATE', {
+    x: width - 280,
+    y: height - 64,
+    size: 9,
+    font: helveticaBold,
+    color: blue2,
   });
-  page.drawText('Renters Rights Act Compliance Platform', {
-    x: 40, y: height - 72,
-    size: 9, font: fontRegular, color: rgb(0.576, 0.769, 0.984),
+  page.drawText('Renters\' Rights Act 2025 — Compliance Record', {
+    x: width - 280,
+    y: height - 78,
+    size: 8,
+    font: helvetica,
+    color: slate,
   });
 
-  // CERTIFIED badge (top right)
-  page.drawRectangle({ x: width - 130, y: height - 80, width: 100, height: 56, color: BRAND_BLUE, borderRadius: 4 });
-  page.drawText('CERTIFIED', { x: width - 120, y: height - 44, size: 11, font: fontBold, color: WHITE });
-  page.drawText('COMPLIANT', { x: width - 120, y: height - 58, size: 11, font: fontBold, color: WHITE });
+  // ── ACCENT BAR ──
+  page.drawRectangle({ x: 0, y: height - 124, width, height: 4, color: blue });
 
-  // ── Certificate title area ───────────────────────────────────────────────
-  page.drawRectangle({ x: 0, y: height - 165, width, height: 65, color: BRAND_LIGHT });
-  page.drawText('PROOF OF COMPLIANCE CERTIFICATE', {
-    x: 40, y: height - 135,
-    size: 16, font: fontBold, color: BRAND_DARK,
+  // ── MAIN TITLE ──
+  page.drawText('PROOF OF SERVICE', {
+    x: 40, y: height - 168,
+    size: 28, font: helveticaBold, color: dark,
   });
-  page.drawText('Renters Rights Act 2025 — Information Sheet Service Record', {
-    x: 40, y: height - 155,
-    size: 9, font: fontRegular, color: GREY,
+  page.drawText('This certificate confirms that the official Government Information Sheet', {
+    x: 40, y: height - 196,
+    size: 11, font: helvetica, color: rgb(0.4, 0.45, 0.5),
   });
-
-  // Ref + date (right side)
-  page.drawText(`Ref: ${ref}`, {
-    x: width - 200, y: height - 135,
-    size: 9, font: fontBold, color: BRAND_BLUE,
-  });
-  page.drawText(`Issued: ${issuedDate}`, {
-    x: width - 200, y: height - 150,
-    size: 8, font: fontRegular, color: GREY,
+  page.drawText('was delivered to and read by the tenant named below.', {
+    x: 40, y: height - 212,
+    size: 11, font: helvetica, color: rgb(0.4, 0.45, 0.5),
   });
 
-  // ── Green confirmation banner ────────────────────────────────────────────
-  page.drawRectangle({ x: 40, y: height - 215, width: width - 80, height: 36, color: rgb(0.240, 0.918, 0.494, 0.15), borderRadius: 4 });
-  page.drawRectangle({ x: 40, y: height - 215, width: 4, height: 36, color: BRAND_GREEN });
-  page.drawText('CONFIRMED:  The Renters Rights Act Information Sheet has been issued for the property below.', {
-    x: 54, y: height - 193,
-    size: 9, font: fontBold, color: rgb(0.067, 0.400, 0.169),
-  });
-  page.drawText('This certificate serves as your legal proof of compliance under Section 3 of the Renters Rights Act 2025.', {
-    x: 54, y: height - 207,
-    size: 8, font: fontRegular, color: rgb(0.067, 0.400, 0.169),
-  });
+  // ── VERIFIED BADGE ──
+  page.drawRectangle({ x: width - 140, y: height - 200, width: 100, height: 44, color: rgb(0.94, 0.99, 0.96), borderRadius: 8 });
+  page.drawRectangle({ x: width - 140, y: height - 200, width: 100, height: 44, borderColor: rgb(0.73, 0.93, 0.81), borderWidth: 1, borderRadius: 8 });
+  page.drawText('✓ VERIFIED', { x: width - 125, y: height - 174, size: 10, font: helveticaBold, color: green });
+  page.drawText('Auto-generated', { x: width - 128, y: height - 188, size: 8, font: helvetica, color: rgb(0.4, 0.6, 0.45) });
 
-  // ── Details section ──────────────────────────────────────────────────────
-  let y = height - 250;
+  // Divider
+  page.drawLine({ start: { x: 40, y: height - 230 }, end: { x: width - 40, y: height - 230 }, thickness: 1, color: borderC });
 
-  function drawDetailRow(label, value, yPos) {
-    page.drawRectangle({ x: 40, y: yPos - 4, width: width - 80, height: 28, color: BRAND_LIGHT, borderRadius: 3 });
-    page.drawText(label, { x: 52, y: yPos + 8, size: 8, font: fontBold, color: GREY });
-    page.drawText(value || '—', { x: 200, y: yPos + 8, size: 9, font: fontRegular, color: BRAND_DARK });
-    return yPos - 36;
+  // ── INFO GRID ──
+  const sectionY = height - 270;
+  const col1 = 40, col2 = 320;
+
+  function drawField(label, value, x, y) {
+    page.drawText(label.toUpperCase(), { x, y, size: 8, font: helveticaBold, color: slate });
+    const lines = wrapText(value, 32);
+    lines.forEach((line, i) => {
+      page.drawText(line, { x, y: y - 14 - (i * 14), size: 11, font: helveticaBold, color: dark });
+    });
+    return y - 14 - (lines.length * 14) - 8;
   }
 
-  page.drawText('COMPLIANCE DETAILS', { x: 40, y: y, size: 10, font: fontBold, color: BRAND_DARK });
-  page.drawLine({ start: { x: 40, y: y - 8 }, end: { x: width - 40, y: y - 8 }, thickness: 1, color: BORDER_GREY });
-  y -= 24;
+  drawField('Property Address', propertyAddress, col1, sectionY);
+  drawField('Landlord Reference', landlordId ? `LND-${landlordId.substring(0, 8).toUpperCase()}` : 'N/A', col2, sectionY);
 
-  y = drawDetailRow('Landlord / Agent Name', landlordName || 'Not provided', y);
-  y = drawDetailRow('Property Address',       propertyAddress,               y);
-  y = drawDetailRow('Tenant Name',            tenantName || 'Not provided',  y);
-  y = drawDetailRow('Compliance Package',     plan === 'bundle' ? 'Complete Bundle (£89) — Information Sheet + Updated Tenancy Agreement' : 'Starter (£49) — Information Sheet + Proof of Service', y);
-  y = drawDetailRow('Date of Issue',          issuedDate,                    y);
-  y = drawDetailRow('Payment Reference',      paymentReference || ref,       y);
-  y = drawDetailRow('Certificate Reference',  ref,                           y);
+  const row2Y = sectionY - 56;
+  drawField('Tenant Name', `${tenantFirst} ${tenantLast}`, col1, row2Y);
+  drawField('Tenant Email', tenantEmail, col2, row2Y);
 
-  // ── Documents included ───────────────────────────────────────────────────
-  y -= 16;
-  page.drawText('DOCUMENTS INCLUDED IN THIS PACKAGE', { x: 40, y, size: 10, font: fontBold, color: BRAND_DARK });
-  page.drawLine({ start: { x: 40, y: y - 8 }, end: { x: width - 40, y: y - 8 }, thickness: 1, color: BORDER_GREY });
-  y -= 24;
+  // Divider
+  const row3Y = row2Y - 56;
+  page.drawLine({ start: { x: 40, y: row3Y + 10 }, end: { x: width - 40, y: row3Y + 10 }, thickness: 0.5, color: borderC });
 
-  const docs = [
-    { name: 'Renters Rights Act Information Sheet', desc: 'Government-prescribed document — serve on tenant immediately' },
-    { name: 'Proof of Service Certificate',         desc: 'This document — retain for your records' },
-    ...(plan === 'bundle' ? [{ name: 'Updated Section 21-Compliant Tenancy Agreement', desc: 'Revised 2026 template aligned with Renters Rights Act' }] : []),
-  ];
+  // ── DELIVERY & READ TIMESTAMPS ──
+  const tsY = row3Y - 20;
+  page.drawText('DELIVERY & READ RECORD', { x: 40, y: tsY, size: 9, font: helveticaBold, color: blue });
 
-  for (const doc of docs) {
-    page.drawCircle({ x: 52, y: y + 5, size: 5, color: BRAND_BLUE });
-    page.drawText(doc.name, { x: 64, y: y + 2, size: 9, font: fontBold, color: BRAND_DARK });
-    page.drawText(doc.desc, { x: 64, y: y - 10, size: 8, font: fontRegular, color: GREY });
-    y -= 28;
-  }
+  // Sent box
+  const sentDate = formatDate(sentAt);
+  page.drawRectangle({ x: 40, y: tsY - 60, width: 240, height: 55, color: lightBg, borderRadius: 8 });
+  page.drawRectangle({ x: 40, y: tsY - 60, width: 240, height: 55, borderColor: borderC, borderWidth: 1, borderRadius: 8 });
+  page.drawText('📧  DOCUMENT SENT', { x: 54, y: tsY - 28, size: 8, font: helveticaBold, color: slate });
+  page.drawText(sentDate, { x: 54, y: tsY - 44, size: 11, font: helveticaBold, color: dark });
 
-  // ── Legal statement ──────────────────────────────────────────────────────
-  y -= 16;
-  page.drawRectangle({ x: 40, y: y - 52, width: width - 80, height: 72, color: rgb(0.937, 0.949, 0.996), borderRadius: 4 });
-  page.drawText('LEGAL STATEMENT', { x: 52, y: y - 4, size: 9, font: fontBold, color: BRAND_BLUE });
+  // Arrow
+  page.drawText('→', { x: 295, y: tsY - 36, size: 16, font: helveticaBold, color: blue });
 
-  const legalText = [
-    'This certificate confirms that the Renters Rights Act 2025 Information Sheet has been generated and issued',
-    `for the above property on ${issuedDate}. The landlord or managing agent is responsible for ensuring the`,
-    'Information Sheet is physically served on the tenant prior to or at the commencement of any new tenancy.',
-    'Failure to serve the Information Sheet may result in a civil penalty of up to £7,000 under the Act.',
-  ];
+  // Read box (highlighted)
+  const readDate = formatDate(readAt);
+  page.drawRectangle({ x: 315, y: tsY - 60, width: 240, height: 55, color: rgb(0.94, 0.99, 0.96), borderRadius: 8 });
+  page.drawRectangle({ x: 315, y: tsY - 60, width: 240, height: 55, borderColor: rgb(0.73, 0.93, 0.81), borderWidth: 1.5, borderRadius: 8 });
+  page.drawText('✓  DOCUMENT READ', { x: 329, y: tsY - 28, size: 8, font: helveticaBold, color: green });
+  page.drawText(readDate, { x: 329, y: tsY - 44, size: 11, font: helveticaBold, color: dark });
 
-  let ly = y - 18;
-  for (const line of legalText) {
-    page.drawText(line, { x: 52, y: ly, size: 7.5, font: fontRegular, color: BRAND_DARK });
-    ly -= 11;
-  }
-  y -= 80;
+  // ── TECHNICAL EVIDENCE ──
+  const evY = tsY - 90;
+  page.drawLine({ start: { x: 40, y: evY + 10 }, end: { x: width - 40, y: evY + 10 }, thickness: 0.5, color: borderC });
 
-  // ── Signature section ────────────────────────────────────────────────────
-  y -= 8;
-  page.drawText('PROOF OF SERVICE', { x: 40, y, size: 10, font: fontBold, color: BRAND_DARK });
-  page.drawLine({ start: { x: 40, y: y - 8 }, end: { x: width - 40, y: y - 8 }, thickness: 1, color: BORDER_GREY });
-  y -= 24;
+  page.drawText('TECHNICAL EVIDENCE', { x: 40, y: evY - 10, size: 9, font: helveticaBold, color: blue });
 
-  page.drawText('Landlord / Agent signature:', { x: 40, y, size: 9, font: fontRegular, color: GREY });
-  page.drawLine({ start: { x: 200, y }, end: { x: 380, y }, thickness: 0.5, color: BRAND_DARK });
+  page.drawText('IP Address:', { x: 40, y: evY - 30, size: 9, font: helveticaBold, color: slate });
+  page.drawText(ipAddress, { x: 130, y: evY - 30, size: 10, font: helvetica, color: dark });
 
-  page.drawText('Date served to tenant:', { x: 40, y: y - 24, size: 9, font: fontRegular, color: GREY });
-  page.drawLine({ start: { x: 200, y: y - 24 }, end: { x: 380, y: y - 24 }, thickness: 0.5, color: BRAND_DARK });
+  page.drawText('Device Type:', { x: 40, y: evY - 47, size: 9, font: helveticaBold, color: slate });
+  page.drawText(device, { x: 130, y: evY - 47, size: 10, font: helvetica, color: dark });
 
-  page.drawText('Tenant signature (acknowledgement):', { x: 40, y: y - 48, size: 9, font: fontRegular, color: GREY });
-  page.drawLine({ start: { x: 200, y: y - 48 }, end: { x: 380, y: y - 48 }, thickness: 0.5, color: BRAND_DARK });
+  page.drawText('Certificate ID:', { x: 40, y: evY - 64, size: 9, font: helveticaBold, color: slate });
+  page.drawText(trackingId, { x: 130, y: evY - 64, size: 9, font: helvetica, color: dark });
 
-  page.drawText('Tenant printed name:', { x: 40, y: y - 72, size: 9, font: fontRegular, color: GREY });
-  page.drawLine({ start: { x: 200, y: y - 72 }, end: { x: 380, y: y - 72 }, thickness: 0.5, color: BRAND_DARK });
+  page.drawText('Issued by:', { x: 40, y: evY - 81, size: 9, font: helveticaBold, color: slate });
+  page.drawText('CompliantUK Document Delivery Service', { x: 130, y: evY - 81, size: 9, font: helvetica, color: dark });
 
-  // ── Footer ───────────────────────────────────────────────────────────────
-  page.drawRectangle({ x: 0, y: 0, width, height: 44, color: BRAND_DARK });
-  page.drawText('CompliantUK — The UK Landlord Compliance Platform', {
-    x: 40, y: 28, size: 8, font: fontBold, color: WHITE,
+  // ── LEGAL STATEMENT ──
+  const legalY = evY - 110;
+  page.drawRectangle({ x: 40, y: legalY - 50, width: width - 80, height: 55, color: rgb(0.953, 0.969, 0.996), borderRadius: 8 });
+  page.drawRectangle({ x: 40, y: legalY - 50, width: width - 80, height: 55, borderColor: rgb(0.749, 0.847, 0.984), borderWidth: 1, borderRadius: 8 });
+  page.drawText('LEGAL STATEMENT', { x: 54, y: legalY - 16, size: 8, font: helveticaBold, color: blue });
+  page.drawText('This certificate constitutes evidence of delivery and service of the Renters\' Rights Act 2025 Information Sheet', {
+    x: 54, y: legalY - 30, size: 8.5, font: helvetica, color: rgb(0.2, 0.35, 0.65),
   });
-  page.drawText('www.compliantuk.co.uk  |  support@compliantuk.co.uk', {
-    x: 40, y: 14, size: 7.5, font: fontRegular, color: rgb(0.576, 0.769, 0.984),
+  page.drawText('pursuant to the requirements of the Renters\' Rights Act 2025 (England). Generated automatically by CompliantUK.', {
+    x: 54, y: legalY - 43, size: 8.5, font: helvetica, color: rgb(0.2, 0.35, 0.65),
   });
-  page.drawText(`Certificate ${ref}  |  Issued ${issuedDate}`, {
-    x: width - 250, y: 14, size: 7, font: fontRegular, color: GREY,
+
+  // ── FOOTER ──
+  page.drawLine({ start: { x: 0, y: 60 }, end: { x: width, y: 60 }, thickness: 0.5, color: borderC });
+  page.drawRectangle({ x: 0, y: 0, width, height: 60, color: navy });
+  page.drawText('CompliantUK — Official Document Delivery & Compliance Service', {
+    x: 40, y: 36, size: 8, font: helvetica, color: slate,
   });
+  page.drawText(`Certificate generated: ${formatDate(new Date().toISOString())} · www.compliantuk.co.uk`, {
+    x: 40, y: 20, size: 7.5, font: helvetica, color: rgb(0.3, 0.4, 0.5),
+  });
+  page.drawText('© 2026 CompliantUK', { x: width - 110, y: 20, size: 7.5, font: helvetica, color: rgb(0.3, 0.4, 0.5) });
 
   const pdfBytes = await pdfDoc.save();
-  return { pdfBytes, referenceNumber: ref };
+  return Buffer.from(pdfBytes);
 }
 
-// HTTP handler — can also be called directly via POST for testing
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+function formatDate(isoString) {
+  if (!isoString) return 'N/A';
+  return new Date(isoString).toLocaleString('en-GB', {
+    day: '2-digit', month: 'long', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    timeZone: 'Europe/London',
+  }) + ' GMT';
+}
 
-  try {
-    const { landlordName, propertyAddress, tenantName, plan, paymentReference } = req.body;
-
-    if (!propertyAddress) {
-      return res.status(400).json({ error: 'propertyAddress is required' });
+function wrapText(text, maxChars) {
+  if (!text) return ['N/A'];
+  if (text.length <= maxChars) return [text];
+  const words = text.split(' ');
+  const lines = [];
+  let current = '';
+  for (const word of words) {
+    if ((current + ' ' + word).trim().length > maxChars) {
+      if (current) lines.push(current);
+      current = word;
+    } else {
+      current = (current + ' ' + word).trim();
     }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
 
-    const { pdfBytes, referenceNumber } = await generateComplianceCertificate({
-      landlordName, propertyAddress, tenantName, plan, paymentReference,
-    });
-
+// Also export as HTTP handler for direct calls
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).end();
+  try {
+    const pdf = await generateCertificatePdf(req.body);
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="CompliantUK-Certificate-${referenceNumber}.pdf"`);
-    res.send(Buffer.from(pdfBytes));
-  } catch (error) {
-    console.error('Certificate generation error:', error);
-    res.status(500).json({ error: 'Failed to generate certificate' });
+    res.status(200).send(pdf);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 }
