@@ -81,6 +81,15 @@ export default async function handler(req, res) {
   const session = event.data.object;
   const meta = session.metadata || {};
 
+  // Diagnostic log — see exactly what arrives
+  console.log('Webhook received. Session ID:', session.id);
+  console.log('Metadata keys:', Object.keys(meta));
+  console.log('landlordEmail:', meta.landlordEmail);
+  console.log('landlordFirst:', meta.landlordFirst);
+  console.log('tenants:', meta.tenants ? meta.tenants.slice(0, 80) : 'none');
+  console.log('tenantsChunks:', meta.tenantsChunks);
+  console.log('customer_email:', session.customer_email);
+
   // Fallback: read email from session if not in metadata
   if (!meta.landlordEmail && session.customer_details?.email) {
     meta.landlordEmail = session.customer_details.email;
