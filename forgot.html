@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reset Password — CompliantUK</title>
+<meta name="robots" content="noindex">
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Geist+Mono:wght@400;500&display=swap');
+:root{--bg:#080c14;--bg1:#0d1220;--bg2:#111827;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--blue:#3b82f6;--blue2:#60a5fa;--blue3:#1d4ed8;--emerald:#10b981;--red:#ef4444;--font:'Bricolage Grotesque',sans-serif;--radius:14px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1160px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 max(5%,20px)}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-mark{width:32px;height:32px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:15px}
+.logo-name{font-size:17px;font-weight:700;color:#f1f5f9;letter-spacing:-.4px}
+.logo-name span{color:#60a5fa}
+.nav-right{display:flex;gap:12px;align-items:center}
+.nav-link{color:#94a3b8;text-decoration:none;font-size:14px}
+.nav-btn{background:#3b82f6;color:white;padding:8px 18px;border-radius:8px;text-decoration:none;font-size:13.5px;font-weight:600}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:60px max(5%,20px)}
+.card{background:var(--bg1);border:1px solid var(--border2);border-radius:20px;padding:44px 40px;width:100%;max-width:440px}
+.card-icon{width:52px;height:52px;background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(29,78,216,0.1));border:1px solid rgba(59,130,246,0.3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:24px}
+h1{font-size:1.6rem;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
+.sub{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:28px}
+label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px}
+input[type=email]{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;font-size:15px;color:var(--text);font-family:var(--font);outline:none;transition:border-color .15s}
+input[type=email]:focus{border-color:var(--blue)}
+.btn{width:100%;margin-top:20px;background:var(--blue);color:white;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:700;font-family:var(--font);cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.9}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.msg{margin-top:16px;padding:14px 16px;border-radius:10px;font-size:14px;line-height:1.5;display:none}
+.msg.success{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#34d399;display:block}
+.msg.error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;display:block}
+.back{display:block;text-align:center;margin-top:20px;color:var(--text3);font-size:13px;text-decoration:none}
+.back:hover{color:var(--text2)}
+footer{border-top:1px solid var(--border);padding:28px max(5%,20px)}
+.footer-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-links{display:flex;gap:4px}
+.footer-links a{color:#64748b;text-decoration:none;font-size:13px;padding:4px 10px}
+.footer-copy{font-size:12px;color:#64748b}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <div class="logo-mark">✓</div>
+      <span class="logo-name">Compliant<span>UK</span></span>
+    </a>
+    <div class="nav-right">
+      <a href="/login" class="nav-link">Log in</a>
+      <a href="/#get-compliant" class="nav-btn">Get compliant — £49</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="card">
+    <div class="card-icon">🔑</div>
+    <h1>Reset your password</h1>
+    <p class="sub">Enter your email address and we'll send you a link to reset your password.</p>
+
+    <label for="email">Email address</label>
+    <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+
+    <button class="btn" id="submit-btn" onclick="handleReset()">Send reset link</button>
+
+    <div class="msg" id="msg"></div>
+
+    <a href="/login" class="back">← Back to log in</a>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <a href="/" class="logo">
+      <div style="width:28px;height:28px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:13px">✓</div>
+      <span style="font-size:16px;font-weight:700;color:#f1f5f9;margin-left:9px">Compliant<span style="color:#60a5fa">UK</span></span>
+    </a>
+    <div class="footer-links">
+      <a href="/about">About</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/contact">Contact</a>
+      <a href="/login">Log in</a>
+    </div>
+    <span class="footer-copy">© 2026 CompliantUK</span>
+  </div>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://ihfbagpupottobyeciwq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZmJhZ3B1cG90dG9ieWVjaXdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MTA5NTUsImV4cCI6MjA1OTA4Njk1NX0.-U8VyL_5cWmquttTZfEekQ_LqPIE_WxOhevY';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const emailInput = document.getElementById('email');
+const btn = document.getElementById('submit-btn');
+const msg = document.getElementById('msg');
+
+emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleReset(); });
+
+async function handleReset() {
+  const email = emailInput.value.trim();
+  if (!email) { showMsg('Please enter your email address.', 'error'); return; }
+  if (!email.includes('@')) { showMsg('Please enter a valid email address.', 'error'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  msg.className = 'msg';
+  msg.style.display = 'none';
+
+  try {
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://www.compliantuk.co.uk/reset-password'
+    });
+    if (error) throw error;
+    showMsg('Check your email — we've sent a password reset link. It may take a minute to arrive.', 'success');
+    btn.textContent = 'Email sent';
+  } catch (err) {
+    showMsg(err.message || 'Something went wrong. Please try again.', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Send reset link';
+  }
+}
+
+function showMsg(text, type) {
+  msg.textContent = text;
+  msg.className = 'msg ' + type;
+}
+</script>
+</body>
+</html>
