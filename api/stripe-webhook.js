@@ -209,7 +209,7 @@ export default async function handler(req, res) {
           landlordFirst, landlordLast, landlordEmail,
           propertyAddress: `${properties.length} properties`,
           tenants: properties.flatMap(p => p.tenants || []),
-          amountFormatted: `£${(session.amount_total / 100).toFixed(0)}`,
+          amountFormatted: `£${(session.amount_total / 100).toFixed(2)}`,
           isNewAccount, tempPassword,
           dashboardUrl: `${BASE_URL}/dashboard`,
           loginUrl: `${BASE_URL}/login`,
@@ -359,16 +359,13 @@ export default async function handler(req, res) {
       // If tenant later opens the email, track.js updates status to 'read'.
       try {
         const certPdf = await generateCertificatePdf({
-          landlordFirst,
-          landlordLast,
-          landlordEmail,
           propertyAddress,
           tenantFirst: tenant.first,
           tenantLast: tenant.last,
           tenantEmail: tenant.email,
           sentAt: new Date().toISOString(),
           trackingId,
-          sessionId: session.id,
+          landlordId,
         });
 
         const certBase64 = certPdf.toString('base64');
@@ -413,7 +410,7 @@ export default async function handler(req, res) {
     // ─────────────────────────────────────
     // 5. Email landlord: confirmation + password + dashboard link
     // ─────────────────────────────────────
-    const amountFormatted = `£${(session.amount_total / 100).toFixed(0)}`;
+    const amountFormatted = `£${(session.amount_total / 100).toFixed(2)}`;
     const landlordEmailHtml = buildLandlordEmail({
       landlordFirst,
       landlordLast,
