@@ -628,12 +628,32 @@ function buildLandlordEmail({
       <p style="margin:0 0 16px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8">Order Summary</p>
       <table cellpadding="0" cellspacing="0" width="100%">
         <tr>
-          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b;width:40%">Property</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b;width:40%">Order reference</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600;font-family:monospace">${session.id.slice(-12).toUpperCase()}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Date</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Landlord</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${landlordFirst} ${landlordLast}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Property</td>
           <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${propertyAddress}</td>
         </tr>
         <tr>
-          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Tenants</td>
-          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${tenants.length}</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Document served</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">Renters' Rights Act 2025 — Official Information Sheet</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Tenants served</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${tenants.length} tenant${tenants.length > 1 ? 's' : ''}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Certificate status</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#166534;font-weight:600">✅ Issued — emailed separately</td>
         </tr>
         <tr>
           <td style="padding:8px 0;font-size:13px;color:#64748b">Amount paid</td>
