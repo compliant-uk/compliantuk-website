@@ -326,8 +326,6 @@ export default async function handler(req, res) {
         continue;
       }
 
-      tenancyRecords.push({ ...tenancy, trackingId });
-
       // Email each tenant
       const trackingPixelUrl = `${BASE_URL}/api/track?id=${trackingId}`;
       const tenantEmailHtml = buildTenantEmail({
@@ -370,32 +368,12 @@ export default async function handler(req, res) {
 
         const certBase64 = certPdf.toString('base64');
 
-        // Email certificate to landlord immediately
-        await resend.emails.send({
-          from: 'CompliantUK <noreply@compliantuk.co.uk>',
-          to: landlordEmail,
-          subject: `📋 Proof of dispatch certificate — ${tenant.first} ${tenant.last} · ${propertyAddress}`,
-          html: `
-            <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:600px;margin:0 auto;background:white;border-radius:12px;overflow:hidden;margin-top:32px">
-              <div style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);padding:28px 36px">
-                <div style="font-size:20px;font-weight:800;color:white">✓ CompliantUK</div>
-                <h1 style="color:white;font-size:20px;font-weight:700;margin:12px 0 0;line-height:1.3">Your proof-of-service certificate is attached</h1>
-              </div>
-              <div style="padding:32px 36px">
-                <p style="font-size:15px;color:#475569;line-height:1.7;margin:0 0 16px">Dear ${landlordFirst},</p>
-                <p style="font-size:15px;color:#475569;line-height:1.7;margin:0 0 16px">The Renters' Rights Act 2025 Information Sheet has been dispatched to <strong>${tenant.first} ${tenant.last}</strong> at <strong>${tenant.email}</strong> for the property at <strong>${propertyAddress}</strong>.</p>
-                <p style="font-size:15px;color:#475569;line-height:1.7;margin:0 0 24px">Your proof-of-service certificate is attached to this email. This is your legal record of compliance — store it with your tenancy records.</p>
-                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:16px 20px;margin:0 0 24px">
-                  <p style="font-size:14px;color:#166534;margin:0;line-height:1.6">✅ <strong>Certificate issued:</strong> ${new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}<br>📧 <strong>Document sent to:</strong> ${tenant.email}<br>🏠 <strong>Property:</strong> ${propertyAddress}</p>
-                </div>
-                <p style="font-size:13px;color:#94a3b8;line-height:1.6;margin:0">The tenant's email open event is tracked separately — if they open the document you will receive an additional read-confirmation update. This certificate is valid regardless of whether the tenant opens the email.</p>
-              </div>
-            </div>`,
-          attachments: [{
-            filename: `Proof-of-Service-${tenant.first}-${tenant.last}-${propertyAddress.slice(0,20).replace(/\s/g,'-')}.pdf`,
-            content: certBase64,
-            encoding: 'base64',
-          }],
+        // Store cert — will be sent in one combined landlord email at the end
+        tenancyRecords.push({
+          ...tenancy,
+          trackingId,
+          certBase64,
+          certFilename: `Certificate-${tenant.first}-${tenant.last}-${propertyAddress.slice(0,25).replace(/\s/g,'-')}.pdf`,
         });
 
         // Mark as certificate generated in DB
@@ -424,19 +402,29 @@ export default async function handler(req, res) {
       loginUrl: `${BASE_URL}/login`,
     });
 
+    // Build attachments: Information Sheet + one certificate per tenant
+    const landlordAttachments = [
+      {
+        filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf',
+        content: pdfBase64,
+        encoding: 'base64',
+      },
+      ...tenancyRecords
+        .filter(t => t.certBase64)
+        .map(t => ({
+          filename: t.certFilename || `Certificate-${t.tenant_first}-${t.tenant_last}.pdf`,
+          content: t.certBase64,
+          encoding: 'base64',
+        })),
+    ];
+
     await resend.emails.send({
       from: 'CompliantUK <noreply@compliantuk.co.uk>',
       to: landlordEmail,
-      bcc: process.env.ADMIN_BCC_EMAIL || 'huseyin.turkay@compliantuk.co.uk',
+      bcc: process.env.ADMIN_BCC_EMAIL || 'support@compliantuk.co.uk',
       subject: `✅ Compliance confirmed — ${propertyAddress}`,
       html: landlordEmailHtml,
-      attachments: [
-        {
-          filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf',
-          content: pdfBase64,
-          encoding: 'base64',
-        },
-      ],
+      attachments: landlordAttachments,
     });
 
     // ─────────────────────────────────────
