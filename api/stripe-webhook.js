@@ -546,7 +546,7 @@ function buildLandlordEmail({
       <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#334155;font-weight:500">${t.first} ${t.last}</td>
       <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#64748b">${t.email}</td>
       <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;text-align:right">
-        <span style="background:#dcfce7;color:#166534;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px">SENT ✓</span>
+        <span style="background:#dcfce7;color:#166534;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px">SENT + CERT ISSUED ✓</span>
       </td>
     </tr>
   `).join('');
@@ -605,7 +605,7 @@ function buildLandlordEmail({
       </div>
     </div>
     <h1 style="margin:0 0 6px;font-size:26px;font-weight:800;color:#ffffff;letter-spacing:-0.8px">✅ You're compliant.</h1>
-    <p style="margin:0;color:#93c5fd;font-size:15px">Payment confirmed. Documents delivered. Certificates pending tenant reads.</p>
+    <p style="margin:0;color:#93c5fd;font-size:15px">Payment confirmed. Documents delivered. Certificates emailed to you now.</p>
   </td></tr>
 
   <!-- Body -->

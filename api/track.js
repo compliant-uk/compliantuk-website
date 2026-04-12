@@ -116,28 +116,52 @@ async function generateAndEmailCertificate(tenancy, ip, device, readAt) {
 
     if (!order) return;
 
-    // Email certificate to landlord
+    // Send read confirmation to landlord (certificate was already sent on payment)
+    const readDate = new Date(readAt).toLocaleString('en-GB', {
+      dateStyle: 'full', timeStyle: 'short', timeZone: 'Europe/London'
+    });
+
     await resend.emails.send({
       from: 'CompliantUK <noreply@compliantuk.co.uk>',
       to: order.landlord_email,
-      subject: `🏅 Proof of service certificate — ${tenancy.tenant_first} ${tenancy.tenant_last} has read the document`,
-      html: buildCertificateEmail({
-        landlordFirst: order.landlord_first,
-        tenantFirst: tenancy.tenant_first,
-        tenantLast: tenancy.tenant_last,
-        propertyAddress: tenancy.property_address,
-        readAt,
-        ip,
-        device,
-        dashboardUrl: 'https://www.compliantuk.co.uk/dashboard',
-      }),
-      attachments: [
-        {
-          filename: `Certificate-${tenancy.tenant_first}-${tenancy.tenant_last}-${tenancy.property_address.replace(/[^a-zA-Z0-9]/g, '-').substring(0, 30)}.pdf`,
-          content: certBase64,
-          encoding: 'base64',
-        },
-      ],
+      subject: `✅ Read confirmation — ${tenancy.tenant_first} ${tenancy.tenant_last} has opened the Information Sheet`,
+      html: `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px;background:#f8fafc">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%">
+  <tr><td style="background:#080c14;border-radius:12px 12px 0 0;padding:28px 36px">
+    <div style="font-size:28px;margin-bottom:8px">✅</div>
+    <h1 style="margin:0 0 6px;font-size:22px;font-weight:800;color:#fff">Tenant Read Confirmation</h1>
+    <p style="margin:0;color:#93c5fd;font-size:14px">${tenancy.tenant_first} ${tenancy.tenant_last} has opened the Information Sheet</p>
+  </td></tr>
+  <tr><td style="background:#fff;padding:36px">
+    <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 20px">Hi ${order.landlord_first},</p>
+    <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 24px">Good news — your tenant has opened the Renters' Rights Act Information Sheet. This is your read confirmation. Your proof-of-service certificate was already emailed to you when the order was placed.</p>
+
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:24px;margin:0 0 24px">
+      <p style="margin:0 0 14px;font-size:13px;font-weight:700;text-transform:uppercase;color:#94a3b8;letter-spacing:1px">Read Confirmation Details</p>
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr><td style="padding:6px 0;font-size:13px;color:#64748b;width:40%">Property</td><td style="padding:6px 0;font-size:14px;color:#0f172a;font-weight:600">${tenancy.property_address}</td></tr>
+        <tr><td style="padding:6px 0;font-size:13px;color:#64748b">Tenant</td><td style="padding:6px 0;font-size:14px;color:#0f172a;font-weight:600">${tenancy.tenant_first} ${tenancy.tenant_last}</td></tr>
+        <tr><td style="padding:6px 0;font-size:13px;color:#64748b">Opened at</td><td style="padding:6px 0;font-size:14px;color:#0f172a;font-weight:600">${readDate}</td></tr>
+        <tr><td style="padding:6px 0;font-size:13px;color:#64748b">IP address</td><td style="padding:6px 0;font-size:14px;color:#0f172a;font-family:monospace">${ip}</td></tr>
+        <tr><td style="padding:6px 0;font-size:13px;color:#64748b">Device</td><td style="padding:6px 0;font-size:14px;color:#0f172a;font-weight:600">${device}</td></tr>
+      </table>
+    </div>
+
+    <div style="text-align:center">
+      <a href="https://www.compliantuk.co.uk/dashboard" style="display:inline-block;background:#3b82f6;color:white;padding:13px 28px;border-radius:9px;text-decoration:none;font-weight:700;font-size:14px">View dashboard →</a>
+    </div>
+  </td></tr>
+  <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;border-radius:0 0 12px 12px;padding:20px;text-align:center">
+    <p style="margin:0;color:#94a3b8;font-size:12px">© 2026 CompliantUK</p>
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body></html>`,
     });
 
     // Update tenancy status
