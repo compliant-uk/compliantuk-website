@@ -8,8 +8,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Pricing tiers — flat rate per tenancy (pence)
 // 1 tenant: £49, 2 tenants: £78, 3 tenants: £97, 4 tenants: £116
-const SINGLE_PRICING = { 1: 50, 2: 100, 3: 150, 4: 200 }; // TEMP 50p TEST — restore to below
-// const SINGLE_PRICING = { 1: 4900, 2: 7800, 3: 9700, 4: 11600 };
+// Flat price per tenancy — covers up to 4 tenants
+// The tenant count selector only populates input fields, it does NOT change the price
+const TENANCY_PRICE = 50; // TEMP 50p TEST — restore to 4900 (£49) for live
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -31,8 +32,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const tenantCount = Math.min(tenants.length, 4);
-    const totalPence = SINGLE_PRICING[tenantCount] || SINGLE_PRICING[1];
+    const tenantCount = tenants.length;
+    const totalPence = TENANCY_PRICE; // flat rate — tenant count doesn't affect price
 
     // Serialise tenant data into metadata
     // Stripe has 500 char limit per value — chunk if needed
