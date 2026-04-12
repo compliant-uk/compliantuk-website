@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Pricing tiers (pence)
 const PRICING = {
-  starter:   { base: 4900, extraTenant: 800 },   // £49 + £8/extra tenant
+  starter:   { base: 50, extraTenant: 50 },   // TEMP 50p TEST - restore to 4900/800 after
   essential: { base: 3900, extraTenant: 600 },   // £39 + £6/extra tenant
   portfolio: { base: 2900, extraTenant: 600 },   // £29 + £6/extra tenant
   scale:     { base: 2200, extraTenant: 500 },   // £22 + £5/extra tenant
