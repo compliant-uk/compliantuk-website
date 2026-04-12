@@ -352,6 +352,62 @@ export default async function handler(req, res) {
           },
         ],
       });
+
+      // ── Generate proof-of-service certificate immediately on payment ──
+      // We do not wait for the tenant to open the email.
+      // The certificate records the date/time the document was dispatched.
+      // If tenant later opens the email, track.js updates status to 'read'.
+      try {
+        const certPdf = await generateCertificatePdf({
+          landlordFirst,
+          landlordLast,
+          landlordEmail,
+          propertyAddress,
+          tenantFirst: tenant.first,
+          tenantLast: tenant.last,
+          tenantEmail: tenant.email,
+          sentAt: new Date().toISOString(),
+          trackingId,
+          sessionId: session.id,
+        });
+
+        const certBase64 = certPdf.toString('base64');
+
+        // Email certificate to landlord immediately
+        await resend.emails.send({
+          from: 'CompliantUK <noreply@compliantuk.co.uk>',
+          to: landlordEmail,
+          subject: `📋 Proof of dispatch certificate — ${tenant.first} ${tenant.last} · ${propertyAddress}`,
+          html: `
+            <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:600px;margin:0 auto;background:white;border-radius:12px;overflow:hidden;margin-top:32px">
+              <div style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);padding:28px 36px">
+                <div style="font-size:20px;font-weight:800;color:white">✓ CompliantUK</div>
+                <h1 style="color:white;font-size:20px;font-weight:700;margin:12px 0 0;line-height:1.3">Your proof-of-service certificate is attached</h1>
+              </div>
+              <div style="padding:32px 36px">
+                <p style="font-size:15px;color:#475569;line-height:1.7;margin:0 0 16px">Dear ${landlordFirst},</p>
+                <p style="font-size:15px;color:#475569;line-height:1.7;margin:0 0 16px">The Renters' Rights Act 2025 Information Sheet has been dispatched to <strong>${tenant.first} ${tenant.last}</strong> at <strong>${tenant.email}</strong> for the property at <strong>${propertyAddress}</strong>.</p>
+                <p style="font-size:15px;color:#475569;line-height:1.7;margin:0 0 24px">Your proof-of-service certificate is attached to this email. This is your legal record of compliance — store it with your tenancy records.</p>
+                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:16px 20px;margin:0 0 24px">
+                  <p style="font-size:14px;color:#166534;margin:0;line-height:1.6">✅ <strong>Certificate issued:</strong> ${new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}<br>📧 <strong>Document sent to:</strong> ${tenant.email}<br>🏠 <strong>Property:</strong> ${propertyAddress}</p>
+                </div>
+                <p style="font-size:13px;color:#94a3b8;line-height:1.6;margin:0">The tenant's email open event is tracked separately — if they open the document you will receive an additional read-confirmation update. This certificate is valid regardless of whether the tenant opens the email.</p>
+              </div>
+            </div>`,
+          attachments: [{
+            filename: `Proof-of-Service-${tenant.first}-${tenant.last}-${propertyAddress.slice(0,20).replace(/\s/g,'-')}.pdf`,
+            content: certBase64,
+            encoding: 'base64',
+          }],
+        });
+
+        // Mark as certificate generated in DB
+        await supabase.from('tenancies').update({ status: 'certificate_generated' }).eq('id', tenancy.id);
+
+      } catch (certErr) {
+        console.error('Certificate generation error:', certErr);
+        // Non-fatal — order still processed, certificate can be regenerated
+      }
     }
 
     // ─────────────────────────────────────
@@ -557,7 +613,7 @@ function buildLandlordEmail({
 
     <p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.7">Hi ${landlordFirst},</p>
     <p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.7">
-      Your compliance pack has been processed and the official Renters' Rights Act 2025 Information Sheet has been emailed to each of your tenants individually. Your proof-of-service certificates will be generated automatically the moment each tenant reads the document.
+      Your compliance pack has been processed and the official Renters' Rights Act 2025 Information Sheet has been emailed to each of your tenants individually. Your proof-of-service certificates have been generated and emailed to you separately — one per tenant.
     </p>
 
     <!-- Order summary box -->
@@ -598,7 +654,7 @@ function buildLandlordEmail({
     <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:20px 24px;margin:0 0 8px">
       <p style="margin:0 0 12px;font-size:14px;font-weight:700;color:#92400e">What happens next</p>
       <p style="margin:0 0 8px;font-size:13px;color:#78350f;line-height:1.6">⏰ <strong>48hr reminder</strong> — if a tenant hasn't opened the document by then, we automatically chase them.</p>
-      <p style="margin:0 0 8px;font-size:13px;color:#78350f;line-height:1.6">🏅 <strong>Certificate auto-generated</strong> — the moment each tenant reads the document, a timestamped certificate is created.</p>
+      <p style="margin:0 0 8px;font-size:13px;color:#78350f;line-height:1.6">🏅 <strong>Certificate generated immediately</strong> — your proof-of-service certificate has been emailed to you separately for each tenant.</p>
       <p style="margin:0;font-size:13px;color:#78350f;line-height:1.6">📊 <strong>Live tracking</strong> — log into your dashboard anytime to see real-time status.</p>
     </div>
 
