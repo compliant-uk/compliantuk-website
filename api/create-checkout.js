@@ -6,13 +6,10 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Pricing tiers (pence)
-const PRICING = {
-  starter:   { base: 50, extraTenant: 50 },   // TEMP 50p TEST
-  essential: { base: 3900, extraTenant: 600 },   // £39 + £6/extra tenant
-  portfolio: { base: 2900, extraTenant: 600 },   // £29 + £6/extra tenant
-  scale:     { base: 2200, extraTenant: 500 },   // £22 + £5/extra tenant
-};
+// Pricing tiers — flat rate per tenancy (pence)
+// 1 tenant: £49, 2 tenants: £78, 3 tenants: £97, 4 tenants: £116
+const SINGLE_PRICING = { 1: 50, 2: 100, 3: 150, 4: 200 }; // TEMP 50p TEST — restore to below
+// const SINGLE_PRICING = { 1: 4900, 2: 7800, 3: 9700, 4: 11600 };
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -34,13 +31,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const packageName = pkg || 'starter';
-    const tier = PRICING[packageName] || PRICING.starter;
-
-    // Calculate price
-    const tenantCount = tenants.length;
-    const extraTenants = Math.max(0, tenantCount - 1);
-    const totalPence = tier.base + (extraTenants * tier.extraTenant);
+    const tenantCount = Math.min(tenants.length, 4);
+    const totalPence = SINGLE_PRICING[tenantCount] || SINGLE_PRICING[1];
 
     // Serialise tenant data into metadata
     // Stripe has 500 char limit per value — chunk if needed
