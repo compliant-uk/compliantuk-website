@@ -433,6 +433,13 @@ export default async function handler(req, res) {
       bcc: process.env.ADMIN_BCC_EMAIL || 'huseyin.turkay@compliantuk.co.uk',
       subject: `✅ Compliance confirmed — ${propertyAddress}`,
       html: landlordEmailHtml,
+      attachments: [
+        {
+          filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf',
+          content: pdfBase64,
+          encoding: 'base64',
+        },
+      ],
     });
 
     // ─────────────────────────────────────
@@ -614,6 +621,9 @@ function buildLandlordEmail({
     <p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.7">Hi ${landlordFirst},</p>
     <p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.7">
       Your compliance pack has been processed and the official Renters' Rights Act 2025 Information Sheet has been emailed to each of your tenants individually. Your proof-of-service certificates have been generated and emailed to you separately — one per tenant.
+    </p>
+    <p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.7">
+      A copy of the Information Sheet is also attached to this email for your own records.
     </p>
 
     <!-- Order summary box -->
