@@ -10,7 +10,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // 1 tenant: £49, 2 tenants: £78, 3 tenants: £97, 4 tenants: £116
 // Flat price per tenancy — covers up to 4 tenants
 // The tenant count selector only populates input fields, it does NOT change the price
-const TENANCY_PRICE = 4900; // £49 per tenancy (flat rate, up to 4 tenants)
+const TENANCY_PRICE = 50; // TEMP 50p TEST — restore to 4900 (£49) for live
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
