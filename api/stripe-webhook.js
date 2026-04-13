@@ -203,7 +203,7 @@ export default async function handler(req, res) {
       await resend.emails.send({
         from: 'CompliantUK <noreply@compliantuk.co.uk>',
         to: landlordEmail,
-        bcc: process.env.ADMIN_BCC_EMAIL || 'huseyin.turkay@compliantuk.co.uk',
+        bcc: process.env.ADMIN_BCC_EMAIL || 'support@compliantuk.co.uk',
         subject: `✅ Portfolio order confirmed — ${properties.length} properties processed`,
         html: buildLandlordEmail({
           landlordFirst, landlordLast, landlordEmail,

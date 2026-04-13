@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /login
+Disallow: /reset-password
+Disallow: /forgot
+Disallow: /register
+Disallow: /success
+
+Sitemap: https://www.compliantuk.co.uk/sitemap.xml
