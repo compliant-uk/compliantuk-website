@@ -249,15 +249,23 @@ let refreshInterval;
 
 // ─── INIT ───
 async function init() {
+  // Give Supabase time to restore session from storage
   const { data: { session } } = await sb.auth.getSession();
 
   if (!session) {
-    document.getElementById('authGate').style.display = 'flex';
-    return;
+    // Try once more after a brief delay
+    await new Promise(r => setTimeout(r, 500));
+    const { data: { session: session2 } } = await sb.auth.getSession();
+    if (!session2) {
+      document.getElementById('authGate').style.display = 'flex';
+      return;
+    }
   }
 
+  const activeSession = session || (await sb.auth.getSession()).data.session;
+
   document.getElementById('app').style.display = 'block';
-  document.getElementById('navEmail').textContent = session.user.email;
+  document.getElementById('navEmail').textContent = activeSession.user.email;
 
   await loadData();
 

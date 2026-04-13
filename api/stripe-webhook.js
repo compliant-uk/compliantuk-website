@@ -451,9 +451,10 @@ export default async function handler(req, res) {
 
     const landlordEmailResult = await resend.emails.send({
       from: 'CompliantUK <noreply@compliantuk.co.uk>',
+      reply_to: 'support@compliantuk.co.uk',
       to: landlordEmail,
       bcc: process.env.ADMIN_BCC_EMAIL || 'support@compliantuk.co.uk',
-      subject: `✅ Compliance confirmed — ${propertyAddress}`,
+      subject: `Compliance confirmed — ${propertyAddress}`,
       html: landlordEmailHtml,
       attachments: landlordAttachments,
     });
