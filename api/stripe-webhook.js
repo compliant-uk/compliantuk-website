@@ -430,7 +430,26 @@ export default async function handler(req, res) {
       orderDate,
     });
 
-    console.log(`Sending landlord email to ${landlordEmail}, ${tenancyRecords.length} tenancy records`);
+    const landlordAttachments = [];
+    if (pdfBase64) {
+      landlordAttachments.push({
+        filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf',
+        content: pdfBase64,
+        encoding: 'base64',
+      });
+    }
+    // Attach each tenant certificate
+    for (const rec of tenancyRecords) {
+      if (rec.certBase64) {
+        landlordAttachments.push({
+          filename: rec.certFilename || `Certificate-${rec.tenant_first}-${rec.tenant_last}.pdf`,
+          content: rec.certBase64,
+          encoding: 'base64',
+        });
+      }
+    }
+
+    console.log(`Sending landlord email to ${landlordEmail}, ${landlordAttachments.length} attachments`);
 
     const landlordEmailResult = await resend.emails.send({
       from: 'CompliantUK <noreply@compliantuk.co.uk>',
@@ -438,13 +457,7 @@ export default async function handler(req, res) {
       bcc: process.env.ADMIN_BCC_EMAIL || 'support@compliantuk.co.uk',
       subject: `✅ Compliance confirmed — ${propertyAddress}`,
       html: landlordEmailHtml,
-      attachments: pdfBase64 ? [
-        {
-          filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf',
-          content: pdfBase64,
-          encoding: 'base64',
-        },
-      ] : [],
+      attachments: landlordAttachments,
     });
 
     console.log('Landlord email result:', JSON.stringify(landlordEmailResult));
