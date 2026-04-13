@@ -404,6 +404,8 @@ export default async function handler(req, res) {
     // 5. Email landlord: confirmation + password + dashboard link
     // ─────────────────────────────────────
     const amountFormatted = `£${(session.amount_total / 100).toFixed(2)}`;
+    const orderRef = session.id.slice(-12).toUpperCase();
+    const orderDate = new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
     const landlordEmailHtml = buildLandlordEmail({
       landlordFirst,
       landlordLast,
@@ -415,6 +417,8 @@ export default async function handler(req, res) {
       tempPassword,
       dashboardUrl: `${BASE_URL}/dashboard`,
       loginUrl: `${BASE_URL}/login`,
+      orderRef,
+      orderDate,
     });
 
     console.log(`Sending landlord email to ${landlordEmail}, ${tenancyRecords.length} tenancy records`);
@@ -540,7 +544,7 @@ function buildTenantEmail({ tenantFirst, tenantLast, landlordFirst, landlordLast
 function buildLandlordEmail({
   landlordFirst, landlordLast, landlordEmail, propertyAddress,
   tenants, amountFormatted, isNewAccount, tempPassword,
-  dashboardUrl, loginUrl,
+  dashboardUrl, loginUrl, orderRef, orderDate,
 }) {
   const tenantRows = tenants.map(t => `
     <tr>
@@ -614,10 +618,10 @@ function buildLandlordEmail({
 
     <p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.7">Hi ${landlordFirst},</p>
     <p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.7">
-      Your compliance pack has been processed and the official Renters' Rights Act 2025 Information Sheet has been emailed to each of your tenants individually. Your proof-of-service certificates have been generated and emailed to you separately — one per tenant.
+      Your compliance pack has been processed. The official Renters' Rights Act 2025 Information Sheet has been emailed to each of your tenants individually, and a copy is attached to this email for your records.
     </p>
     <p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.7">
-      A copy of the Information Sheet is also attached to this email for your own records.
+      Your proof-of-service certificates have been generated and are ready to download from your dashboard — one per tenant.
     </p>
 
     <!-- Order summary box -->
@@ -626,15 +630,19 @@ function buildLandlordEmail({
       <table cellpadding="0" cellspacing="0" width="100%">
         <tr>
           <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b;width:40%">Order reference</td>
-          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600;font-family:monospace">${session.id.slice(-12).toUpperCase()}</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600;font-family:monospace">${orderRef}</td>
         </tr>
         <tr>
           <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Date</td>
-          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${new Date().toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${orderDate}</td>
         </tr>
         <tr>
           <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Landlord</td>
           <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${landlordFirst} ${landlordLast}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Landlord email</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${landlordEmail}</td>
         </tr>
         <tr>
           <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Property</td>
@@ -649,12 +657,12 @@ function buildLandlordEmail({
           <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${tenants.length} tenant${tenants.length > 1 ? 's' : ''}</td>
         </tr>
         <tr>
-          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Certificate status</td>
-          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#166534;font-weight:600">✅ Generated — download from dashboard</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Certificates</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#166534;font-weight:600">✅ Ready to download in your dashboard</td>
         </tr>
         <tr>
           <td style="padding:8px 0;font-size:13px;color:#64748b">Amount paid</td>
-          <td style="padding:8px 0;font-size:14px;color:#0f172a;font-weight:600">${amountFormatted}</td>
+          <td style="padding:8px 0;font-size:15px;color:#0f172a;font-weight:700">${amountFormatted}</td>
         </tr>
       </table>
     </div>
