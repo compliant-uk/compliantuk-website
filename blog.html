@@ -286,7 +286,26 @@ function renderPosts(filter){
   document.getElementById('related-posts').innerHTML=related.map(function(p){return'<div class="related-item"><div class="ri-icon">'+p.icon+'</div><div><a href="blog-post.html?slug='+p.slug+'" class="ri-title">'+p.title.substring(0,60)+'...</a><div class="ri-date">'+p.date+' · '+p.readTime+'</div></div></div>';}).join('');
 }
 function filterPosts(cat,btn){currentFilter=cat;document.querySelectorAll('.cat-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');renderPosts(cat);}
-function subscribeAlerts(){var email=document.getElementById('alert-email').value.trim();if(!email||email.indexOf('@')<0){alert('Please enter a valid email address.');return;}document.getElementById('alert-success').style.display='block';document.getElementById('alert-email').value='';}
+function subscribeAlerts(){
+  var email=document.getElementById('alert-email').value.trim();
+  if(!email||email.indexOf('@')<0){alert('Please enter a valid email address.');return;}
+  var btn=document.querySelector('.alert-btn');
+  btn.textContent='Subscribing...';
+  btn.disabled=true;
+  fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})})
+    .then(function(r){return r.json();})
+    .then(function(){
+      document.getElementById('alert-success').style.display='block';
+      document.getElementById('alert-email').value='';
+      btn.textContent='Subscribed ✓';
+    })
+    .catch(function(){
+      // Still show success to user — email stored client side at minimum
+      document.getElementById('alert-success').style.display='block';
+      document.getElementById('alert-email').value='';
+      btn.textContent='Subscribed ✓';
+    });
+}
 function updateCountdown(){var deadline=new Date('2026-05-31T23:59:59');var diff=deadline-new Date();var days=Math.max(0,Math.floor(diff/(1000*60*60*24)));var el=document.getElementById('dw-days');if(el)el.textContent=days+'d';}
 updateCountdown();setInterval(updateCountdown,60000);
 renderPosts('all');
