@@ -415,7 +415,7 @@ async function downloadCertDirect(tenantName, tenancyId) {
 
 async function downloadCert(tenancyId, tenantName) {
   try {
-    const { data, error } = await supabaseClient
+    const { data, error } = await sb
       .from('tenancies')
       .select('cert_data, tenant_first, tenant_last, property_address')
       .eq('id', tenancyId)
