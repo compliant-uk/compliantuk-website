@@ -294,8 +294,14 @@ export default async function handler(req, res) {
     // ─────────────────────────────────────
     // 3. Fetch GOV.UK PDF
     // ─────────────────────────────────────
-    const pdfBuffer = await fetchInfoSheetPdf();
-    const pdfBase64 = pdfBuffer.toString('base64');
+    let pdfBase64 = null;
+    try {
+      const pdfBuffer = await fetchInfoSheetPdf();
+      pdfBase64 = pdfBuffer.toString('base64');
+    } catch (pdfErr) {
+      console.error('PDF fetch failed:', pdfErr.message);
+      // Continue without PDF — tenant emails will still send, landlord gets confirmation
+    }
 
     // ─────────────────────────────────────
     // 4. Save tenancies + email each tenant
@@ -342,13 +348,13 @@ export default async function handler(req, res) {
         to: tenant.email,
         subject: `Important: Renters' Rights Act 2025 — Information Sheet from your landlord`,
         html: tenantEmailHtml,
-        attachments: [
+        attachments: pdfBase64 ? [
           {
             filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf',
             content: pdfBase64,
             encoding: 'base64',
           },
-        ],
+        ] : [],
       });
 
       // ── Generate proof-of-service certificate immediately on payment ──
@@ -412,13 +418,13 @@ export default async function handler(req, res) {
       bcc: process.env.ADMIN_BCC_EMAIL || 'support@compliantuk.co.uk',
       subject: `✅ Compliance confirmed — ${propertyAddress}`,
       html: landlordEmailHtml,
-      attachments: [
+      attachments: pdfBase64 ? [
         {
           filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf',
           content: pdfBase64,
           encoding: 'base64',
         },
-      ],
+      ] : [],
     });
 
     console.log('Landlord email result:', JSON.stringify(landlordEmailResult));
