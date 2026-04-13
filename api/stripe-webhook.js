@@ -365,16 +365,20 @@ export default async function handler(req, res) {
 
         const certBase64 = certPdf.toString('base64');
 
-        // Store cert — will be sent in one combined landlord email at the end
+        // Store cert in Supabase — accessible via dashboard for download
+        await supabase.from('tenancies').update({
+          status: 'certificate_generated',
+          cert_data: certBase64,
+          cert_generated_at: new Date().toISOString(),
+        }).eq('id', tenancy.id);
+
+        // Track in tenancyRecords for landlord email summary
         tenancyRecords.push({
           ...tenancy,
           trackingId,
           certBase64,
           certFilename: `Certificate-${tenant.first}-${tenant.last}-${propertyAddress.slice(0,25).replace(/\s/g,'-')}.pdf`,
         });
-
-        // Mark as certificate generated in DB
-        await supabase.from('tenancies').update({ status: 'certificate_generated' }).eq('id', tenancy.id);
 
       } catch (certErr) {
         console.error('Certificate generation error for', tenant.email, ':', certErr.message);
@@ -400,23 +404,7 @@ export default async function handler(req, res) {
       loginUrl: `${BASE_URL}/login`,
     });
 
-    // Build attachments: Information Sheet + one certificate per tenant
-    const landlordAttachments = [
-      {
-        filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf',
-        content: pdfBase64,
-        encoding: 'base64',
-      },
-      ...tenancyRecords
-        .filter(t => t.certBase64)
-        .map(t => ({
-          filename: t.certFilename || `Certificate-${t.tenant_first}-${t.tenant_last}.pdf`,
-          content: t.certBase64,
-          encoding: 'base64',
-        })),
-    ];
-
-    console.log(`Sending landlord email to ${landlordEmail} with ${landlordAttachments.length} attachments, ${tenancyRecords.length} tenancy records`);
+    console.log(`Sending landlord email to ${landlordEmail}, ${tenancyRecords.length} tenancy records`);
 
     const landlordEmailResult = await resend.emails.send({
       from: 'CompliantUK <noreply@compliantuk.co.uk>',
@@ -424,7 +412,13 @@ export default async function handler(req, res) {
       bcc: process.env.ADMIN_BCC_EMAIL || 'support@compliantuk.co.uk',
       subject: `✅ Compliance confirmed — ${propertyAddress}`,
       html: landlordEmailHtml,
-      attachments: landlordAttachments,
+      attachments: [
+        {
+          filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf',
+          content: pdfBase64,
+          encoding: 'base64',
+        },
+      ],
     });
 
     console.log('Landlord email result:', JSON.stringify(landlordEmailResult));
@@ -643,7 +637,7 @@ function buildLandlordEmail({
         </tr>
         <tr>
           <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Certificate status</td>
-          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#166534;font-weight:600">✅ Issued — emailed separately</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#166534;font-weight:600">✅ Generated — download from dashboard</td>
         </tr>
         <tr>
           <td style="padding:8px 0;font-size:13px;color:#64748b">Amount paid</td>
@@ -671,7 +665,7 @@ function buildLandlordEmail({
     <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:20px 24px;margin:0 0 8px">
       <p style="margin:0 0 12px;font-size:14px;font-weight:700;color:#92400e">What happens next</p>
       <p style="margin:0 0 8px;font-size:13px;color:#78350f;line-height:1.6">⏰ <strong>48hr reminder</strong> — if a tenant hasn't opened the document by then, we automatically chase them.</p>
-      <p style="margin:0 0 8px;font-size:13px;color:#78350f;line-height:1.6">🏅 <strong>Certificate generated immediately</strong> — your proof-of-service certificate has been emailed to you separately for each tenant.</p>
+      <p style="margin:0 0 8px;font-size:13px;color:#78350f;line-height:1.6">🏅 <strong>Certificates in your dashboard</strong> — your proof-of-service certificates have been generated and are ready to download from your dashboard.</p>
       <p style="margin:0;font-size:13px;color:#78350f;line-height:1.6">📊 <strong>Live tracking</strong> — log into your dashboard anytime to see real-time status.</p>
     </div>
 
