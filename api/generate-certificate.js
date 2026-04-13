@@ -208,14 +208,47 @@ function wrapText(text, maxChars) {
   return lines;
 }
 
-// Also export as HTTP handler for direct calls
+// HTTP handler — called from dashboard "Get Certificate" button
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   try {
-    const pdf = await generateCertificatePdf(req.body);
+    const { tenancyId, tenantFirst, tenantLast, tenantEmail, propertyAddress } = req.body;
+
+    // Get sent_at from Supabase tenancy record
+    let sentAt = new Date().toISOString();
+    let trackingId = '';
+    let landlordId = '';
+
+    if (tenancyId) {
+      try {
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+        const { data } = await supabase.from('tenancies').select('sent_at, tracking_id, landlord_id').eq('id', tenancyId).single();
+        if (data) {
+          sentAt = data.sent_at || sentAt;
+          trackingId = data.tracking_id || '';
+          landlordId = data.landlord_id || '';
+        }
+      } catch (e) {
+        console.error('Supabase fetch for cert:', e.message);
+      }
+    }
+
+    const pdf = await generateCertificatePdf({
+      propertyAddress,
+      tenantFirst,
+      tenantLast,
+      tenantEmail,
+      sentAt,
+      trackingId,
+      landlordId,
+    });
+
     res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="Certificate-${tenantFirst}-${tenantLast}.pdf"`);
     res.status(200).send(pdf);
   } catch (err) {
+    console.error('Certificate generation error:', err.message);
     res.status(500).json({ error: err.message });
   }
 }

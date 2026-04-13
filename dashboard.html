@@ -362,11 +362,7 @@ function renderOrderCard(order) {
   const tenantRows = tenancies.map(t => {
     const statusInfo = getStatusInfo(t.status);
     const readTime = t.read_at ? `<div class="timestamp">${fmtDate(t.read_at)}</div>` : '';
-    const certBadge = t.status === 'certificate_generated' && t.cert_data
-      ? `<button onclick="downloadCertDirect('${t.tenant_first} ${t.tenant_last}', '${t.id}')" style="background:#059669;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px">⬇ Download Certificate</button>`
-      : t.status === 'certificate_generated'
-      ? `<button onclick="downloadCert('${t.id}','${t.tenant_first} ${t.tenant_last}')" style="background:#059669;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px">⬇ Download Certificate</button>`
-      : `<span style="color:var(--text3);font-size:12px">Generating...</span>`;
+    const certBadge = `<button onclick="generateAndDownloadCert('${t.id}','${t.tenant_first}','${t.tenant_last}','${t.tenant_email}','${t.property_address?.replace(/'/g,"\\'")}', this)" style="background:#3b82f6;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px">🏅 Get Certificate</button>`;
 
     return `<tr>
       <td>
@@ -421,50 +417,39 @@ function renderOrderCard(order) {
   </div>`;
 }
 
-// Cache for tenancy data including cert_data
-const tenancyCache = {};
+// ─── CERTIFICATE ON DEMAND ───
+async function generateAndDownloadCert(tenancyId, tenantFirst, tenantLast, tenantEmail, propertyAddress, btn) {
+  btn.textContent = 'Generating...';
+  btn.disabled = true;
 
-async function downloadCertDirect(tenantName, tenancyId) {
-  // Try cache first
-  const cached = tenancyCache[tenancyId];
-  if (cached?.cert_data) {
-    triggerPdfDownload(cached.cert_data, tenantName);
-    return;
-  }
-  // Fall back to fresh query
-  await downloadCert(tenancyId, tenantName);
-}
-
-async function downloadCert(tenancyId, tenantName) {
   try {
-    const { data, error } = await sb
-      .from('tenancies')
-      .select('cert_data, tenant_first, tenant_last, property_address')
-      .eq('id', tenancyId)
-      .single();
+    const response = await fetch('/api/generate-certificate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tenancyId, tenantFirst, tenantLast, tenantEmail, propertyAddress }),
+    });
 
-    if (error || !data?.cert_data) {
-      alert('Certificate not available yet. Please try again shortly.');
-      return;
-    }
-    triggerPdfDownload(data.cert_data, tenantName);
-  } catch (e) {
-    alert('Download failed. Please try again.');
-    console.error(e);
+    if (!response.ok) throw new Error('Generation failed');
+
+    const arrayBuffer = await response.arrayBuffer();
+    const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Certificate-${tenantFirst}-${tenantLast}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    btn.textContent = '✓ Downloaded';
+    btn.style.background = '#059669';
+    setTimeout(() => { btn.textContent = '🏅 Get Certificate'; btn.disabled = false; btn.style.background = '#3b82f6'; }, 3000);
+  } catch (err) {
+    console.error('Cert error:', err);
+    btn.textContent = 'Try again';
+    btn.disabled = false;
+    btn.style.background = '#dc2626';
+    setTimeout(() => { btn.textContent = '🏅 Get Certificate'; btn.style.background = '#3b82f6'; }, 3000);
   }
-}
-
-function triggerPdfDownload(base64Data, tenantName) {
-  const byteChars = atob(base64Data);
-  const byteArray = new Uint8Array(byteChars.length);
-  for (let i = 0; i < byteChars.length; i++) byteArray[i] = byteChars.charCodeAt(i);
-  const blob = new Blob([byteArray], { type: 'application/pdf' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `Certificate-${tenantName.replace(/\s/g,'-')}.pdf`;
-  a.click();
-  URL.revokeObjectURL(url);
 }
 
 
