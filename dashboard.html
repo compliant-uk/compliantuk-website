@@ -249,28 +249,25 @@ let refreshInterval;
 
 // ─── INIT ───
 async function init() {
-  // Give Supabase time to restore session from storage
-  const { data: { session } } = await sb.auth.getSession();
-
-  if (!session) {
-    // Try once more after a brief delay
-    await new Promise(r => setTimeout(r, 500));
-    const { data: { session: session2 } } = await sb.auth.getSession();
-    if (!session2) {
+  // Wait for Supabase to restore session from storage
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+      if (session) {
+        document.getElementById('authGate').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('navEmail').textContent = session.user.email;
+        await loadData();
+        if (!refreshInterval) {
+          refreshInterval = setInterval(loadData, 30000);
+        }
+      } else {
+        document.getElementById('authGate').style.display = 'flex';
+      }
+    } else if (event === 'SIGNED_OUT') {
+      document.getElementById('app').style.display = 'none';
       document.getElementById('authGate').style.display = 'flex';
-      return;
     }
-  }
-
-  const activeSession = session || (await sb.auth.getSession()).data.session;
-
-  document.getElementById('app').style.display = 'block';
-  document.getElementById('navEmail').textContent = activeSession.user.email;
-
-  await loadData();
-
-  // Auto-refresh every 30 seconds for live updates
-  refreshInterval = setInterval(loadData, 30000);
+  });
 }
 
 // ─── LOAD DATA ───
