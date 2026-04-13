@@ -181,7 +181,9 @@ async function handleLogin() {
     return;
   }
 
-  // Success - go to dashboard
+  // Success - small delay to ensure session is persisted before redirect
+  btn.textContent = 'Logging in...';
+  await new Promise(r => setTimeout(r, 800));
   window.location.href = '/dashboard';
 }
 

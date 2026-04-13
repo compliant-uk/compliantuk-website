@@ -249,25 +249,42 @@ let refreshInterval;
 
 // ─── INIT ───
 async function init() {
-  // Wait for Supabase to restore session from storage
+  // First try getSession directly
+  const { data: { session: directSession } } = await sb.auth.getSession();
+  
+  if (directSession) {
+    showDashboard(directSession);
+    return;
+  }
+
+  // Fall back to onAuthStateChange
   sb.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-      if (session) {
-        document.getElementById('authGate').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        document.getElementById('navEmail').textContent = session.user.email;
-        await loadData();
-        if (!refreshInterval) {
-          refreshInterval = setInterval(loadData, 30000);
-        }
-      } else {
-        document.getElementById('authGate').style.display = 'flex';
-      }
-    } else if (event === 'SIGNED_OUT') {
-      document.getElementById('app').style.display = 'none';
+    if (session && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION')) {
+      showDashboard(session);
+    } else if (!session && event === 'INITIAL_SESSION') {
       document.getElementById('authGate').style.display = 'flex';
     }
   });
+
+  // Final fallback after 2 seconds
+  setTimeout(async () => {
+    const { data: { session: fallbackSession } } = await sb.auth.getSession();
+    if (fallbackSession) {
+      showDashboard(fallbackSession);
+    } else {
+      document.getElementById('authGate').style.display = 'flex';
+    }
+  }, 2000);
+}
+
+async function showDashboard(session) {
+  document.getElementById('authGate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('navEmail').textContent = session.user.email;
+  await loadData();
+  if (!refreshInterval) {
+    refreshInterval = setInterval(loadData, 30000);
+  }
 }
 
 // ─── LOAD DATA ───
