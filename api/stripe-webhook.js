@@ -247,11 +247,13 @@ export default async function handler(req, res) {
 
     // Create or find Supabase account — wrapped so failure doesn't kill email send
     try {
-      const { data: existingUsers } = await supabase.auth.admin.listUsers();
-      const existingUser = existingUsers?.users?.find(u => u.email === landlordEmail);
+      // Try to find existing user by email first
+      const { data: { users }, error: listErr } = await supabase.auth.admin.listUsers({ perPage: 1000 });
+      const existingUser = users?.find(u => u.email?.toLowerCase() === landlordEmail.toLowerCase());
 
       if (existingUser) {
         landlordId = existingUser.id;
+        console.log('Found existing user:', landlordId);
       } else {
         tempPassword = generatePassword();
         isNewAccount = true;
@@ -263,8 +265,14 @@ export default async function handler(req, res) {
         });
         if (createError) {
           console.error('Create user error:', createError.message);
+          // If user already exists with different case, try to find them
+          if (createError.message.includes('already')) {
+            const found = users?.find(u => u.email?.toLowerCase() === landlordEmail.toLowerCase());
+            if (found) landlordId = found.id;
+          }
         } else {
           landlordId = newUser.user.id;
+          console.log('Created new user:', landlordId);
         }
       }
     } catch (authErr) {
