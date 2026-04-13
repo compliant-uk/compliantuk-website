@@ -370,13 +370,20 @@ export default async function handler(req, res) {
         });
 
         const certBase64 = certPdf.toString('base64');
+        console.log(`Cert generated for ${tenant.email}, size: ${certBase64.length} chars`);
 
         // Store cert in Supabase — accessible via dashboard for download
-        await supabase.from('tenancies').update({
+        const { error: certSaveError } = await supabase.from('tenancies').update({
           status: 'certificate_generated',
           cert_data: certBase64,
           cert_generated_at: new Date().toISOString(),
         }).eq('id', tenancy.id);
+
+        if (certSaveError) {
+          console.error('Cert save to Supabase failed:', certSaveError.message);
+        } else {
+          console.log(`Cert saved to Supabase for tenancy ${tenancy.id}`);
+        }
 
         // Track in tenancyRecords for landlord email summary
         tenancyRecords.push({

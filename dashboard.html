@@ -340,7 +340,9 @@ function renderOrderCard(order) {
   const tenantRows = tenancies.map(t => {
     const statusInfo = getStatusInfo(t.status);
     const readTime = t.read_at ? `<div class="timestamp">${fmtDate(t.read_at)}</div>` : '';
-    const certBadge = t.status === 'certificate_generated'
+    const certBadge = t.status === 'certificate_generated' && t.cert_data
+      ? `<button onclick="downloadCertDirect('${t.tenant_first} ${t.tenant_last}', '${t.id}')" style="background:#059669;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px">⬇ Download Certificate</button>`
+      : t.status === 'certificate_generated'
       ? `<button onclick="downloadCert('${t.id}','${t.tenant_first} ${t.tenant_last}')" style="background:#059669;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px">⬇ Download Certificate</button>`
       : `<span style="color:var(--text3);font-size:12px">Generating...</span>`;
 
@@ -397,6 +399,20 @@ function renderOrderCard(order) {
   </div>`;
 }
 
+// Cache for tenancy data including cert_data
+const tenancyCache = {};
+
+async function downloadCertDirect(tenantName, tenancyId) {
+  // Try cache first
+  const cached = tenancyCache[tenancyId];
+  if (cached?.cert_data) {
+    triggerPdfDownload(cached.cert_data, tenantName);
+    return;
+  }
+  // Fall back to fresh query
+  await downloadCert(tenancyId, tenantName);
+}
+
 async function downloadCert(tenancyId, tenantName) {
   try {
     const { data, error } = await supabaseClient
@@ -409,22 +425,24 @@ async function downloadCert(tenancyId, tenantName) {
       alert('Certificate not available yet. Please try again shortly.');
       return;
     }
-
-    // Convert base64 to blob and trigger download
-    const byteChars = atob(data.cert_data);
-    const byteArray = new Uint8Array(byteChars.length);
-    for (let i = 0; i < byteChars.length; i++) byteArray[i] = byteChars.charCodeAt(i);
-    const blob = new Blob([byteArray], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Certificate-${tenantName.replace(/\s/g,'-')}.pdf`;
-    a.click();
-    URL.revokeObjectURL(url);
+    triggerPdfDownload(data.cert_data, tenantName);
   } catch (e) {
     alert('Download failed. Please try again.');
     console.error(e);
   }
+}
+
+function triggerPdfDownload(base64Data, tenantName) {
+  const byteChars = atob(base64Data);
+  const byteArray = new Uint8Array(byteChars.length);
+  for (let i = 0; i < byteChars.length; i++) byteArray[i] = byteChars.charCodeAt(i);
+  const blob = new Blob([byteArray], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Certificate-${tenantName.replace(/\s/g,'-')}.pdf`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 
