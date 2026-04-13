@@ -438,16 +438,6 @@ export default async function handler(req, res) {
         encoding: 'base64',
       });
     }
-    // Attach each tenant certificate
-    for (const rec of tenancyRecords) {
-      if (rec.certBase64) {
-        landlordAttachments.push({
-          filename: rec.certFilename || `Certificate-${rec.tenant_first}-${rec.tenant_last}.pdf`,
-          content: rec.certBase64,
-          encoding: 'base64',
-        });
-      }
-    }
 
     console.log(`Sending landlord email to ${landlordEmail}, ${landlordAttachments.length} attachments`);
 
