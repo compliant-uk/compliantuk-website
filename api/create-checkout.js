@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       landlordEmail,
       propertyAddress,
       tenantCount: String(tenantCount),
-      package: packageName,
+      package: 'starter',
     };
 
     if (tenantsJson.length <= 490) {
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
           price_data: {
             currency: 'gbp',
             product_data: {
-              name: `CompliantUK — ${packageName.charAt(0).toUpperCase() + packageName.slice(1)} Pack`,
+              name: `CompliantUK — Starter Compliance Pack`,
               description: `Information Sheet delivery + proof certificate · ${tenantCount} tenant${tenantCount > 1 ? 's' : ''} · ${propertyAddress}`,
             },
             unit_amount: totalPence,
