@@ -241,55 +241,64 @@ export default async function handler(req, res) {
     // ─────────────────────────────────────
     // 1. Create or find Supabase account
     // ─────────────────────────────────────
-    let landlordId;
+    let landlordId = null;
     let tempPassword = null;
     let isNewAccount = false;
 
-    // Check if user already exists
-    const { data: existingUsers } = await supabase.auth.admin.listUsers();
-    const existingUser = existingUsers?.users?.find(u => u.email === landlordEmail);
+    // Create or find Supabase account — wrapped so failure doesn't kill email send
+    try {
+      const { data: existingUsers } = await supabase.auth.admin.listUsers();
+      const existingUser = existingUsers?.users?.find(u => u.email === landlordEmail);
 
-    if (existingUser) {
-      landlordId = existingUser.id;
-    } else {
-      // Create new account with auto-generated password
-      tempPassword = generatePassword();
-      isNewAccount = true;
-
-      const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
-        email: landlordEmail,
-        password: tempPassword,
-        email_confirm: true, // skip email confirmation - we handle it ourselves
-        user_metadata: {
-          first_name: landlordFirst,
-          last_name: landlordLast,
-        },
-      });
-
-      if (createError) throw new Error(`Failed to create user: ${createError.message}`);
-      landlordId = newUser.user.id;
+      if (existingUser) {
+        landlordId = existingUser.id;
+      } else {
+        tempPassword = generatePassword();
+        isNewAccount = true;
+        const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+          email: landlordEmail,
+          password: tempPassword,
+          email_confirm: true,
+          user_metadata: { first_name: landlordFirst, last_name: landlordLast },
+        });
+        if (createError) {
+          console.error('Create user error:', createError.message);
+        } else {
+          landlordId = newUser.user.id;
+        }
+      }
+    } catch (authErr) {
+      console.error('Auth error (non-fatal):', authErr.message);
     }
 
     // ─────────────────────────────────────
     // 2. Save order to Supabase
     // ─────────────────────────────────────
-    const { data: order, error: orderError } = await supabase
-      .from('orders')
-      .insert({
-        stripe_session_id: session.id,
-        landlord_id: landlordId,
-        landlord_email: landlordEmail,
-        landlord_first: landlordFirst,
-        landlord_last: landlordLast,
-        property_address: propertyAddress,
-        amount_paid: session.amount_total,
-        package: meta.package || 'starter',
-        status: 'processing',
-      })
-      .select()
-      .single();
-
-    if (orderError) throw new Error(`Failed to save order: ${orderError.message}`);
+    let order = null;
+    try {
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          stripe_session_id: session.id,
+          landlord_id: landlordId,
+          landlord_email: landlordEmail,
+          landlord_first: landlordFirst,
+          landlord_last: landlordLast,
+          property_address: propertyAddress,
+          amount_paid: session.amount_total,
+          package: meta.package || 'starter',
+          status: 'processing',
+        })
+        .select()
+        .single();
+      if (orderError) {
+        console.error('Order save error:', orderError.message);
+      } else {
+        order = orderData;
+      }
+    } catch (orderErr) {
+      console.error('Order save failed (non-fatal):', orderErr.message);
+    }
 
     // ─────────────────────────────────────
     // 3. Fetch GOV.UK PDF
@@ -315,7 +324,7 @@ export default async function handler(req, res) {
       const { data: tenancy, error: tenancyError } = await supabase
         .from('tenancies')
         .insert({
-          order_id: order.id,
+          order_id: order?.id || null,
           landlord_id: landlordId,
           property_address: propertyAddress,
           tenant_first: tenant.first,
@@ -443,12 +452,11 @@ export default async function handler(req, res) {
     // ─────────────────────────────────────
     // 6. Mark order complete
     // ─────────────────────────────────────
-    await supabase
-      .from('orders')
-      .update({ status: 'complete' })
-      .eq('id', order.id);
+    if (order?.id) {
+      await supabase.from('orders').update({ status: 'complete' }).eq('id', order.id);
+    }
 
-    return res.status(200).json({ received: true, orderId: order.id });
+    return res.status(200).json({ received: true, orderId: order?.id });
 
   } catch (err) {
     console.error('Webhook processing error:', err);
