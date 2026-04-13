@@ -352,9 +352,6 @@ export default async function handler(req, res) {
       });
 
       // ── Generate proof-of-service certificate immediately on payment ──
-      // We do not wait for the tenant to open the email.
-      // The certificate records the date/time the document was dispatched.
-      // If tenant later opens the email, track.js updates status to 'read'.
       try {
         const certPdf = await generateCertificatePdf({
           propertyAddress,
@@ -380,8 +377,9 @@ export default async function handler(req, res) {
         await supabase.from('tenancies').update({ status: 'certificate_generated' }).eq('id', tenancy.id);
 
       } catch (certErr) {
-        console.error('Certificate generation error:', certErr);
-        // Non-fatal — order still processed, certificate can be regenerated
+        console.error('Certificate generation error for', tenant.email, ':', certErr.message);
+        // Still push to tenancyRecords without cert so landlord email is sent
+        tenancyRecords.push({ ...tenancy, trackingId, certBase64: null });
       }
     }
 
@@ -418,7 +416,9 @@ export default async function handler(req, res) {
         })),
     ];
 
-    await resend.emails.send({
+    console.log(`Sending landlord email to ${landlordEmail} with ${landlordAttachments.length} attachments, ${tenancyRecords.length} tenancy records`);
+
+    const landlordEmailResult = await resend.emails.send({
       from: 'CompliantUK <noreply@compliantuk.co.uk>',
       to: landlordEmail,
       bcc: process.env.ADMIN_BCC_EMAIL || 'support@compliantuk.co.uk',
@@ -426,6 +426,8 @@ export default async function handler(req, res) {
       html: landlordEmailHtml,
       attachments: landlordAttachments,
     });
+
+    console.log('Landlord email result:', JSON.stringify(landlordEmailResult));
 
     // ─────────────────────────────────────
     // 6. Mark order complete
