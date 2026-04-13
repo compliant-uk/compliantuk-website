@@ -1,0 +1,3 @@
+landlord_first,landlord_last,landlord_email,property_address,tenant1_first,tenant1_last,tenant1_email,tenant2_first,tenant2_last,tenant2_email,tenant3_first,tenant3_last,tenant3_email,tenant4_first,tenant4_last,tenant4_email
+John,Smith,john.smith@email.com,"12 Oak Street, London, E1 2AB",Alice,Johnson,alice@email.com,Bob,Williams,bob@email.com,,,,,
+Sarah,Brown,sarah.brown@gmail.com,"45 Maple Avenue, Manchester, M1 3CD",Tom,Davis,tom.davis@email.com,,,,,,,,
