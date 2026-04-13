@@ -448,18 +448,25 @@ export default async function handler(req, res) {
     }
 
     console.log(`Sending landlord email to ${landlordEmail}, ${landlordAttachments.length} attachments`);
+    console.log('RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
+    console.log('RESEND_API_KEY prefix:', process.env.RESEND_API_KEY?.slice(0,8));
 
-    const landlordEmailResult = await resend.emails.send({
-      from: 'CompliantUK <noreply@compliantuk.co.uk>',
-      reply_to: 'support@compliantuk.co.uk',
-      to: landlordEmail,
-      bcc: process.env.ADMIN_BCC_EMAIL || 'support@compliantuk.co.uk',
-      subject: `Compliance confirmed — ${propertyAddress}`,
-      html: landlordEmailHtml,
-      attachments: landlordAttachments,
-    });
-
-    console.log('Landlord email result:', JSON.stringify(landlordEmailResult));
+    let landlordEmailResult;
+    try {
+      landlordEmailResult = await resend.emails.send({
+        from: 'CompliantUK <noreply@compliantuk.co.uk>',
+        reply_to: 'support@compliantuk.co.uk',
+        to: landlordEmail,
+        bcc: process.env.ADMIN_BCC_EMAIL || 'support@compliantuk.co.uk',
+        subject: `Compliance confirmed — ${propertyAddress}`,
+        html: landlordEmailHtml,
+        attachments: landlordAttachments,
+      });
+      console.log('Landlord email result:', JSON.stringify(landlordEmailResult));
+    } catch (emailErr) {
+      console.error('LANDLORD EMAIL FAILED:', emailErr.message);
+      console.error('Full error:', JSON.stringify(emailErr));
+    }
 
     // ─────────────────────────────────────
     // 6. Mark order complete
