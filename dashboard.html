@@ -184,7 +184,7 @@ nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filt
     <div class="stat-card">
       <div class="stat-label">Awaiting Read</div>
       <div class="stat-value amber" id="statPending">—</div>
-      <div class="stat-sub">certificate pending</div>
+      <div class="stat-sub">certificate available</div>
     </div>
   </div>
 
@@ -193,7 +193,7 @@ nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filt
     <div class="filter-tabs">
       <button class="ftab active" onclick="filterOrders('all', this)">All properties</button>
       <button class="ftab" onclick="filterOrders('complete', this)">✅ Fully compliant</button>
-      <button class="ftab" onclick="filterOrders('pending', this)">⏳ Awaiting read</button>
+      <button class="ftab" onclick="filterOrders('pending', this)">⏳ Pending</button>
     </div>
     <a href="/#get-compliant" class="add-btn">＋ Add property</a>
   </div>
@@ -340,7 +340,7 @@ function renderOrders(filter) {
       <div class="empty-state">
         <div class="empty-icon">${filter === 'all' ? '🏠' : filter === 'complete' ? '✅' : '⏳'}</div>
         <div class="empty-title">${filter === 'all' ? 'No properties yet' : filter === 'complete' ? 'No fully compliant properties yet' : 'All caught up!'}</div>
-        <div class="empty-sub">${filter === 'all' ? 'Add your first property to get started.' : filter === 'complete' ? 'Certificates are generated when each tenant reads their document.' : 'All your tenants have read their Information Sheets.'}</div>
+        <div class="empty-sub">${filter === 'all' ? 'Add your first property to get started.' : filter === 'complete' ? 'Log into your dashboard to generate your proof-of-service certificate for each tenant.' : 'All your tenants have read their Information Sheets.'}</div>
         ${filter === 'all' ? '<a href="/#get-compliant" class="add-btn" style="display:inline-flex;width:auto">＋ Add your first property</a>' : ''}
       </div>`;
     return;
