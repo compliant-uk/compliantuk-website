@@ -440,12 +440,12 @@ function buildLandlordEmail({ landlordFirst, landlordLast, landlordEmail, proper
       <p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b">Temporary Password</p>
       <p style="margin:0 0 4px;font-size:22px;font-weight:800;color:#60a5fa;font-family:monospace;letter-spacing:2px">${tempPassword}</p>
       <p style="margin:0 0 20px;font-size:12px;color:#94a3b8">Change this after logging in via account settings.</p>
-      <a href="${loginUrl}" style="display:inline-block;background:#3b82f6;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">Log in to dashboard →</a>
+      <a href="${loginUrl}?email=${encodeURIComponent(landlordEmail)}&new=1" style="display:inline-block;background:#3b82f6;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">Log in to dashboard →</a>
     </div>` : `
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:20px 24px;margin:0 0 24px">
       <p style="margin:0 0 8px;font-size:15px;font-weight:700;color:#166534">📊 View in your dashboard</p>
       <p style="margin:0 0 16px;color:#15803d;font-size:14px">This order has been added to your existing account.</p>
-      <a href="${dashboardUrl}" style="display:inline-block;background:#16a34a;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">Go to dashboard →</a>
+      <a href="${loginUrl}?email=${encodeURIComponent(landlordEmail)}" style="display:inline-block;background:#16a34a;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">Go to dashboard →</a>
     </div>`;
 
   return `<!DOCTYPE html>

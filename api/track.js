@@ -152,7 +152,7 @@ async function generateAndEmailCertificate(tenancy, ip, device, readAt) {
     </div>
 
     <div style="text-align:center">
-      <a href="https://www.compliantuk.co.uk/dashboard" style="display:inline-block;background:#3b82f6;color:white;padding:13px 28px;border-radius:9px;text-decoration:none;font-weight:700;font-size:14px">View dashboard →</a>
+      <a href="https://www.compliantuk.co.uk/login?email=${encodeURIComponent(order.landlord_email)}" style="display:inline-block;background:#3b82f6;color:white;padding:13px 28px;border-radius:9px;text-decoration:none;font-weight:700;font-size:14px">View dashboard →</a>
     </div>
   </td></tr>
   <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;border-radius:0 0 12px 12px;padding:20px;text-align:center">
