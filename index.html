@@ -307,13 +307,65 @@ footer{background:var(--bg1);border-top:1px solid var(--border);padding:40px max
 <footer><div class="fi"><a href="/" class="logo"><div class="logo-mark"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><path d="M16 2L4 7v8c0 7.18 5.16 13.9 12 15.93C22.84 28.9 28 22.18 28 15V7L16 2z" fill="url(#sg)"/><polyline points="10,16 14,20 22,12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div><span class="logo-name">Compliant<span>UK</span></span></a><div class="fl"><a href="/about.html">About</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/contact.html">Contact</a><a href="/login.html">Log in</a></div><span class="fc">© 2026 CompliantUK. All rights reserved.</span></div><p class="flg">CompliantUK provides document delivery and compliance tracking services for private landlords in England. We are not solicitors and nothing on this website constitutes legal advice. Always consult a qualified solicitor for advice specific to your circumstances. The Renters' Rights Act 2025 information provided is for general guidance only and may be subject to change.</p></footer>
 
 <script>
-const PRICE=49;
+const PRICING = {
+  starter: { base: 49, extra: 8, label: 'Starter' }
+};
 let n=1;
+let currentPrice=PRICING.starter.base;
+
 function updateCountdown(){const d=new Date('2026-05-31T23:59:59'),now=new Date(),diff=d-now;if(diff<=0){document.getElementById('cd').textContent='Deadline passed';return}const days=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000);document.getElementById('cd').textContent=`${days}d ${h}h ${m}m`;document.getElementById('ds').textContent=days}
 updateCountdown();setInterval(updateCountdown,60000);
-function setCount(x){n=x;document.querySelectorAll('.tcb').forEach(b=>b.classList.toggle('active',+b.dataset.n===x));renderTenants();document.getElementById('plbl').textContent=`${n} tenant${n>1?'s':''} — Starter compliance pack`}
+
+function updatePrice(){
+  const extra = Math.max(0, n - 1);
+  currentPrice = PRICING.starter.base + (extra * PRICING.starter.extra);
+  const btn = document.querySelector('.sbtn');
+  if(btn) btn.textContent = `Pay £${currentPrice} via Card — Become compliant instantly`;
+  document.getElementById('plbl').textContent = `${n} tenant${n>1?'s':''} — ${PRICING.starter.label} compliance pack (£${currentPrice})`;
+}
+
+function setCount(x){
+  n=x;
+  document.querySelectorAll('.tcb').forEach(b=>b.classList.toggle('active',+b.dataset.n===x));
+  renderTenants();
+  updatePrice();
+}
+
 function renderTenants(){const c=document.getElementById('tg');let h='';for(let i=1;i<=n;i++)h+=`<div class="tg"><div class="tglbl">Tenant ${i}</div><div class="fr"><div class="f"><label>First name *</label><input type="text" id="t${i}f" placeholder="First name" required></div><div class="f"><label>Last name *</label><input type="text" id="t${i}l" placeholder="Last name" required></div></div><div class="f"><label>Email address *</label><input type="email" id="t${i}e" placeholder="tenant@example.com" required></div></div>`;c.innerHTML=h}
-async function handlePay(){const lf=document.getElementById('lf').value.trim(),ll=document.getElementById('ll').value.trim(),le=document.getElementById('le').value.trim(),pa=document.getElementById('pa').value.trim();if(!lf||!ll||!le||!pa){alert('Please fill in all your details.');return}const tenants=[];for(let i=1;i<=n;i++){const f=document.getElementById(`t${i}f`).value.trim(),l=document.getElementById(`t${i}l`).value.trim(),e=document.getElementById(`t${i}e`).value.trim();if(!f||!l||!e){alert('Please fill in all tenant details.');return}tenants.push({first:f,last:l,email:e})}const btn=document.querySelector('.sbtn');btn.disabled=true;btn.textContent='Processing…';try{const resp=await fetch('/api/create-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({landlordFirst:lf,landlordLast:ll,landlordEmail:le,propertyAddress:pa,tenants})});const data=await resp.json();if(data.url){sessionStorage.setItem('pendingOrder',JSON.stringify({landlordFirst:lf,landlordLast:ll,landlordEmail:le,propertyAddress:pa,tenantCount:tenants.length,price:PRICE}));window.location.href=data.url;}else{alert(data.error||'Payment setup failed. Please try again.');btn.disabled=false;btn.textContent=`Pay £${PRICE} via Card — Become compliant instantly`;}}catch(err){alert('Network error. Please try again.');btn.disabled=false;btn.textContent=`Pay £${PRICE} via Card — Become compliant instantly`;}}
+
+async function handlePay(){
+  const lf=document.getElementById('lf').value.trim(),ll=document.getElementById('ll').value.trim(),le=document.getElementById('le').value.trim(),pa=document.getElementById('pa').value.trim();
+  if(!lf||!ll||!le||!pa){alert('Please fill in all your details.');return}
+  const tenants=[];
+  for(let i=1;i<=n;i++){
+    const f=document.getElementById(`t${i}f`).value.trim(),l=document.getElementById(`t${i}l`).value.trim(),e=document.getElementById(`t${i}e`).value.trim();
+    if(!f||!l||!e){alert('Please fill in all tenant details.');return}
+    tenants.push({first:f,last:l,email:e})
+  }
+  const btn=document.querySelector('.sbtn');
+  btn.disabled=true;
+  btn.textContent='Processing…';
+  try{
+    const resp=await fetch('/api/create-checkout',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({landlordFirst:lf,landlordLast:ll,landlordEmail:le,propertyAddress:pa,tenants,package:'starter'})
+    });
+    const data=await resp.json();
+    if(data.url){
+      sessionStorage.setItem('pendingOrder',JSON.stringify({landlordFirst:lf,landlordLast:ll,landlordEmail:le,propertyAddress:pa,tenantCount:tenants.length,price:currentPrice}));
+      window.location.href=data.url;
+    }else{
+      alert(data.error||'Payment setup failed. Please try again.');
+      btn.disabled=false;
+      updatePrice();
+    }
+  }catch(err){
+    alert('Network error. Please try again.');
+    btn.disabled=false;
+    updatePrice();
+  }
+}
 function faq(btn){const open=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',!open);const a=btn.nextElementSibling;a.style.maxHeight=open?'0':a.scrollHeight+'px'}
 function toggleMenu(){document.getElementById('mob').classList.toggle('open')}
 renderTenants();
