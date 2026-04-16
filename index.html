@@ -307,6 +307,41 @@ footer{background:var(--bg1);border-top:1px solid var(--border);padding:40px max
 <footer><div class="fi"><a href="/" class="logo"><div class="logo-mark"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><path d="M16 2L4 7v8c0 7.18 5.16 13.9 12 15.93C22.84 28.9 28 22.18 28 15V7L16 2z" fill="url(#sg)"/><polyline points="10,16 14,20 22,12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div><span class="logo-name">Compliant<span>UK</span></span></a><div class="fl"><a href="/about">About</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/contact">Contact</a><a href="/login">Log in</a></div><span class="fc">© 2026 CompliantUK. All rights reserved.</span></div><p class="flg">CompliantUK provides document delivery and compliance tracking services for private landlords in England. We are not solicitors and nothing on this website constitutes legal advice. Always consult a qualified solicitor for advice specific to your circumstances. The Renters' Rights Act 2025 information provided is for general guidance only and may be subject to change.</p></footer>
 
 <script>
+// ── AUTH REDIRECT INTERCEPTOR ──────────────────────────────────────────────
+// Supabase auth links (password reset, magic link) sometimes land on the
+// homepage instead of the correct page. Detect and redirect immediately.
+(function() {
+  var hash = window.location.hash;
+  var search = window.location.search;
+  var params = new URLSearchParams(search);
+  var hashParams = new URLSearchParams(hash.replace('#',''));
+
+  // IMPLICIT FLOW: token in hash fragment
+  var type = hashParams.get('type');
+  if (type === 'recovery') {
+    // Password reset link — send to reset-password page with full hash
+    window.location.replace('/reset-password' + hash);
+    return;
+  }
+  if (type === 'magiclink' || type === 'signup' || type === 'invite') {
+    // Magic link / email confirm — send to dashboard (login will handle it)
+    window.location.replace('/dashboard' + hash);
+    return;
+  }
+
+  // PKCE FLOW: ?code= in query string (Supabase v2 default)
+  var code = params.get('code');
+  if (code) {
+    // We can't tell recovery from magic-link without consuming the code,
+    // so we route to reset-password which handles both:
+    // - recovery → shows password form
+    // - magic link → exchanges session and redirects to dashboard
+    window.location.replace('/reset-password' + search);
+    return;
+  }
+})();
+// ── END AUTH REDIRECT INTERCEPTOR ─────────────────────────────────────────
+
 const PRICING = {
   starter: { base: 49, extra: 8, included: 4, label: 'Starter' }  // £49 includes up to 4 tenants; +£8 per extra tenant from tenant 5+
 };
