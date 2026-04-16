@@ -83,9 +83,9 @@ footer a:hover{color:var(--text2)}
 <body>
 <nav>
   <div class="nav-wrap">
-    <a href="index.html" class="logo"><div class="logo-mark"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><path d="M16 2L4 7v8c0 7.18 5.16 13.9 12 15.93C22.84 28.9 28 22.18 28 15V7L16 2z" fill="url(#sg)"/><polyline points="10,16 14,20 22,12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div><span class="logo-name">Compliant<span>UK</span></span></a>
+    <a href="/" class="logo"><div class="logo-mark"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><path d="M16 2L4 7v8c0 7.18 5.16 13.9 12 15.93C22.84 28.9 28 22.18 28 15V7L16 2z" fill="url(#sg)"/><polyline points="10,16 14,20 22,12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div><span class="logo-name">Compliant<span>UK</span></span></a>
     <div class="nav-right">
-      <a href="index.html" class="back-link">← Back to home</a>
+      <a href="/" class="back-link">← Back to home</a>
     </div>
     <button class="hamburger" id="hb" onclick="toggleMobileMenu()" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -95,11 +95,11 @@ footer a:hover{color:var(--text2)}
 
 <div class="mobile-menu" id="mm">
   <div class="mm-inner">
-    <a href="index.html" class="mm-link" onclick="closeMobileMenu()">Home <span class="mm-link-arrow">›</span></a>
-    <a href="blog.html" class="mm-link" onclick="closeMobileMenu()">Blog <span class="mm-link-arrow">›</span></a>
-    <a href="bulk.html" class="mm-link" onclick="closeMobileMenu()">Portfolio &amp; Agency <span class="mm-link-arrow">›</span></a>
-    <a href="about.html" class="mm-link" onclick="closeMobileMenu()">About <span class="mm-link-arrow">›</span></a>
-    <a href="index.html#get-compliant" class="mm-cta" onclick="closeMobileMenu()">Get compliant — £49</a>
+    <a href="/" class="mm-link" onclick="closeMobileMenu()">Home <span class="mm-link-arrow">›</span></a>
+    <a href="/blog" class="mm-link" onclick="closeMobileMenu()">Blog <span class="mm-link-arrow">›</span></a>
+    <a href="/bulk" class="mm-link" onclick="closeMobileMenu()">Portfolio &amp; Agency <span class="mm-link-arrow">›</span></a>
+    <a href="/about" class="mm-link" onclick="closeMobileMenu()">About <span class="mm-link-arrow">›</span></a>
+    <a href="/#get-compliant" class="mm-cta" onclick="closeMobileMenu()">Get compliant — £49</a>
   </div>
 </div>
 
@@ -131,7 +131,7 @@ footer a:hover{color:var(--text2)}
       <div class="cc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
       <div class="cc-title">About us</div>
       <div class="cc-desc">Learn about our mission and why we built CompliantUK to raise standards across the private rented sector.</div>
-      <a href="about.html" class="cc-link">Read our story →</a>
+      <a href="/about" class="cc-link">Read our story →</a>
     </div>
   </div>
 
@@ -159,7 +159,7 @@ footer a:hover{color:var(--text2)}
   </div>
 </div>
 
-<footer>© 2026 CompliantUK · <a href="index.html">Home</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></footer>
+<footer>© 2026 CompliantUK · <a href="/">Home</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></footer>
 
 <script>
 function toggleMobileMenu(){var m=document.getElementById("mm");var b=document.getElementById("hb");var open=m.classList.contains("open");m.classList.toggle("open",!open);b.classList.toggle("open",!open)}
