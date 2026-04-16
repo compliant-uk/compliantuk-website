@@ -452,7 +452,7 @@ async function generateAndDownloadCert(tenancyId, tenantFirst, tenantLast, tenan
   }
 }
 
-
+function getStatusInfo(status) {
   switch (status) {
     case 'sent': return { cls: 'sp-sent', dot: '→', label: 'SENT' };
     case 'opened': return { cls: 'sp-opened', dot: '●', label: 'OPENED' };

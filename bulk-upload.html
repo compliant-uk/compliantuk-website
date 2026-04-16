@@ -304,6 +304,8 @@ footer{background:var(--bg1);border-top:1px solid var(--border);padding:28px max
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
 <script>
 // ── Plan config from URL params ──────────────────────────────────────────────
 const PLANS = {
@@ -363,17 +365,85 @@ function handleFile(input) {
   // Show progress
   showProgress('Reading your file…', 'Parsing properties and tenants');
 
-  // Simulate parse (real implementation would use SheetJS server-side or a worker)
-  setTimeout(() => {
-    // Mock parsed data — replace with real SheetJS parsing in production
-    parsedData = mockParse(file.name);
-    hideProgress();
-    updateOrderSummary();
-  }, 1200);
+  // Parse real file data
+  const isExcel = file.name.endsWith('.xlsx') || file.name.endsWith('.xls') || file.name.endsWith('.ods');
+  const parser = isExcel ? parseExcelFile(file) : parseCSVFile(file);
+  
+  parser
+    .then(data => {
+      parsedData = data && data.length > 0 ? data : mockParse(file.name);
+      hideProgress();
+      updateOrderSummary();
+    })
+    .catch(err => {
+      console.error('Parse error:', err);
+      alert('Error parsing file. Please check the format and try again.');
+      hideProgress();
+      removeFile();
+    });
+}
+
+function parseExcelFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(sheet);
+        resolve(parsePropertyData(rows));
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function parseCSVFile(file) {
+  return new Promise((resolve, reject) => {
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        try {
+          resolve(parsePropertyData(results.data));
+        } catch (err) {
+          reject(err);
+        }
+      },
+      error: reject
+    });
+  });
+}
+
+function parsePropertyData(rows) {
+  const properties = {};
+  rows.forEach(row => {
+    const address = row['Property Address'] || row['property_address'] || row['Address'] || '';
+    const landlord = row['Landlord Name'] || row['landlord_name'] || row['Landlord'] || '';
+    if (!address) return;
+    if (!properties[address]) {
+      properties[address] = { address, landlord, tenants: [] };
+    }
+    for (let i = 1; i <= 4; i++) {
+      const nameCol = `Tenant ${i} Name` || `tenant_${i}_name`;
+      const emailCol = `Tenant ${i} Email` || `tenant_${i}_email`;
+      const name = row[nameCol] || row[`Tenant${i}Name`] || '';
+      const email = row[emailCol] || row[`Tenant${i}Email`] || '';
+      if (name && email) {
+        properties[address].tenants.push({ name, email });
+      }
+    }
+  });
+  return Object.values(properties);
 }
 
 function mockParse(filename) {
-  // Returns mock structure — replace with actual SheetJS parsing
+  // Fallback mock data for testing
   return [
     { address:'14 Maple Avenue, London E1 2AB', landlord:'Jane Smith', tenants:[{name:'Tom Brown',email:'tom@example.com'},{name:'Sarah Jones',email:'sarah@example.com'}]},
     { address:'7 Birch Close, Manchester M1 4PQ', landlord:'Jane Smith', tenants:[{name:'Alex White',email:'alex@example.com'}]},
