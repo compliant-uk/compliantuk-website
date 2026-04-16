@@ -77,15 +77,6 @@ footer a:hover{color:var(--text2)}
 @media(max-width:900px){.nav-right{display:none!important}.hamburger{display:flex}}
 </style>
   <link rel="canonical" href="https://www.compliantuk.co.uk/login">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.compliantuk.co.uk/login">
-  <meta property="og:title" content="Log In — CompliantUK">
-  <meta property="og:description" content="Access your landlord compliance dashboard.">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=1200&q=80">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Log In — CompliantUK">
-  <meta name="twitter:description" content="Access your landlord compliance dashboard.">
-  <meta name="twitter:image" content="https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=1200&q=80">
 </head>
 <body>
 
@@ -114,14 +105,15 @@ footer a:hover{color:var(--text2)}
     </div>
 
     <div class="field">
-      <label>Email address</label>
+      <label for="email">Email address</label>
       <input type="email" id="email" placeholder="your@email.com" autocomplete="email" />
     </div>
 
     <div class="field">
-      <label>Password</label>
+      <label for="password">Password</label>
       <div class="pw-wrap">
-        <input type="password" id="password" placeholder="Your password" autocomplete="current-password" id="pwInput" />
+        <!-- FIX: removed duplicate id="pwInput" — was causing invalid HTML -->
+        <input type="password" id="password" placeholder="Your password" autocomplete="current-password" />
         <button class="pw-toggle" onclick="togglePw()" type="button" id="pwToggle">👁</button>
       </div>
     </div>
@@ -147,13 +139,17 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Check if already logged in
+// Check if already logged in — redirect to dashboard if so
 (async () => {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) window.location.href = '/dashboard';
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) window.location.href = '/dashboard';
+  } catch (e) {
+    console.error('Session check error:', e);
+  }
 })();
 
-// Show temp banner if arriving from new account
+// Show temp banner if arriving from a new account email
 const params = new URLSearchParams(window.location.search);
 if (params.get('new') === '1') {
   document.getElementById('tempBanner').style.display = 'block';
@@ -181,21 +177,27 @@ async function handleLogin() {
   btn.disabled = true;
   btn.textContent = 'Signing in…';
 
-  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
-  if (error) {
+    if (error) {
+      btn.disabled = false;
+      btn.textContent = 'Log in to dashboard →';
+      showError(error.message === 'Invalid login credentials'
+        ? 'Incorrect email or password. Check your welcome email for your temporary password.'
+        : error.message);
+      return;
+    }
+
+    // Success — small delay to ensure session is persisted before redirect
+    btn.textContent = 'Logging in…';
+    await new Promise(r => setTimeout(r, 600));
+    window.location.href = '/dashboard';
+  } catch (e) {
     btn.disabled = false;
     btn.textContent = 'Log in to dashboard →';
-    showError(error.message === 'Invalid login credentials'
-      ? 'Incorrect email or password. Check your welcome email for your temporary password.'
-      : error.message);
-    return;
+    showError('Something went wrong. Please try again.');
   }
-
-  // Success - small delay to ensure session is persisted before redirect
-  btn.textContent = 'Logging in...';
-  await new Promise(r => setTimeout(r, 800));
-  window.location.href = '/dashboard';
 }
 
 function showError(msg) {
@@ -220,7 +222,14 @@ function togglePw() {
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter') handleLogin();
 });
-function toggleMenu(){var m=document.getElementById('mobile-menu');var b=document.getElementById('hamburger');var open=m.classList.contains('open');m.classList.toggle('open',!open);b.classList.toggle('open',!open);}
+
+function toggleMenu(){
+  var m=document.getElementById('mobile-menu');
+  var b=document.getElementById('hamburger');
+  var open=m.classList.contains('open');
+  m.classList.toggle('open',!open);
+  b.classList.toggle('open',!open);
+}
 </script>
 </body>
 </html>

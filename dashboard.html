@@ -362,7 +362,7 @@ function renderOrderCard(order) {
   const tenantRows = tenancies.map(t => {
     const statusInfo = getStatusInfo(t.status);
     const readTime = t.read_at ? `<div class="timestamp">${fmtDate(t.read_at)}</div>` : '';
-    const certBadge = `<button onclick="generateAndDownloadCert('${t.id}','${t.tenant_first}','${t.tenant_last}','${t.tenant_email}','${t.property_address?.replace(/'/g,"\\'")}', this)" style="background:#3b82f6;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px">🏅 Get Certificate</button>`;
+    const certBadge = `<button class="cert-btn" data-id="${escAttr(t.id)}" data-first="${escAttr(t.tenant_first)}" data-last="${escAttr(t.tenant_last)}" data-email="${escAttr(t.tenant_email)}" data-addr="${escAttr(t.property_address)}" style="background:#3b82f6;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px">🏅 Get Certificate</button>`;
 
     return `<tr>
       <td>
@@ -531,6 +531,18 @@ function showPwMsg(text, color) {
 }
 
 function toggleMenu(){var m=document.getElementById('mobile-menu');var b=document.getElementById('hamburger');var open=m.classList.contains('open');m.classList.toggle('open',!open);b.classList.toggle('open',!open);}
+
+// Safe attribute escaping — prevents cert button breaking on special chars in addresses
+function escAttr(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Event delegation for cert buttons
+document.getElementById('ordersWrap').addEventListener('click', function(e) {
+  const btn = e.target.closest('.cert-btn');
+  if (!btn) return;
+  generateAndDownloadCert(btn.dataset.id, btn.dataset.first, btn.dataset.last, btn.dataset.email, btn.dataset.addr, btn);
+});
 
 init();
 </script>
