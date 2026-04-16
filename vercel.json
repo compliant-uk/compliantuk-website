@@ -33,6 +33,14 @@
     "api/subscribe.js": {
       "memory": 256,
       "maxDuration": 10
+    },
+    "api/contact.js": {
+      "memory": 256,
+      "maxDuration": 10
+    },
+    "api/unsubscribe.js": {
+      "memory": 256,
+      "maxDuration": 10
     }
   },
   "crons": [

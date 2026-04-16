@@ -60,7 +60,9 @@ textarea{resize:vertical;min-height:120px}
 select option{background:var(--bg2)}
 .submit-btn{width:100%;background:linear-gradient(135deg,var(--blue3),var(--blue));color:white;border:none;padding:14px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;margin-top:6px}
 .submit-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,0.3)}
+.submit-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
 .success-msg{display:none;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:9px;padding:14px 16px;font-size:14px;color:var(--emerald2);margin-top:14px;text-align:center}
+.error-msg{display:none;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:9px;padding:14px 16px;font-size:14px;color:#fca5a5;margin-top:14px;text-align:center}
 .response-note{font-size:12px;color:var(--text3);text-align:center;margin-top:10px}
 @media(max-width:700px){.grid{grid-template-columns:1fr}}
 footer{border-top:1px solid var(--border);padding:28px 5%;text-align:center;font-size:12px;color:var(--text3)}
@@ -150,8 +152,9 @@ footer a:hover{color:var(--text2)}
       </select>
     </div>
     <div class="field"><label>Message *</label><textarea id="c-message" placeholder="Tell us how we can help..."></textarea></div>
-    <button class="submit-btn" onclick="sendMessage(this)">Send message →</button>
+    <button class="submit-btn" id="submit-btn" onclick="sendMessage(this)">Send message →</button>
     <div class="success-msg" id="success-msg">Message sent — we'll be in touch shortly!</div>
+    <div class="error-msg" id="error-msg"></div>
     <p class="response-note">We typically respond within 4 hours Mon–Fri, 9am–6pm</p>
   </div>
 </div>
@@ -162,7 +165,61 @@ footer a:hover{color:var(--text2)}
 function toggleMobileMenu(){var m=document.getElementById("mm");var b=document.getElementById("hb");var open=m.classList.contains("open");m.classList.toggle("open",!open);b.classList.toggle("open",!open)}
 function closeMobileMenu(){var m=document.getElementById("mm");var b=document.getElementById("hb");m.classList.remove("open");b.classList.remove("open")}
 document.addEventListener("click",function(e){var m=document.getElementById("mm");var b=document.getElementById("hb");if(m&&b&&!m.contains(e.target)&&!b.contains(e.target)){m.classList.remove("open");b.classList.remove("open")}});
-function sendMessage(btn){var name=document.getElementById('c-name').value.trim();var email=document.getElementById('c-email').value.trim();var message=document.getElementById('c-message').value.trim();if(!name||!email||!message){alert('Please fill in your name, email, and message.');return;}btn.textContent='Sending...';btn.disabled=true;var subject=document.getElementById('c-subject').value||'Website enquiry';var body='Name: '+name+'\nEmail: '+email+'\n\nMessage:\n'+message;window.location.href='mailto:support@compliantuk.co.uk?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);setTimeout(function(){document.getElementById('success-msg').style.display='block';btn.textContent='Send message →';btn.disabled=false;},1000);}
+
+async function sendMessage(btn){
+  var name=document.getElementById('c-name').value.trim();
+  var email=document.getElementById('c-email').value.trim();
+  var message=document.getElementById('c-message').value.trim();
+  var subject=document.getElementById('c-subject').value||'Website enquiry';
+  
+  // Clear previous messages
+  document.getElementById('success-msg').style.display='none';
+  document.getElementById('error-msg').style.display='none';
+  
+  // Validate
+  if(!name||!email||!message){
+    document.getElementById('error-msg').textContent='Please fill in your name, email, and message.';
+    document.getElementById('error-msg').style.display='block';
+    return;
+  }
+  
+  // Disable button and show loading state
+  btn.disabled=true;
+  var originalText=btn.textContent;
+  btn.textContent='Sending...';
+  
+  try{
+    var response=await fetch('/api/contact',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:name,email:email,subject:subject,message:message})
+    });
+    
+    var data=await response.json();
+    
+    if(response.ok){
+      // Success
+      document.getElementById('success-msg').style.display='block';
+      document.getElementById('c-name').value='';
+      document.getElementById('c-email').value='';
+      document.getElementById('c-subject').value='';
+      document.getElementById('c-message').value='';
+      btn.textContent='Message sent ✓';
+    }else{
+      // Error from API
+      document.getElementById('error-msg').textContent=data.error||'Failed to send message. Please try again.';
+      document.getElementById('error-msg').style.display='block';
+      btn.textContent=originalText;
+      btn.disabled=false;
+    }
+  }catch(err){
+    console.error('Contact form error:',err);
+    document.getElementById('error-msg').textContent='Network error. Please check your connection and try again.';
+    document.getElementById('error-msg').style.display='block';
+    btn.textContent=originalText;
+    btn.disabled=false;
+  }
+}
 </script>
 </body>
 </html>

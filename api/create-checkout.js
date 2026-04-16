@@ -1,16 +1,19 @@
 // api/create-checkout.js
-// Creates a Stripe Checkout session with all order data in metadata
-// Called from index.html and bulk.html on form submit
+// Creates a Stripe Checkout session with dynamic pricing based on package and tenant count
+// Called from index.html on form submit
 
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Pricing tiers — flat rate per tenancy (pence)
-// 1 tenant: £49, 2 tenants: £78, 3 tenants: £97, 4 tenants: £116
-// Flat price per tenancy — covers up to 4 tenants
-// The tenant count selector only populates input fields, it does NOT change the price
-const TENANCY_PRICE = 4900; // £49 per tenancy (flat rate, up to 4 tenants)
+// Pricing tiers — per tenancy (pence)
+// Each tier has a base price per tenancy and additional cost per extra tenant
+const PRICING_TIERS = {
+  starter: { basePrice: 4900, extraTenantPrice: 800, label: 'Starter' },      // £49 base, +£8 per extra tenant
+  essential: { basePrice: 3900, extraTenantPrice: 600, label: 'Essential' },   // £39 base, +£6 per extra tenant
+  portfolio: { basePrice: 2900, extraTenantPrice: 600, label: 'Portfolio' },   // £29 base, +£6 per extra tenant
+  scale: { basePrice: 2200, extraTenantPrice: 500, label: 'Scale' },           // £22 base, +£5 per extra tenant
+};
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -24,7 +27,7 @@ export default async function handler(req, res) {
       landlordEmail,
       propertyAddress,
       tenants,        // array of { first, last, email }
-      package: pkg,  // 'starter' | 'essential' | 'portfolio' | 'scale'
+      package: pkg,   // 'starter' | 'essential' | 'portfolio' | 'scale'
     } = req.body;
 
     // Validate required fields
@@ -32,8 +35,20 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // Validate package
+    const packageKey = (pkg || 'starter').toLowerCase();
+    if (!PRICING_TIERS[packageKey]) {
+      return res.status(400).json({ error: 'Invalid package selection' });
+    }
+
     const tenantCount = tenants.length;
-    const totalPence = TENANCY_PRICE; // flat rate — tenant count doesn't affect price
+    const pricing = PRICING_TIERS[packageKey];
+
+    // Calculate dynamic price:
+    // Base price for the package + extra tenant costs
+    // (First tenant included in base price, additional tenants cost extra)
+    const extraTenantCount = Math.max(0, tenantCount - 1);
+    const totalPence = pricing.basePrice + (extraTenantCount * pricing.extraTenantPrice);
 
     // Serialise tenant data into metadata
     // Stripe has 500 char limit per value — chunk if needed
@@ -44,7 +59,9 @@ export default async function handler(req, res) {
       landlordEmail,
       propertyAddress,
       tenantCount: String(tenantCount),
-      package: 'starter',
+      package: packageKey,
+      pricePerTenant: String(pricing.basePrice / 100),
+      extraTenantCost: String(pricing.extraTenantPrice / 100),
     };
 
     if (tenantsJson.length <= 490) {
@@ -71,7 +88,7 @@ export default async function handler(req, res) {
           price_data: {
             currency: 'gbp',
             product_data: {
-              name: `CompliantUK — Starter Compliance Pack`,
+              name: `CompliantUK — ${pricing.label} Compliance Pack`,
               description: `Information Sheet delivery + proof certificate · ${tenantCount} tenant${tenantCount > 1 ? 's' : ''} · ${propertyAddress}`,
             },
             unit_amount: totalPence,
@@ -86,6 +103,7 @@ export default async function handler(req, res) {
         metadata: {
           landlordEmail,
           propertyAddress,
+          package: packageKey,
         },
       },
     });

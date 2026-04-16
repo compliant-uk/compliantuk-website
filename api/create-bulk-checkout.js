@@ -1,11 +1,13 @@
 // api/create-bulk-checkout.js
-// Creates a Stripe Checkout session for bulk/portfolio orders.
-// Receives full order payload from bulk-upload.html and stores in metadata
-// so stripe-webhook.js can process tenants without needing sessionStorage.
+// Creates a Stripe Checkout session for bulk/portfolio orders
+// Stores large order payloads in Supabase instead of Stripe metadata to avoid limits
+// Stripe metadata only stores reference ID and basic info
 
 import Stripe from 'stripe';
+import { createClient } from '@supabase/supabase-js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 const PLAN_LABELS = {
   silver:   'Silver (2–10 properties)',
@@ -34,29 +36,48 @@ export default async function handler(req, res) {
     const propertyCount = properties.length;
     const origin = req.headers.origin || 'https://www.compliantuk.co.uk';
 
-    // Stripe metadata values max 500 chars per key, 50 keys total.
-    // Chunk properties JSON across multiple keys if needed.
-    const propertiesJson = JSON.stringify(properties);
-    const chunkSize = 490;
-    const chunks = [];
-    for (let i = 0; i < propertiesJson.length; i += chunkSize) {
-      chunks.push(propertiesJson.slice(i, i + chunkSize));
-    }
-    if (chunks.length > 40) {
-      return res.status(400).json({ error: 'Order too large for metadata. Contact support.' });
+    // Store full order payload in Supabase for large orders
+    // This avoids Stripe metadata size limits (500 chars per key, 50 keys total)
+    let bulkOrderId = null;
+    try {
+      const { data, error: insertError } = await supabase
+        .from('bulk_orders')
+        .insert({
+          plan,
+          property_count: propertyCount,
+          total_gbp: total,
+          landlord_first: submittedBy.first,
+          landlord_last: submittedBy.last,
+          landlord_email: submittedBy.email,
+          price_per_property: pricePerProperty,
+          extra_tenant_cost: extraTenantCost,
+          properties_data: JSON.stringify(properties),
+          status: 'pending',
+          created_at: new Date().toISOString(),
+        })
+        .select('id')
+        .single();
+
+      if (insertError) {
+        console.error('Failed to store bulk order:', insertError);
+        return res.status(500).json({ error: 'Failed to process bulk order' });
+      }
+
+      bulkOrderId = data.id;
+    } catch (dbErr) {
+      console.error('Bulk order storage error:', dbErr);
+      return res.status(500).json({ error: 'Failed to store order data' });
     }
 
+    // Minimal metadata for Stripe — just reference ID and basic info
     const metadata = {
       orderType: 'bulk',
+      bulkOrderId: String(bulkOrderId),
       plan,
       propertyCount: String(propertyCount),
       totalGBP: String(total),
-      landlordFirst: submittedBy.first,
-      landlordLast: submittedBy.last,
       landlordEmail: submittedBy.email,
-      propertiesChunks: String(chunks.length),
     };
-    chunks.forEach((chunk, i) => { metadata[`properties_${i}`] = chunk; });
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],

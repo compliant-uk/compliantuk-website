@@ -1,11 +1,18 @@
 // api/subscribe.js
 // Saves subscriber email and sends a welcome/notification email via Resend
+// Includes token-based unsubscribe link
 
 import { Resend } from 'resend';
 import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+// Generate unsubscribe token
+function generateUnsubscribeToken(email) {
+  return crypto.createHash('sha256').update(email + process.env.UNSUBSCRIBE_SECRET || 'default-secret').digest('hex');
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -15,10 +22,14 @@ export default async function handler(req, res) {
 
   // Save to Supabase subscribers table (create if needed)
   try {
-    await supabase.from('subscribers').upsert({ email, subscribed_at: new Date().toISOString() }, { onConflict: 'email' });
+    await supabase.from('subscribers').upsert({ email, subscribed_at: new Date().toISOString(), subscribed: true }, { onConflict: 'email' });
   } catch (err) {
     console.error('Subscriber save error:', err.message);
   }
+
+  // Generate unsubscribe token and link
+  const unsubscribeToken = generateUnsubscribeToken(email);
+  const unsubscribeUrl = `https://www.compliantuk.co.uk/api/unsubscribe?email=${encodeURIComponent(email)}&token=${unsubscribeToken}`;
 
   // Send welcome email to subscriber
   try {
@@ -43,7 +54,7 @@ export default async function handler(req, res) {
     <a href="https://www.compliantuk.co.uk" style="display:inline-block;background:#3b82f6;color:white;padding:13px 28px;border-radius:9px;text-decoration:none;font-weight:700;font-size:14px">Become compliant now →</a>
   </td></tr>
   <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;border-radius:0 0 12px 12px;padding:20px;text-align:center">
-    <p style="margin:0;color:#94a3b8;font-size:12px">© 2026 CompliantUK · <a href="https://www.compliantuk.co.uk/privacy" style="color:#94a3b8">Unsubscribe</a></p>
+    <p style="margin:0;color:#94a3b8;font-size:12px">© 2026 CompliantUK · <a href="${unsubscribeUrl}" style="color:#94a3b8">Unsubscribe</a></p>
   </td></tr>
 </table></td></tr></table>
 </body></html>`,
