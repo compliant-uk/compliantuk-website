@@ -123,17 +123,17 @@ export async function generateCertificatePdf({
   const sentDate = formatDate(sentAt);
   page.drawRectangle({ x: 40, y: tsY - 60, width: 240, height: 55, color: lightBg, borderRadius: 8 });
   page.drawRectangle({ x: 40, y: tsY - 60, width: 240, height: 55, borderColor: borderC, borderWidth: 1, borderRadius: 8 });
-  page.drawText('📧  DOCUMENT SENT', { x: 54, y: tsY - 28, size: 8, font: helveticaBold, color: slate });
+  page.drawText('EMAIL SENT', { x: 54, y: tsY - 28, size: 8, font: helveticaBold, color: slate });
   page.drawText(sentDate, { x: 54, y: tsY - 44, size: 11, font: helveticaBold, color: dark });
 
   // Arrow
-  page.drawText('→', { x: 295, y: tsY - 36, size: 16, font: helveticaBold, color: blue });
+  page.drawText('->', { x: 295, y: tsY - 36, size: 16, font: helveticaBold, color: blue });
 
   // Read box (highlighted)
   const readDate = formatDate(readAt);
   page.drawRectangle({ x: 315, y: tsY - 60, width: 240, height: 55, color: rgb(0.94, 0.99, 0.96), borderRadius: 8 });
   page.drawRectangle({ x: 315, y: tsY - 60, width: 240, height: 55, borderColor: rgb(0.73, 0.93, 0.81), borderWidth: 1.5, borderRadius: 8 });
-  page.drawText('✓  DOCUMENT READ', { x: 329, y: tsY - 28, size: 8, font: helveticaBold, color: green });
+  page.drawText('DOCUMENT READ', { x: 329, y: tsY - 28, size: 8, font: helveticaBold, color: green });
   page.drawText(readDate, { x: 329, y: tsY - 44, size: 11, font: helveticaBold, color: dark });
 
   // ── TECHNICAL EVIDENCE ──
@@ -143,13 +143,13 @@ export async function generateCertificatePdf({
   page.drawText('TECHNICAL EVIDENCE', { x: 40, y: evY - 10, size: 9, font: helveticaBold, color: blue });
 
   page.drawText('IP Address:', { x: 40, y: evY - 30, size: 9, font: helveticaBold, color: slate });
-  page.drawText(ipAddress, { x: 130, y: evY - 30, size: 10, font: helvetica, color: dark });
+  page.drawText(ipAddress || 'Not recorded', { x: 130, y: evY - 30, size: 10, font: helvetica, color: dark });
 
   page.drawText('Device Type:', { x: 40, y: evY - 47, size: 9, font: helveticaBold, color: slate });
-  page.drawText(device, { x: 130, y: evY - 47, size: 10, font: helvetica, color: dark });
+  page.drawText(device || 'Not recorded', { x: 130, y: evY - 47, size: 10, font: helvetica, color: dark });
 
   page.drawText('Certificate ID:', { x: 40, y: evY - 64, size: 9, font: helveticaBold, color: slate });
-  page.drawText(trackingId, { x: 130, y: evY - 64, size: 9, font: helvetica, color: dark });
+  page.drawText(trackingId || 'N/A', { x: 130, y: evY - 64, size: 9, font: helvetica, color: dark });
 
   page.drawText('Issued by:', { x: 40, y: evY - 81, size: 9, font: helveticaBold, color: slate });
   page.drawText('CompliantUK Document Delivery Service', { x: 130, y: evY - 81, size: 9, font: helvetica, color: dark });
@@ -208,26 +208,44 @@ function wrapText(text, maxChars) {
   return lines;
 }
 
-// HTTP handler — called from dashboard "Get Certificate" button
+// HTTP handler — called from dashboard "Download Certificate" button
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   try {
     const { tenancyId, tenantFirst, tenantLast, tenantEmail, propertyAddress } = req.body;
 
-    // Get sent_at from Supabase tenancy record
+    // Defaults
     let sentAt = new Date().toISOString();
+    let readAt = null;
+    let ipAddress = 'Not recorded';
+    let device = 'Not recorded';
     let trackingId = '';
     let landlordId = '';
 
     if (tenancyId) {
       try {
         const { createClient } = await import('@supabase/supabase-js');
-        const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-        const { data } = await supabase.from('tenancies').select('sent_at, tracking_id, landlord_id').eq('id', tenancyId).single();
+        const supabase = createClient(
+          process.env.SUPABASE_URL,
+          process.env.SUPABASE_SERVICE_ROLE_KEY
+        );
+
+        // FIX: also fetch read_at, ip_address, device from the tenancy record
+        const { data, error } = await supabase
+          .from('tenancies')
+          .select('sent_at, read_at, tracking_id, landlord_id, ip_address, device')
+          .eq('id', tenancyId)
+          .single();
+
+        if (error) console.error('Supabase query error:', error.message);
+
         if (data) {
-          sentAt = data.sent_at || sentAt;
+          sentAt     = data.sent_at     || sentAt;
+          readAt     = data.read_at     || null;
           trackingId = data.tracking_id || '';
           landlordId = data.landlord_id || '';
+          ipAddress  = data.ip_address  || 'Not recorded';
+          device     = data.device      || 'Not recorded';
         }
       } catch (e) {
         console.error('Supabase fetch for cert:', e.message);
@@ -240,6 +258,9 @@ export default async function handler(req, res) {
       tenantLast,
       tenantEmail,
       sentAt,
+      readAt,      // ✅ now passed
+      ipAddress,   // ✅ now passed
+      device,      // ✅ now passed
       trackingId,
       landlordId,
     });
@@ -248,7 +269,7 @@ export default async function handler(req, res) {
     res.setHeader('Content-Disposition', `attachment; filename="Certificate-${tenantFirst}-${tenantLast}.pdf"`);
     res.status(200).send(pdf);
   } catch (err) {
-    console.error('Certificate generation error:', err.message);
+    console.error('Certificate generation error:', err.message, err.stack);
     res.status(500).json({ error: err.message });
   }
 }
