@@ -109,7 +109,62 @@ export default async function handler(req,res) {
 }
 
 function tenantHtml(tFirst,tLast,lFirst,lLast,addr,pixel) {
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,sans-serif"><table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0"><tr><td style="background:#080c14;border-radius:12px 12px 0 0;padding:28px 36px"><div style="font-weight:700;font-size:17px;color:white">Compliant<span style="color:#60a5fa">UK</span></div><h1 style="margin:12px 0 0;font-size:22px;font-weight:800;color:#fff">Important: Information Sheet from your landlord</h1></td></tr><tr><td style="background:#fff;padding:36px"><p style="margin:0 0 20px;color:#334155;font-size:15px;line-height:1.7">Dear ${tFirst} ${tLast},</p><p style="margin:0 0 20px;color:#334155;font-size:15px;line-height:1.7">Your landlord, ${lFirst} ${lLast}, is required by law to provide you with the official Renters' Rights Act 2025 Information Sheet.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px 24px;margin:0 0 24px"><p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;color:#94a3b8">Property</p><p style="margin:0;font-size:16px;font-weight:600;color:#0f172a">${addr}</p></div><p style="margin:0;color:#94a3b8;font-size:13px">This email was sent on behalf of your landlord by CompliantUK.</p></td></tr><tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px;text-align:center"><p style="margin:0;color:#94a3b8;font-size:12px">© 2026 CompliantUK</p></td></tr></table></td></tr></table><img src="${pixel}" width="1" height="1" style="display:none" alt=""></body></html>`;
+  const landlordName = `${lFirst} ${lLast}`;
+  const tenantName = `${tFirst} ${tLast}`;
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Important Legal Document — Renters' Rights Act 2025</title>
+</head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:'Helvetica Neue',Arial,sans-serif">
+<div style="max-width:600px;margin:0 auto;background:white;border-radius:12px;overflow:hidden;margin-top:40px;box-shadow:0 4px 24px rgba(0,0,0,0.06)">
+
+  <div style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);padding:32px 40px;text-align:center">
+    <div style="display:inline-block;background:rgba(255,255,255,0.15);padding:8px 16px;border-radius:8px;margin-bottom:16px">
+      <span style="font-size:18px;font-weight:800;color:white">✓ CompliantUK</span>
+    </div>
+    <h1 style="color:white;font-size:22px;font-weight:700;margin:0;line-height:1.3">Important Legal Document for Your Tenancy</h1>
+    <p style="color:rgba(255,255,255,0.85);font-size:14px;margin:10px 0 0">Renters' Rights Act 2025 — Please Read</p>
+  </div>
+
+  <div style="background:#fef3c7;border-bottom:2px solid #f59e0b;padding:14px 40px">
+    <p style="margin:0;font-size:14px;color:#92400e;font-weight:600">⚠ This is not spam. This is an official legal document sent on behalf of your landlord.</p>
+  </div>
+
+  <div style="padding:36px 40px">
+    <p style="font-size:16px;color:#1e293b;margin:0 0 20px">Dear ${tenantName},</p>
+
+    <div style="background:#eff6ff;border-radius:10px;padding:20px 24px;margin:0 0 20px;border-left:4px solid #3b82f6">
+      <p style="margin:0 0 10px;font-size:15px;font-weight:700;color:#1e40af">📋 What is this email?</p>
+      <p style="margin:0;font-size:14px;color:#1e293b;line-height:1.7">Under the <strong>Renters' Rights Act 2025</strong>, every landlord in England is legally required to provide each tenant with an official Government Information Sheet. Your landlord, <strong>${landlordName}</strong>, is fulfilling this legal duty for your property at <strong>${addr}</strong>.</p>
+    </div>
+
+    <div style="background:#f0fdf4;border-radius:10px;padding:20px 24px;margin:0 0 20px;border-left:4px solid #10b981">
+      <p style="margin:0 0 10px;font-size:15px;font-weight:700;color:#065f46">🏠 Why do you need to read it?</p>
+      <p style="margin:0 0 12px;font-size:14px;color:#1e293b;line-height:1.7">The attached PDF is the <strong>official GOV.UK information sheet</strong> that sets out your rights as a tenant. It covers:</p>
+      <p style="margin:0 0 6px;font-size:14px;color:#1e293b">✓ Your rights if your landlord wants to increase the rent</p>
+      <p style="margin:0 0 6px;font-size:14px;color:#1e293b">✓ What your landlord must do before ending your tenancy</p>
+      <p style="margin:0 0 6px;font-size:14px;color:#1e293b">✓ Your right to a well-maintained, safe property</p>
+      <p style="margin:0;font-size:14px;color:#1e293b">✓ How to raise a dispute or complaint if needed</p>
+    </div>
+
+    <div style="background:#f8fafc;border-radius:10px;padding:20px 24px;margin:0 0 28px;border:1px solid #e2e8f0">
+      <p style="margin:0 0 8px;font-size:15px;font-weight:700;color:#1e293b">📎 What you need to do</p>
+      <p style="margin:0;font-size:14px;color:#475569;line-height:1.7"><strong>Open and read the PDF attached to this email.</strong> There is nothing to sign or return. Your receipt of this document is recorded automatically and protects both you and your landlord under the new legislation.</p>
+    </div>
+
+    <p style="font-size:14px;color:#475569;line-height:1.7;margin:0 0 28px">For questions about your rights, <a href="https://www.citizensadvice.org.uk" style="color:#3b82f6;text-decoration:none;font-weight:600">Citizens Advice</a> offers free independent guidance. For information on the Act itself, visit <a href="https://www.gov.uk/government/collections/renters-rights-bill" style="color:#3b82f6;text-decoration:none;font-weight:600">GOV.UK</a>.</p>
+
+    <hr style="border:none;border-top:1px solid #e2e8f0;margin:0 0 20px"/>
+    <p style="font-size:12px;color:#94a3b8;line-height:1.6;margin:0">This email was sent on behalf of <strong>${landlordName}</strong> by <strong>CompliantUK</strong>, a compliance document delivery service for private landlords in England. Delivery of this document is recorded for legal compliance purposes only.</p>
+  </div>
+
+  <div style="background:#f8fafc;padding:20px 40px;border-top:1px solid #e2e8f0;text-align:center">
+    <p style="font-size:12px;color:#94a3b8;margin:0">© 2026 CompliantUK</p>
+  </div>
+</div>
+<img src="${pixel}" width="1" height="1" style="display:none" alt="">
+</body></html>`;
 }
 
 function landlordHtml(lFirst,lLast,lEmail,addr,tenants,amount,isNew,pw,ref,date) {
