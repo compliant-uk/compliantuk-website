@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
+    "raw-body": "^2.5.2",
     "pdf-lib": "^1.17.1",
     "stripe": "^14.0.0",
     "@supabase/supabase-js": "^2.39.0",
