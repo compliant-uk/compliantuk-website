@@ -230,22 +230,22 @@ export default async function handler(req, res) {
           process.env.SUPABASE_SERVICE_ROLE_KEY
         );
 
-        // FIX: also fetch read_at, ip_address, device from the tenancy record
+        // Fetch all fields needed for the certificate
         const { data, error } = await supabase
           .from('tenancies')
-          .select('sent_at, read_at, tracking_id, landlord_id, ip_address, device')
+          .select('sent_at, read_at, tracking_id, landlord_id, tenant_ip, tenant_device')
           .eq('id', tenancyId)
           .single();
 
         if (error) console.error('Supabase query error:', error.message);
 
         if (data) {
-          sentAt     = data.sent_at     || sentAt;
-          readAt     = data.read_at     || null;
-          trackingId = data.tracking_id || '';
-          landlordId = data.landlord_id || '';
-          ipAddress  = data.ip_address  || 'Not recorded';
-          device     = data.device      || 'Not recorded';
+          sentAt     = data.sent_at       || sentAt;
+          readAt     = data.read_at       || null;
+          trackingId = data.tracking_id   || '';
+          landlordId = data.landlord_id   || '';
+          ipAddress  = data.tenant_ip     || 'Not recorded';
+          device     = data.tenant_device || 'Not recorded';
         }
       } catch (e) {
         console.error('Supabase fetch for cert:', e.message);
