@@ -7,6 +7,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import getRawBody from 'raw-body';
+import { generateAndStoreCertificate } from './generate-certificate.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -183,8 +184,9 @@ export default async function handler(req, res) {
     const trackingId = generateTrackingId();
 
     // Save tenancy record
+    let tenancyId = null;
     try {
-      await supabase.from('tenancies').insert({
+      const { data: tenancy, error } = await supabase.from('tenancies').insert({
         order_id: orderId,
         landlord_id: landlordId,
         property_address: propertyAddress,
@@ -194,7 +196,9 @@ export default async function handler(req, res) {
         tracking_id: trackingId,
         status: 'sent',
         sent_at: new Date().toISOString(),
-      });
+      }).select().single();
+      if (error) console.error('Tenancy save error:', error.message);
+      else tenancyId = tenancy?.id;
     } catch (err) {
       console.error('Tenancy save error:', err.message);
     }
@@ -208,13 +212,31 @@ export default async function handler(req, res) {
         to: tenant.email,
         subject: `Important: Renters' Rights Act 2025 — Information Sheet from your landlord`,
         html: buildTenantEmail({ tenantFirst: tenant.first, tenantLast: tenant.last, landlordFirst, landlordLast, propertyAddress, trackingPixelUrl }),
-        attachments: pdfBase64 ? [{ filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf', content: pdfBase64, encoding: 'base64' }] : [],
+  
       });
       console.log(`Tenant email sent: ${tenant.email}`);
     } catch (err) {
       console.error('Tenant email error:', tenant.email, err.message);
     }
-  }
+
+    // Generate and store certificate immediately (proof of delivery)
+    if (tenancyId && landlordId) {
+      try {
+        await generateAndStoreCertificate({
+          tenancyId,
+          propertyAddress,
+          tenantFirst: tenant.first,
+          tenantLast: tenant.last,
+          tenantEmail: tenant.email,
+          sentAt: new Date().toISOString(),
+          landlordId,
+          trackingId,
+        });
+        console.log(`Certificate stored for ${tenant.email}`);
+      } catch (err) {
+        console.error('Certificate generation error (non-fatal):', err.message);
+      }
+    }
 
   // ── 5. Email landlord confirmation ────────────────────────────────────────
   try {
@@ -229,7 +251,7 @@ export default async function handler(req, res) {
       bcc: process.env.ADMIN_BCC_EMAIL || 'support@compliantuk.co.uk',
       subject: `Compliance confirmed — ${propertyAddress}`,
       html: buildLandlordEmail({ landlordFirst, landlordLast, landlordEmail, propertyAddress, tenants, amountFormatted, isNewAccount, tempPassword, orderRef, orderDate, dashboardUrl: `${BASE_URL}/dashboard`, loginUrl: `${BASE_URL}/login` }),
-      attachments: pdfBase64 ? [{ filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf', content: pdfBase64, encoding: 'base64' }] : [],
+
     });
     console.log(`Landlord email sent: ${landlordEmail}`);
   } catch (err) {
@@ -319,7 +341,7 @@ async function handleBulkOrderProcessing({ session, bulkOrder, properties, res }
     for (const tenant of tenants) {
       const trackingId = generateTrackingId();
       try {
-        await supabase.from('tenancies').insert({
+        const { data: tenancy, error } = await supabase.from('tenancies').insert({
           order_id: orderId,
           landlord_id: landlordId,
           property_address: propertyAddress,
@@ -329,7 +351,9 @@ async function handleBulkOrderProcessing({ session, bulkOrder, properties, res }
           tracking_id: trackingId,
           status: 'sent',
           sent_at: new Date().toISOString(),
-        });
+        }).select().single();
+
+        const tenancyId = tenancy?.id;
 
         const trackingPixelUrl = `${BASE_URL}/api/track?id=${trackingId}`;
         await resend.emails.send({
@@ -340,6 +364,21 @@ async function handleBulkOrderProcessing({ session, bulkOrder, properties, res }
           html: buildTenantEmail({ tenantFirst: tenant.first, tenantLast: tenant.last, landlordFirst, landlordLast, propertyAddress, trackingPixelUrl }),
           attachments: pdfBase64 ? [{ filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf', content: pdfBase64, encoding: 'base64' }] : [],
         });
+
+        // Generate and store certificate immediately (proof of delivery)
+        if (tenancyId && landlordId) {
+          try {
+            await generateAndStoreCertificate({
+              tenancyId, propertyAddress,
+              tenantFirst: tenant.first, tenantLast: tenant.last,
+              tenantEmail: tenant.email,
+              sentAt: new Date().toISOString(),
+              landlordId, trackingId,
+            });
+          } catch (certErr) {
+            console.error('Bulk cert error (non-fatal):', certErr.message);
+          }
+        }
       } catch (err) {
         console.error('Bulk tenant processing error:', tenant.email, err.message);
       }
@@ -379,7 +418,7 @@ async function handleBulkOrderProcessing({ session, bulkOrder, properties, res }
         dashboardUrl: `${BASE_URL}/dashboard`, 
         loginUrl: `${BASE_URL}/login` 
       }),
-      attachments: pdfBase64 ? [{ filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf', content: pdfBase64, encoding: 'base64' }] : [],
+
     });
   } catch (err) {
     console.error('Bulk landlord email error:', err.message);
