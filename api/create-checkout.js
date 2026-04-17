@@ -10,7 +10,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // Base price INCLUDES up to 4 tenants. Tenants 5+ are charged at extraTenantPrice each.
 // e.g. Starter: 1–4 tenants = £49 | 5 tenants = £57 | 6 tenants = £65
 const PRICING_TIERS = {
-  starter:   { basePrice: 4900, extraTenantPrice: 800, includedTenants: 4, label: 'Starter' },      // £49 base (up to 4 tenants), +£8 per extra tenant
+  starter:   { basePrice: 50, extraTenantPrice: 50, includedTenants: 4, label: 'Starter' },      // TEMP 50p TEST - restore to 4900/800 after
   essential: { basePrice: 3900, extraTenantPrice: 600, includedTenants: 4, label: 'Essential' },    // £39 base (up to 4 tenants), +£6 per extra tenant
   portfolio: { basePrice: 2900, extraTenantPrice: 600, includedTenants: 4, label: 'Portfolio' },    // £29 base (up to 4 tenants), +£6 per extra tenant
   scale:     { basePrice: 2200, extraTenantPrice: 500, includedTenants: 4, label: 'Scale' },        // £22 base (up to 4 tenants), +£5 per extra tenant
