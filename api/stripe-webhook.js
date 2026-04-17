@@ -2,186 +2,120 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import getRawBody from 'raw-body';
-import { buildTenantEmail, buildLandlordEmail } from './email-builders.js';
 import { generateAndStoreCertificate } from './generate-certificate.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 const resend = new Resend(process.env.RESEND_API_KEY);
-const BASE_URL = 'https://www.compliantuk.co.uk';
+const BASE = 'https://www.compliantuk.co.uk';
 
-function genPassword() {
+function genPw() {
   const c = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
   return Array.from({length:12},()=>c[Math.floor(Math.random()*c.length)]).join('');
 }
-
-function genTrackingId() {
-  return Math.random().toString(36).slice(2) + Date.now().toString(36);
-}
-
+function genId() { return Math.random().toString(36).slice(2)+Date.now().toString(36); }
 async function fetchPdf() {
-  const r = await fetch(`${BASE_URL}/The_Renters__Rights_Act_Information_Sheet_2026.pdf`);
-  if (!r.ok) throw new Error(`PDF fetch failed: ${r.status}`);
+  const r = await fetch(`${BASE}/The_Renters__Rights_Act_Information_Sheet_2026.pdf`);
+  if (!r.ok) throw new Error(`PDF ${r.status}`);
   return Buffer.from(await r.arrayBuffer());
 }
-
-function parseTenants(meta) {
-  if (meta.tenants) return JSON.parse(meta.tenants);
-  if (meta.tenantsChunks) {
-    let j = '';
-    for (let i = 0; i < parseInt(meta.tenantsChunks,10); i++) j += meta[`tenants_${i}`]||'';
-    return JSON.parse(j);
-  }
+function parseTenants(m) {
+  if (m.tenants) return JSON.parse(m.tenants);
+  if (m.tenantsChunks) { let j=''; for(let i=0;i<parseInt(m.tenantsChunks,10);i++) j+=m[`tenants_${i}`]||''; return JSON.parse(j); }
   return [];
 }
-
-async function getOrCreateLandlord(email, first, last) {
-  const { data: { users } } = await sb.auth.admin.listUsers({ perPage: 1000 });
-  const existing = users?.find(u => u.email?.toLowerCase() === email.toLowerCase());
-  if (existing) return { landlordId: existing.id, tempPassword: null, isNew: false };
-  const pw = genPassword();
-  const { data: u, error } = await sb.auth.admin.createUser({
-    email, password: pw, email_confirm: true,
-    user_metadata: { first_name: first, last_name: last },
-  });
+async function getOrCreate(email,first,last) {
+  const {data:{users}} = await sb.auth.admin.listUsers({perPage:1000});
+  const ex = users?.find(u=>u.email?.toLowerCase()===email.toLowerCase());
+  if (ex) return {id:ex.id,pw:null,isNew:false};
+  const pw = genPw();
+  const {data:u,error} = await sb.auth.admin.createUser({email,password:pw,email_confirm:true,user_metadata:{first_name:first,last_name:last}});
   if (error) throw error;
-  return { landlordId: u.user.id, tempPassword: pw, isNew: true };
+  return {id:u.user.id,pw,isNew:true};
 }
-
-async function processTenant({ tenant, orderId, landlordId, propertyAddress, landlordFirst, landlordLast, pdfBase64 }) {
-  const trackingId = genTrackingId();
-  const sentAt = new Date().toISOString();
-
-  const { data: t } = await sb.from('tenancies').insert({
-    order_id: orderId, landlord_id: landlordId,
-    property_address: propertyAddress,
-    tenant_first: tenant.first, tenant_last: tenant.last, tenant_email: tenant.email,
-    tracking_id: trackingId, status: 'sent', sent_at: sentAt,
+async function doTenant(t,orderId,landlordId,addr,lFirst,lLast,pdf64) {
+  const tid = genId();
+  const now = new Date().toISOString();
+  const {data:row} = await sb.from('tenancies').insert({
+    order_id:orderId,landlord_id:landlordId,property_address:addr,
+    tenant_first:t.first,tenant_last:t.last,tenant_email:t.email,
+    tracking_id:tid,status:'sent',sent_at:now
   }).select().single();
-
-  const trackingPixelUrl = `${BASE_URL}/api/track?id=${trackingId}`;
+  const pixel = `${BASE}/api/track?id=${tid}`;
   await resend.emails.send({
-    from: 'CompliantUK <noreply@compliantuk.co.uk>',
-    reply_to: 'support@compliantuk.co.uk',
-    to: tenant.email,
-    subject: "Important: Renters' Rights Act 2025 — Information Sheet from your landlord",
-    html: buildTenantEmail({ tenantFirst: tenant.first, tenantLast: tenant.last, landlordFirst, landlordLast, propertyAddress, trackingPixelUrl }),
-    attachments: pdfBase64 ? [{ filename: 'Renters-Rights-Act-Information-Sheet-2026.pdf', content: pdfBase64, encoding: 'base64' }] : [],
+    from:'CompliantUK <noreply@compliantuk.co.uk>',reply_to:'support@compliantuk.co.uk',
+    to:t.email,subject:"Important: Renters' Rights Act 2025 — Information Sheet from your landlord",
+    html:tenantHtml(t.first,t.last,lFirst,lLast,addr,pixel),
+    attachments:pdf64?[{filename:'Renters-Rights-Act-Information-Sheet-2026.pdf',content:pdf64,encoding:'base64'}]:[],
   });
-
-  if (t?.id) {
-    await generateAndStoreCertificate({
-      tenancyId: t.id, propertyAddress,
-      tenantFirst: tenant.first, tenantLast: tenant.last,
-      tenantEmail: tenant.email, sentAt, landlordId, trackingId,
-    }).catch(e => console.error('Cert error:', e.message));
-  }
+  if (row?.id) generateAndStoreCertificate({tenancyId:row.id,propertyAddress:addr,tenantFirst:t.first,tenantLast:t.last,tenantEmail:t.email,sentAt:now,landlordId,trackingId:tid}).catch(e=>console.error('cert:',e.message));
 }
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
-
+export default async function handler(req,res) {
+  if (req.method!=='POST') return res.status(405).end();
   let event;
   try {
     const raw = await getRawBody(req);
-    event = stripe.webhooks.constructEvent(raw, req.headers['stripe-signature'], process.env.STRIPE_WEBHOOK_SECRET);
-  } catch (e) {
-    return res.status(400).send(`Webhook Error: ${e.message}`);
-  }
-
-  if (event.type !== 'checkout.session.completed') return res.status(200).json({ received: true });
+    event = stripe.webhooks.constructEvent(raw,req.headers['stripe-signature'],process.env.STRIPE_WEBHOOK_SECRET);
+  } catch(e) { return res.status(400).send(`Webhook Error: ${e.message}`); }
+  if (event.type!=='checkout.session.completed') return res.status(200).json({received:true});
 
   const session = event.data.object;
-  const meta = session.metadata || {};
+  const meta = session.metadata||{};
 
-  // ── BULK ORDER ──
-  if (meta.orderType === 'bulk' && meta.bulkOrderId) {
+  if (meta.orderType==='bulk' && meta.bulkOrderId) {
     try {
-      const { data: bulk } = await sb.from('bulk_orders').select('*').eq('id', meta.bulkOrderId).single();
-      if (!bulk) throw new Error('Bulk order not found');
-
-      await sb.from('bulk_orders').update({ status: 'paid', stripe_session_id: session.id, paid_at: new Date().toISOString() }).eq('id', bulk.id);
-
-      const { landlordId, tempPassword, isNew } = await getOrCreateLandlord(bulk.landlord_email, bulk.landlord_first, bulk.landlord_last);
-      const properties = JSON.parse(bulk.properties_data);
-      const pdfBuf = await fetchPdf().catch(() => null);
-      const pdfBase64 = pdfBuf ? pdfBuf.toString('base64') : null;
-
-      for (const prop of properties) {
-        const { data: order } = await sb.from('orders').insert({
-          stripe_session_id: session.id, landlord_id: landlordId,
-          landlord_email: bulk.landlord_email, landlord_first: bulk.landlord_first, landlord_last: bulk.landlord_last,
-          property_address: prop.address, amount_paid: 0, package: bulk.plan, status: 'processing',
-        }).select().single();
-
-        for (const t of (prop.tenants||[])) {
-          await processTenant({ tenant: t, orderId: order?.id, landlordId, propertyAddress: prop.address, landlordFirst: bulk.landlord_first, landlordLast: bulk.landlord_last, pdfBase64 }).catch(e => console.error('Tenant error:', e.message));
-        }
-        if (order?.id) await sb.from('orders').update({ status: 'complete' }).eq('id', order.id);
+      const {data:bulk} = await sb.from('bulk_orders').select('*').eq('id',meta.bulkOrderId).single();
+      if (!bulk) throw new Error('Bulk not found');
+      await sb.from('bulk_orders').update({status:'paid',stripe_session_id:session.id,paid_at:new Date().toISOString()}).eq('id',bulk.id);
+      const {id:landlordId,pw,isNew} = await getOrCreate(bulk.landlord_email,bulk.landlord_first,bulk.landlord_last);
+      const props = JSON.parse(bulk.properties_data);
+      const pdf64 = await fetchPdf().then(b=>b.toString('base64')).catch(()=>null);
+      for (const prop of props) {
+        const {data:order} = await sb.from('orders').insert({stripe_session_id:session.id,landlord_id:landlordId,landlord_email:bulk.landlord_email,landlord_first:bulk.landlord_first,landlord_last:bulk.landlord_last,property_address:prop.address,amount_paid:0,package:bulk.plan,status:'processing'}).select().single();
+        for (const t of (prop.tenants||[])) await doTenant(t,order?.id,landlordId,prop.address,bulk.landlord_first,bulk.landlord_last,pdf64).catch(e=>console.error('tenant:',e.message));
+        if (order?.id) await sb.from('orders').update({status:'complete'}).eq('id',order.id);
       }
-
-      await sb.from('bulk_orders').update({ status: 'processed' }).eq('id', bulk.id);
-
-      const amountFormatted = `£${(session.amount_total/100).toFixed(2)}`;
-      const orderRef = session.id.slice(-12).toUpperCase();
-      const orderDate = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
-      await resend.emails.send({
-        from: 'CompliantUK <noreply@compliantuk.co.uk>', reply_to: 'support@compliantuk.co.uk',
-        to: bulk.landlord_email, bcc: process.env.ADMIN_BCC_EMAIL||'support@compliantuk.co.uk',
-        subject: `Portfolio compliance confirmed — ${properties.length} properties`,
-        html: buildLandlordEmail({ landlordFirst: bulk.landlord_first, landlordLast: bulk.landlord_last, landlordEmail: bulk.landlord_email, propertyAddress: `${properties.length} properties (Portfolio)`, tenants: [], amountFormatted, isNewAccount: isNew, tempPassword, orderRef, orderDate, dashboardUrl: `${BASE_URL}/dashboard`, loginUrl: `${BASE_URL}/login` }),
-      }).catch(e => console.error('Bulk landlord email error:', e.message));
-
-    } catch (e) {
-      console.error('Bulk processing error:', e.message);
-    }
-    return res.status(200).json({ received: true, bulk: true });
+      await sb.from('bulk_orders').update({status:'processed'}).eq('id',bulk.id);
+      const fmt = `£${(session.amount_total/100).toFixed(2)}`;
+      const ref = session.id.slice(-12).toUpperCase();
+      const date = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+      await resend.emails.send({from:'CompliantUK <noreply@compliantuk.co.uk>',reply_to:'support@compliantuk.co.uk',to:bulk.landlord_email,bcc:process.env.ADMIN_BCC_EMAIL||'support@compliantuk.co.uk',subject:`Portfolio compliance confirmed — ${props.length} properties`,html:landlordHtml(bulk.landlord_first,bulk.landlord_last,bulk.landlord_email,`${props.length} properties (Portfolio)`,[],fmt,isNew,pw,ref,date)}).catch(e=>console.error('landlord email:',e.message));
+    } catch(e) { console.error('bulk error:',e.message); }
+    return res.status(200).json({received:true,bulk:true});
   }
 
-  // ── SINGLE ORDER ──
-  const landlordEmail = meta.landlordEmail || session.customer_details?.email || session.customer_email;
-  const landlordFirst = meta.landlordFirst || 'Landlord';
-  const landlordLast = meta.landlordLast || '';
-  const propertyAddress = meta.propertyAddress || 'Your property';
-
-  if (!landlordEmail) return res.status(200).json({ received: true, error: 'No landlord email' });
-
-  let tenants = [];
-  try { tenants = parseTenants(meta); } catch(e) { console.error('Parse error:', e.message); }
-  if (!tenants.length) return res.status(200).json({ received: true, error: 'No tenants' });
+  const lEmail = meta.landlordEmail||session.customer_details?.email||session.customer_email;
+  const lFirst = meta.landlordFirst||'Landlord';
+  const lLast = meta.landlordLast||'';
+  const addr = meta.propertyAddress||'Your property';
+  if (!lEmail) return res.status(200).json({received:true,error:'no email'});
+  let tenants=[];
+  try { tenants=parseTenants(meta); } catch(e) { console.error('parse:',e.message); }
+  if (!tenants.length) return res.status(200).json({received:true,error:'no tenants'});
 
   try {
-    const { landlordId, tempPassword, isNew } = await getOrCreateLandlord(landlordEmail, landlordFirst, landlordLast);
+    const {id:landlordId,pw,isNew} = await getOrCreate(lEmail,lFirst,lLast);
+    const {data:order} = await sb.from('orders').insert({stripe_session_id:session.id,landlord_id:landlordId,landlord_email:lEmail,landlord_first:lFirst,landlord_last:lLast,property_address:addr,amount_paid:session.amount_total,package:meta.package||'starter',status:'processing'}).select().single();
+    const pdf64 = await fetchPdf().then(b=>b.toString('base64')).catch(()=>null);
+    for (const t of tenants) await doTenant(t,order?.id,landlordId,addr,lFirst,lLast,pdf64).catch(e=>console.error('tenant:',e.message));
+    if (order?.id) await sb.from('orders').update({status:'complete'}).eq('id',order.id);
+    const fmt = `£${(session.amount_total/100).toFixed(2)}`;
+    const ref = session.id.slice(-12).toUpperCase();
+    const date = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+    await resend.emails.send({from:'CompliantUK <noreply@compliantuk.co.uk>',reply_to:'support@compliantuk.co.uk',to:lEmail,bcc:process.env.ADMIN_BCC_EMAIL||'support@compliantuk.co.uk',subject:`Compliance confirmed — ${addr}`,html:landlordHtml(lFirst,lLast,lEmail,addr,tenants,fmt,isNew,pw,ref,date)}).catch(e=>console.error('landlord email:',e.message));
+  } catch(e) { console.error('single error:',e.message); }
+  return res.status(200).json({received:true});
+}
 
-    const { data: order } = await sb.from('orders').insert({
-      stripe_session_id: session.id, landlord_id: landlordId,
-      landlord_email: landlordEmail, landlord_first: landlordFirst, landlord_last: landlordLast,
-      property_address: propertyAddress, amount_paid: session.amount_total,
-      package: meta.package||'starter', status: 'processing',
-    }).select().single();
+function tenantHtml(tFirst,tLast,lFirst,lLast,addr,pixel) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,sans-serif"><table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0"><tr><td style="background:#080c14;border-radius:12px 12px 0 0;padding:28px 36px"><div style="font-weight:700;font-size:17px;color:white">Compliant<span style="color:#60a5fa">UK</span></div><h1 style="margin:12px 0 0;font-size:22px;font-weight:800;color:#fff">Important: Information Sheet from your landlord</h1></td></tr><tr><td style="background:#fff;padding:36px"><p style="margin:0 0 20px;color:#334155;font-size:15px;line-height:1.7">Dear ${tFirst} ${tLast},</p><p style="margin:0 0 20px;color:#334155;font-size:15px;line-height:1.7">Your landlord, ${lFirst} ${lLast}, is required by law to provide you with the official Renters' Rights Act 2025 Information Sheet.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px 24px;margin:0 0 24px"><p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;color:#94a3b8">Property</p><p style="margin:0;font-size:16px;font-weight:600;color:#0f172a">${addr}</p></div><p style="margin:0;color:#94a3b8;font-size:13px">This email was sent on behalf of your landlord by CompliantUK.</p></td></tr><tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px;text-align:center"><p style="margin:0;color:#94a3b8;font-size:12px">© 2026 CompliantUK</p></td></tr></table></td></tr></table><img src="${pixel}" width="1" height="1" style="display:none" alt=""></body></html>`;
+}
 
-    const pdfBuf = await fetchPdf().catch(() => null);
-    const pdfBase64 = pdfBuf ? pdfBuf.toString('base64') : null;
-
-    for (const t of tenants) {
-      await processTenant({ tenant: t, orderId: order?.id, landlordId, propertyAddress, landlordFirst, landlordLast, pdfBase64 }).catch(e => console.error('Tenant error:', e.message));
-    }
-
-    if (order?.id) await sb.from('orders').update({ status: 'complete' }).eq('id', order.id);
-
-    const amountFormatted = `£${(session.amount_total/100).toFixed(2)}`;
-    const orderRef = session.id.slice(-12).toUpperCase();
-    const orderDate = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
-    await resend.emails.send({
-      from: 'CompliantUK <noreply@compliantuk.co.uk>', reply_to: 'support@compliantuk.co.uk',
-      to: landlordEmail, bcc: process.env.ADMIN_BCC_EMAIL||'support@compliantuk.co.uk',
-      subject: `Compliance confirmed — ${propertyAddress}`,
-      html: buildLandlordEmail({ landlordFirst, landlordLast, landlordEmail, propertyAddress, tenants, amountFormatted, isNewAccount: isNew, tempPassword, orderRef, orderDate, dashboardUrl: `${BASE_URL}/dashboard`, loginUrl: `${BASE_URL}/login` }),
-    }).catch(e => console.error('Landlord email error:', e.message));
-
-  } catch (e) {
-    console.error('Single order error:', e.message);
-  }
-
-  return res.status(200).json({ received: true });
+function landlordHtml(lFirst,lLast,lEmail,addr,tenants,amount,isNew,pw,ref,date) {
+  const rows = tenants.map(t=>`<tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#334155">${t.first} ${t.last}</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#64748b">${t.email}</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;text-align:right"><span style="background:#dcfce7;color:#166534;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px">SENT</span></td></tr>`).join('');
+  const acct = isNew
+    ? `<div style="background:#1e3a5f;border-radius:12px;padding:28px 32px;margin:0 0 24px;border-left:4px solid #3b82f6"><h2 style="margin:0 0 6px;font-size:17px;font-weight:700;color:#fff">Your CompliantUK Account</h2><p style="margin:0 0 16px;color:#93c5fd;font-size:13px">Log in to track compliance and download certificates.</p><p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase">Email</p><p style="margin:0 0 16px;font-size:15px;color:#e2e8f0;font-family:monospace">${lEmail}</p><p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase">Temporary Password</p><p style="margin:0 0 20px;font-size:22px;font-weight:800;color:#60a5fa;font-family:monospace;letter-spacing:2px">${pw}</p><a href="${BASE}/login?email=${encodeURIComponent(lEmail)}&new=1" style="display:inline-block;background:#3b82f6;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">Log in to dashboard</a></div>`
+    : `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:20px 24px;margin:0 0 24px"><p style="margin:0 0 8px;font-size:15px;font-weight:700;color:#166534">View in your dashboard</p><a href="${BASE}/login?email=${encodeURIComponent(lEmail)}" style="display:inline-block;background:#16a34a;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">Go to dashboard</a></div>`;
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,sans-serif"><table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0"><tr><td style="background:#080c14;border-radius:12px 12px 0 0;padding:28px 36px"><div style="font-weight:700;font-size:17px;color:white;margin-bottom:16px">Compliant<span style="color:#60a5fa">UK</span></div><h1 style="margin:0 0 6px;font-size:26px;font-weight:800;color:#fff">You're compliant.</h1><p style="margin:0;color:#93c5fd;font-size:15px">Payment confirmed. Documents delivered to your tenants.</p></td></tr><tr><td style="background:#fff;padding:36px"><p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.7">Hi ${lFirst}, the Renters' Rights Act 2025 Information Sheet has been emailed to each of your tenants.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:24px 28px;margin:0 0 24px"><p style="margin:0 0 16px;font-size:13px;font-weight:700;text-transform:uppercase;color:#94a3b8">Order Summary</p><table cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b;width:40%">Reference</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600;font-family:monospace">${ref}</td></tr><tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Date</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${date}</td></tr><tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Property</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${addr}</td></tr><tr><td style="padding:8px 0;font-size:13px;color:#64748b">Amount paid</td><td style="padding:8px 0;font-size:15px;color:#0f172a;font-weight:700">${amount}</td></tr></table></div>${rows.length?`<div style="margin:0 0 28px"><p style="margin:0 0 12px;font-size:13px;font-weight:700;text-transform:uppercase;color:#94a3b8">Tenant Delivery Status</p><table cellpadding="0" cellspacing="0" width="100%">${rows}</table></div>`:''} ${acct}</td></tr><tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px;text-align:center"><p style="margin:0;color:#94a3b8;font-size:12px">© 2026 CompliantUK</p></td></tr></table></td></tr></table></body></html>`;
 }
