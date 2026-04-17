@@ -168,20 +168,30 @@ export async function buildCertificatePdf({
   page.drawText('DELIVERED', { x: 329, y: tsY - 28, size: 8, font: bold, color: green });
   page.drawText(formatDate(sentAt), { x: 329, y: tsY - 44, size: 11, font: bold, color: dark });
 
-  // Read row (if available)
+  // Read row — always shown, with pending state if not yet captured
+  const rdY = tsY - 80;
+  page.drawText('TENANT OPEN RECORD:', { x: 40, y: rdY, size: 9, font: bold, color: blue });
   if (readAt) {
-    const rdY = tsY - 80;
-    page.drawText('DOCUMENT OPENED BY TENANT:', { x: 40, y: rdY, size: 9, font: bold, color: blue });
-    page.drawText(formatDate(readAt), { x: 240, y: rdY, size: 9, font: regular, color: dark });
-    if (ipAddress && ipAddress !== 'Not recorded') {
-      page.drawText(`IP: ${ipAddress}  Device: ${device || 'Unknown'}`, {
-        x: 40, y: rdY - 14, size: 8, font: regular, color: slate,
-      });
-    }
+    page.drawText(formatDate(readAt), { x: 200, y: rdY, size: 9, font: regular, color: dark });
+  } else {
+    page.drawRectangle({ x: 200, y: rdY - 4, width: 80, height: 14, color: rgb(0.98, 0.97, 0.93) });
+    page.drawText('Awaiting open', { x: 202, y: rdY, size: 8, font: regular, color: rgb(0.7, 0.6, 0.2) });
   }
 
+  page.drawText('IP ADDRESS:', { x: 40, y: rdY - 18, size: 9, font: bold, color: slate });
+  page.drawText(
+    ipAddress && ipAddress !== 'Not recorded' ? ipAddress : (readAt ? 'Not recorded' : 'Pending — captured on open'),
+    { x: 130, y: rdY - 18, size: 9, font: regular, color: dark }
+  );
+
+  page.drawText('DEVICE:', { x: 40, y: rdY - 34, size: 9, font: bold, color: slate });
+  page.drawText(
+    device && device !== 'Unknown' ? device : (readAt ? 'Unknown' : 'Pending — captured on open'),
+    { x: 130, y: rdY - 34, size: 9, font: regular, color: dark }
+  );
+
   // ── TECHNICAL EVIDENCE ──
-  const evY = tsY - (readAt ? 120 : 90);
+  const evY = tsY - 130;
   page.drawLine({ start: { x: 40, y: evY + 10 }, end: { x: width - 40, y: evY + 10 }, thickness: 0.5, color: borderC });
 
   page.drawText('TECHNICAL EVIDENCE', { x: 40, y: evY - 10, size: 9, font: bold, color: blue });
