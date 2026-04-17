@@ -195,7 +195,10 @@ nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filt
       <button class="ftab" onclick="filterOrders('complete', this)">✅ Fully compliant</button>
       <button class="ftab" onclick="filterOrders('pending', this)">⏳ Pending</button>
     </div>
-    <a href="/#get-compliant" class="add-btn">＋ Add property</a>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button id="globalDlAll" onclick="downloadAllCertsGlobal(this)" style="display:none;background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3);padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">⬇ All Certificates</button>
+      <a href="/#get-compliant" class="add-btn">＋ Add property</a>
+    </div>
   </div>
 
   <!-- Orders list -->
@@ -308,13 +311,29 @@ async function loadData() {
 function renderStats() {
   const props = allOrders.length;
   const sent = allTenancies.length;
-  const certs = allTenancies.filter(t => t.status === 'certificate_generated').length;
-  const pending = allTenancies.filter(t => t.status !== 'certificate_generated').length;
+  const certs = allTenancies.filter(t => t.certificate_url).length;
+  const pending = allTenancies.filter(t => !t.certificate_url).length;
 
   document.getElementById('statProps').textContent = props;
   document.getElementById('statSent').textContent = sent;
   document.getElementById('statCerts').textContent = certs;
   document.getElementById('statPending').textContent = pending;
+
+  // Show/hide global download all button
+  const globalBtn = document.getElementById('globalDlAll');
+  if (globalBtn) {
+    if (certs > 0) {
+      globalBtn.style.display = 'block';
+      globalBtn.textContent = `⬇ All Certificates (${certs})`;
+      // Store all cert URLs on the button
+      const allCertUrls = allTenancies
+        .filter(t => t.certificate_url)
+        .map(t => ({ url: t.certificate_url, name: `Certificate-${t.tenant_first}-${t.tenant_last}.pdf` }));
+      globalBtn.dataset.certs = JSON.stringify(allCertUrls);
+    } else {
+      globalBtn.style.display = 'none';
+    }
+  }
 }
 
 // ─── RENDER ORDERS ───
@@ -362,7 +381,9 @@ function renderOrderCard(order) {
   const tenantRows = tenancies.map(t => {
     const statusInfo = getStatusInfo(t.status);
     const readTime = t.read_at ? `<div class="timestamp">${fmtDate(t.read_at)}</div>` : '';
-    const certBadge = `<button class="cert-btn" data-id="${escAttr(t.id)}" data-first="${escAttr(t.tenant_first)}" data-last="${escAttr(t.tenant_last)}" data-email="${escAttr(t.tenant_email)}" data-addr="${escAttr(t.property_address)}" style="background:#3b82f6;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px">🏅 Get Certificate</button>`;
+    const certBadge = t.certificate_url
+      ? `<a href="${escAttr(t.certificate_url)}" target="_blank" download="Certificate-${escAttr(t.tenant_first)}-${escAttr(t.tenant_last)}.pdf" style="background:#059669;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;text-decoration:none">🏅 Download</a>`
+      : `<button class="cert-btn" data-id="${escAttr(t.id)}" data-first="${escAttr(t.tenant_first)}" data-last="${escAttr(t.tenant_last)}" style="background:#3b82f6;color:white;border:none;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px">🏅 Get Certificate</button>`;
 
     return `<tr>
       <td>
@@ -380,6 +401,14 @@ function renderOrderCard(order) {
     ? `<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--text3);font-size:13px">No tenant data yet</td></tr>`
     : '';
 
+  const certUrls = tenancies
+    .filter(t => t.certificate_url)
+    .map(t => ({ url: t.certificate_url, name: `Certificate-${t.tenant_first}-${t.tenant_last}.pdf` }));
+
+  const downloadAllBtn = certUrls.length > 0
+    ? `<button class="dl-all-btn" data-certs='${JSON.stringify(certUrls)}' style="background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3);padding:5px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">⬇ Download All (${certUrls.length})</button>`
+    : '';
+
   return `
   <div class="order-card" id="order-${order.id}">
     <div class="order-header" onclick="toggleOrder('${order.id}')">
@@ -391,9 +420,12 @@ function renderOrderCard(order) {
         </div>
       </div>
       <div class="oh-right">
-        <div>
-          <div class="oh-amount">${amount}</div>
-          <div class="oh-date">${date}</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          ${downloadAllBtn}
+          <div>
+            <div class="oh-amount">${amount}</div>
+            <div class="oh-date">${date}</div>
+          </div>
         </div>
         <div class="oh-chevron">▼</div>
       </div>
@@ -417,8 +449,10 @@ function renderOrderCard(order) {
   </div>`;
 }
 
-// ─── CERTIFICATE ON DEMAND ───
-async function generateAndDownloadCert(tenancyId, tenantFirst, tenantLast, tenantEmail, propertyAddress, btn) {
+// ─── CERTIFICATE DOWNLOAD ───
+// If cert_url exists on tenancy: direct link (rendered as <a>)
+// If not (legacy/pre-storage): fetch from API which generates on-the-fly
+async function generateAndDownloadCert(tenancyId, tenantFirst, tenantLast, btn) {
   btn.textContent = 'Generating...';
   btn.disabled = true;
 
@@ -426,21 +460,25 @@ async function generateAndDownloadCert(tenancyId, tenantFirst, tenantLast, tenan
     const response = await fetch('/api/generate-certificate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tenancyId, tenantFirst, tenantLast, tenantEmail, propertyAddress }),
+      body: JSON.stringify({ tenancyId }),
     });
 
     if (!response.ok) throw new Error('Generation failed');
 
-    const arrayBuffer = await response.arrayBuffer();
-    const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Certificate-${tenantFirst}-${tenantLast}.pdf`;
-    a.click();
-    URL.revokeObjectURL(url);
+    // API may redirect to storage URL or return PDF bytes
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('application/pdf')) {
+      const arrayBuffer = await response.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Certificate-${tenantFirst}-${tenantLast}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
 
-    btn.textContent = '✓ Downloaded';
+    btn.textContent = 'Downloaded';
     btn.style.background = '#059669';
     setTimeout(() => { btn.textContent = '🏅 Get Certificate'; btn.disabled = false; btn.style.background = '#3b82f6'; }, 3000);
   } catch (err) {
@@ -449,6 +487,59 @@ async function generateAndDownloadCert(tenancyId, tenantFirst, tenantLast, tenan
     btn.disabled = false;
     btn.style.background = '#dc2626';
     setTimeout(() => { btn.textContent = '🏅 Get Certificate'; btn.style.background = '#3b82f6'; }, 3000);
+  }
+}
+
+// ─── DOWNLOAD ALL (zip via JSZip) ───
+async function downloadAllCerts(certsJson, btn) {
+  const certs = JSON.parse(certsJson);
+  if (!certs.length) return;
+
+  btn.textContent = 'Zipping...';
+  btn.disabled = true;
+
+  try {
+    // Load JSZip on demand
+    if (!window.JSZip) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+        s.onload = resolve; s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    const zip = new window.JSZip();
+
+    await Promise.all(certs.map(async ({ url, name }) => {
+      const res = await fetch(url);
+      const buf = await res.arrayBuffer();
+      zip.file(name, buf);
+    }));
+
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'CompliantUK-Certificates.zip';
+    a.click();
+    URL.revokeObjectURL(a.href);
+
+    btn.textContent = 'Downloaded';
+    btn.style.background = 'rgba(5,150,105,0.2)';
+    btn.style.color = '#6ee7b7';
+    btn.style.borderColor = 'rgba(5,150,105,0.4)';
+    setTimeout(() => {
+      btn.textContent = `⬇ Download All (${certs.length})`;
+      btn.disabled = false;
+      btn.style.background = 'rgba(59,130,246,0.15)';
+      btn.style.color = '#60a5fa';
+      btn.style.borderColor = 'rgba(59,130,246,0.3)';
+    }, 3000);
+  } catch (err) {
+    console.error('Zip error:', err);
+    btn.textContent = 'Failed — try again';
+    btn.disabled = false;
+    setTimeout(() => { btn.textContent = `⬇ Download All (${certs.length})`; }, 3000);
   }
 }
 
@@ -537,11 +628,27 @@ function escAttr(str) {
   return (str || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// Event delegation for cert buttons
+// Global "All Certificates" button
+function downloadAllCertsGlobal(btn) {
+  downloadAllCerts(btn.dataset.certs, btn);
+}
+
+// Event delegation for cert + download-all buttons
 document.getElementById('ordersWrap').addEventListener('click', function(e) {
-  const btn = e.target.closest('.cert-btn');
-  if (!btn) return;
-  generateAndDownloadCert(btn.dataset.id, btn.dataset.first, btn.dataset.last, btn.dataset.email, btn.dataset.addr, btn);
+  // Stop header toggle firing when buttons are clicked
+  e.stopPropagation && e.target.closest('.cert-btn, .dl-all-btn') && e.stopPropagation();
+
+  const certBtn = e.target.closest('.cert-btn');
+  if (certBtn) {
+    generateAndDownloadCert(certBtn.dataset.id, certBtn.dataset.first, certBtn.dataset.last, certBtn);
+    return;
+  }
+
+  const dlAllBtn = e.target.closest('.dl-all-btn');
+  if (dlAllBtn) {
+    downloadAllCerts(dlAllBtn.dataset.certs, dlAllBtn);
+    return;
+  }
 });
 
 init();
