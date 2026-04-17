@@ -1,9 +1,10 @@
 // api/track.js
 // Invisible 1x1 tracking pixel — records when tenants open their email
 // Updates tenancy status: sent → opened → read
-// Certificates are generated at purchase time, NOT here
+// Also regenerates the certificate PDF with IP/device/timestamp when first opened
 
 import { createClient } from '@supabase/supabase-js';
+import { buildCertificatePdf } from './generate-certificate.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -49,7 +50,7 @@ export default async function handler(req, res) {
     const now = new Date().toISOString();
 
     if (tenancy.status === 'sent') {
-      // First open
+      // First open — record IP, device, timestamp
       await supabase
         .from('tenancies')
         .update({
@@ -59,6 +60,46 @@ export default async function handler(req, res) {
           tenant_device: device,
         })
         .eq('tracking_id', trackingId);
+
+      // Regenerate certificate with the newly captured tracking data
+      try {
+        const { data: full } = await supabase
+          .from('tenancies')
+          .select('*')
+          .eq('tracking_id', trackingId)
+          .single();
+
+        if (full) {
+          const pdf = await buildCertificatePdf({
+            propertyAddress: full.property_address,
+            tenantFirst:     full.tenant_first,
+            tenantLast:      full.tenant_last,
+            tenantEmail:     full.tenant_email,
+            sentAt:          full.sent_at,
+            readAt:          now,
+            ipAddress:       ip,
+            device:          device,
+            trackingId:      full.tracking_id,
+            landlordId:      full.landlord_id,
+          });
+
+          const filename = `${full.landlord_id}/${full.tracking_id}.pdf`;
+          await supabase.storage.from('certificates').upload(filename, pdf, {
+            contentType: 'application/pdf',
+            upsert: true,
+          });
+          const { data: { publicUrl } } = supabase.storage
+            .from('certificates')
+            .getPublicUrl(filename);
+          await supabase
+            .from('tenancies')
+            .update({ certificate_url: publicUrl })
+            .eq('tracking_id', trackingId);
+        }
+      } catch (certErr) {
+        console.error('Track: cert regeneration failed (non-fatal):', certErr.message);
+      }
+
     } else if (tenancy.status === 'opened') {
       // Second pixel fire = read confirmation
       await supabase
