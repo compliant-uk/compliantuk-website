@@ -37,8 +37,8 @@ function normaliseTenant(t) {
   const name = `${t?.name || ''}`.trim();
   const split = name.split(/\s+/).filter(Boolean);
   return {
-    first: (t?.first || split.slice(0, -1).join(' ') || split[0] || 'Tenant').trim(),
-    last: (t?.last || split.slice(-1).join(' ') || '').trim(),
+    first: (t?.first || t?.firstName || split.slice(0, -1).join(' ') || split[0] || 'Tenant').trim(),
+    last: (t?.last || t?.lastName || split.slice(-1).join(' ') || '').trim(),
     email: `${t?.email || ''}`.trim().toLowerCase(),
     name,
   };
@@ -104,17 +104,20 @@ export default async function handler(req,res) {
       const props = safeJson(bulk.properties_data, []);
       const processingReport = normaliseProcessingReport(bulk.processing_report, props);
       const pdf64 = await fetchPdf().then(b=>b.toString('base64')).catch(()=>null);
-      for (const prop of props) {
-        const {data:order} = await sb.from('orders').insert({stripe_session_id:session.id,landlord_id:landlordId,landlord_email:bulk.landlord_email,landlord_first:bulk.landlord_first,landlord_last:bulk.landlord_last,property_address:prop.address,amount_paid:0,package:bulk.plan,status:'processing'}).select().single();
-        for (const t of (prop.tenants||[])) await doTenant(t,order?.id,landlordId,prop.address,bulk.landlord_first,bulk.landlord_last,pdf64).catch(e=>console.error('tenant:',e.message));
-        if (order?.id) await sb.from('orders').update({status:'complete'}).eq('id',order.id);
+      for (const [index, prop] of props.entries()) {
+        const propertyAddress = prop.address || prop.propertyAddress || 'Your property';
+        const childSessionId = `${session.id}:bulk:${index + 1}`;
+        const {data:order,error:orderError} = await sb.from('orders').insert({stripe_session_id:childSessionId,landlord_id:landlordId,landlord_email:bulk.landlord_email,landlord_first:bulk.landlord_first,landlord_last:bulk.landlord_last,property_address:propertyAddress,amount_paid:0,package:bulk.plan,status:'processing'}).select().single();
+        if (orderError || !order?.id) throw new Error(`Bulk order insert failed for property ${index + 1}: ${orderError?.message || 'missing order id'}`);
+        for (const t of (prop.tenants||[])) await doTenant(t,order.id,landlordId,propertyAddress,bulk.landlord_first,bulk.landlord_last,pdf64).catch(e=>console.error('tenant:',e.message));
+        await sb.from('orders').update({status:'complete'}).eq('id',order.id);
       }
       await sb.from('bulk_orders').update({status:'processed'}).eq('id',bulk.id);
       const fmt = `£${(session.amount_total/100).toFixed(2)}`;
       const ref = session.id.slice(-12).toUpperCase();
       const date = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
       await resend.emails.send({from:'CompliantUK <noreply@compliantuk.co.uk>',reply_to:'support@compliantuk.co.uk',to:bulk.landlord_email,bcc:process.env.ADMIN_BCC_EMAIL||'support@compliantuk.co.uk',subject:`Portfolio compliance confirmed — ${props.length} properties`,html:landlordHtml(bulk.landlord_first,bulk.landlord_last,bulk.landlord_email,`${props.length} properties (Portfolio)`,[],fmt,isNew,pw,ref,date,processingReport)}).catch(e=>console.error('landlord email:',e.message));
-    } catch(e) { console.error('bulk error:',e.message); }
+    } catch(e) { console.error('bulk error:',e.message); await sb.from('bulk_orders').update({status:'failed'}).eq('id',meta.bulkOrderId); }
     return res.status(200).json({received:true,bulk:true});
   }
 
