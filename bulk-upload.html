@@ -326,6 +326,7 @@ function goStep2() {
 
 // ── File handling ─────────────────────────────────────────────────────────────
 let parsedData = null;
+let processingReport = null;
 
 function handleFile(input) {
   const file = input.files[0];
@@ -340,9 +341,11 @@ function handleFile(input) {
   const parser  = isExcel ? parseExcelFile(file) : parseCSVFile(file);
   parser
     .then(data => {
-      if (!data || data.length === 0) throw new Error('No valid rows found');
-      parsedData = data;
+      if (!data || !data.properties || data.properties.length === 0) throw new Error('No processable tenant rows found');
+      parsedData = data.properties;
+      processingReport = data.report;
       hideProgress();
+      renderProcessingReport();
       updateOrderSummary();
     })
     .catch(err => {
@@ -384,64 +387,98 @@ function parseCSVFile(file) {
   });
 }
 
-// ── FIXED: parsePropertyData ─────────────────────────────────────────────────
-// Supports both the official template format (tenant1_first, tenant1_last,
-// tenant1_email) and the legacy friendly format (Tenant 1 Name, Tenant 1 Email)
+// ── Resilient bulk parser ───────────────────────────────────────────────────
+// Processes what is processable, omits invalid records, and reports skipped rows
+// before payment. Supports official template headings and legacy friendly headings.
 function parsePropertyData(rows) {
   const properties = {};
+  const skipped = [];
+  const warnings = [];
+  const clean = v => {
+    if (v === null || v === undefined) return '';
+    const s = String(v).trim();
+    return /^(none|null|undefined|n\/a)$/i.test(s) ? '' : s;
+  };
+  const validEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean(email));
+  const rowLabel = (index, row) => `Row ${index + 2}${clean(row.property_address || row['Property Address'] || row.Address) ? ` (${clean(row.property_address || row['Property Address'] || row.Address)})` : ''}`;
+  const getValue = (row, keys) => {
+    for (const key of keys) {
+      if (Object.prototype.hasOwnProperty.call(row, key) && clean(row[key])) return clean(row[key]);
+    }
+    return '';
+  };
 
-  rows.forEach(row => {
-    // Address — template uses property_address
-    const address = (
-      row['property_address'] ||
-      row['Property Address'] ||
-      row['Address'] ||
-      ''
-    ).toString().trim();
-
-    if (!address) return;
-
-    // Landlord — template splits into first/last
-    const landlordFirst = (row['landlord_first'] || '').toString().trim();
-    const landlordLast  = (row['landlord_last']  || '').toString().trim();
-    const landlord = (
-      row['Landlord Name'] ||
-      row['landlord_name'] ||
-      ((landlordFirst + ' ' + landlordLast).trim()) ||
-      ''
-    ).toString().trim();
-
-    if (!properties[address]) {
-      properties[address] = { address, landlord, tenants: [] };
+  rows.forEach((row, index) => {
+    const address = getValue(row, ['property_address', 'Property Address', 'Address', 'propertyAddress']);
+    if (!address) {
+      skipped.push({ row: index + 2, reason: 'Missing property_address', severity: 'error' });
+      return;
     }
 
-    // Tenants — template uses tenant1_first, tenant1_last, tenant1_email
-    // clean() converts null/undefined/None string to empty string safely
-    const clean = v => {
-      if (v === null || v === undefined) return '';
-      const s = String(v).trim();
-      return (s === 'None' || s === 'null' || s === 'undefined') ? '' : s;
-    };
+    const landlordFirst = getValue(row, ['landlord_first', 'Landlord First', 'landlordFirst']);
+    const landlordLast  = getValue(row, ['landlord_last', 'Landlord Last', 'landlordLast']);
+    const landlordEmail = getValue(row, ['landlord_email', 'Landlord Email', 'landlordEmail']);
+    const landlord = getValue(row, ['Landlord Name', 'landlord_name']) || `${landlordFirst} ${landlordLast}`.trim();
 
-    for (let i = 1; i <= 4; i++) {
-      const first = clean(row[`tenant${i}_first`]) || clean(row[`Tenant ${i} First`]);
-      const last  = clean(row[`tenant${i}_last`])  || clean(row[`Tenant ${i} Last`]);
-      const email = clean(row[`tenant${i}_email`]) || clean(row[`Tenant ${i} Email`]) || clean(row[`Tenant${i}Email`]);
-      const name  = (first + ' ' + last).trim() || clean(row[`Tenant ${i} Name`]) || clean(row[`Tenant${i}Name`]);
+    if (!properties[address]) {
+      properties[address] = { address, landlord, landlordFirst, landlordLast, landlordEmail, tenants: [] };
+    }
 
-      if (name && email && email.includes('@')) {
-        const already = properties[address].tenants.some(t => t.email === email);
-        if (!already) {
-          properties[address].tenants.push({ name, email });
-        }
+    let foundTenantCandidate = false;
+    for (let i = 1; i <= 10; i++) {
+      const first = getValue(row, [`tenant${i}_first`, `Tenant ${i} First`, `tenant${i}First`]);
+      const last  = getValue(row, [`tenant${i}_last`, `Tenant ${i} Last`, `tenant${i}Last`]);
+      const email = getValue(row, [`tenant${i}_email`, `Tenant ${i} Email`, `Tenant${i}Email`, `tenant${i}Email`]);
+      const name  = `${first} ${last}`.trim() || getValue(row, [`Tenant ${i} Name`, `Tenant${i}Name`, `tenant${i}_name`]);
+
+      if (!first && !last && !name && !email) continue;
+      foundTenantCandidate = true;
+
+      if (!name || !email) {
+        skipped.push({ row: index + 2, reason: `Tenant ${i} missing ${!name ? 'name' : 'email'}`, severity: 'error' });
+        continue;
       }
+      if (!validEmail(email)) {
+        skipped.push({ row: index + 2, reason: `Tenant ${i} has invalid email: ${email}`, severity: 'error' });
+        continue;
+      }
+
+      const normalized = {
+        first: first || name.split(/\s+/).slice(0, -1).join(' ') || name,
+        last: last || name.split(/\s+/).slice(-1).join(' '),
+        name,
+        email: email.toLowerCase(),
+      };
+      const already = properties[address].tenants.some(t => t.email === normalized.email);
+      if (already) {
+        warnings.push({ row: index + 2, reason: `Duplicate tenant email ignored: ${normalized.email}`, severity: 'warning' });
+      } else {
+        properties[address].tenants.push(normalized);
+      }
+    }
+
+    if (!foundTenantCandidate) {
+      skipped.push({ row: index + 2, reason: 'No tenant details found', severity: 'error' });
     }
   });
 
-  // Filter out properties with no tenants
-  return Object.values(properties).filter(p => p.tenants.length > 0);
+  const processedProperties = Object.values(properties).filter(p => p.tenants.length > 0);
+  Object.values(properties).forEach(p => {
+    if (p.tenants.length === 0) skipped.push({ row: null, reason: `Property omitted because it had no valid tenants: ${p.address}`, severity: 'error' });
+  });
+
+  return {
+    properties: processedProperties,
+    report: {
+      processedProperties: processedProperties.length,
+      processedTenants: processedProperties.reduce((sum, p) => sum + p.tenants.length, 0),
+      skippedCount: skipped.length,
+      warningCount: warnings.length,
+      issues: skipped.concat(warnings),
+    },
+  };
 }
-// ── END FIXED parsePropertyData ──────────────────────────────────────────────
+// ── END resilient bulk parser ────────────────────────────────────────────────
 
 function removeFile() {
   document.getElementById('file-input').value = '';
@@ -449,6 +486,22 @@ function removeFile() {
   document.getElementById('col-map').classList.remove('show');
   document.getElementById('step2-btn').style.display = 'none';
   parsedData = null;
+  processingReport = null;
+  document.getElementById('processing-report').classList.remove('show');
+}
+
+function renderProcessingReport() {
+  const box = document.getElementById('processing-report');
+  const body = document.getElementById('pr-body');
+  const pill = document.getElementById('pr-pill');
+  if (!processingReport) { box.classList.remove('show'); return; }
+  const hasIssues = processingReport.skippedCount > 0 || processingReport.warningCount > 0;
+  pill.textContent = hasIssues ? `${processingReport.skippedCount} skipped` : 'All rows processed';
+  pill.classList.toggle('warn', hasIssues);
+  const issueHtml = processingReport.issues.slice(0, 12).map(issue => `<div class="pr-item">${issue.row ? `Row ${issue.row}: ` : ''}${issue.reason}</div>`).join('');
+  const extra = processingReport.issues.length > 12 ? `<div class="pr-item">+ ${processingReport.issues.length - 12} more issue(s) retained for your confirmation email.</div>` : '';
+  body.innerHTML = `We can process <strong>${processingReport.processedProperties}</strong> propert${processingReport.processedProperties === 1 ? 'y' : 'ies'} and <strong>${processingReport.processedTenants}</strong> tenant email${processingReport.processedTenants === 1 ? '' : 's'}. ${hasIssues ? 'Rows listed below will be omitted and need immediate attention.' : 'No skipped rows were detected.'}${hasIssues ? `<div class="pr-list">${issueHtml}${extra}</div>` : ''}`;
+  box.classList.add('show');
 }
 
 function formatSize(bytes) {

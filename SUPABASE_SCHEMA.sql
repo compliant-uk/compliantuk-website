@@ -23,11 +23,20 @@ CREATE TABLE IF NOT EXISTS public.bulk_orders (
     price_per_property DECIMAL(10, 2),
     extra_tenant_cost DECIMAL(10, 2),
     properties_data JSONB NOT NULL,
+    processing_report JSONB,
     status TEXT DEFAULT 'pending', -- pending, paid, processed, failed
     stripe_session_id TEXT,
     created_at TIMESTAMPTZ DEFAULT now(),
     paid_at TIMESTAMPTZ
 );
+
+-- Add processing_report if the table exists but lacks this column
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bulk_orders' AND column_name='processing_report') THEN
+        ALTER TABLE public.bulk_orders ADD COLUMN processing_report JSONB;
+    END IF;
+END $$;
 
 -- 3. Update Subscribers Table (if not already exists)
 CREATE TABLE IF NOT EXISTS public.subscribers (

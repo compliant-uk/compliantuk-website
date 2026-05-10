@@ -2,6 +2,10 @@
   "name": "compliantuk-website",
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "test": "node test-suite.mjs && node tests/bulk-flow.test.mjs && python3.11 tests/template_integrity.py",
+    "test:bulk": "node tests/bulk-flow.test.mjs && python3.11 tests/template_integrity.py"
+  },
   "dependencies": {
     "raw-body": "^2.5.2",
     "pdf-lib": "^1.17.1",

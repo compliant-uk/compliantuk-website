@@ -22,9 +22,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { plan, total, properties, submittedBy, pricePerProperty, extraTenantCost } = req.body;
+    const { plan, total, properties, processingReport, submittedBy, pricePerProperty, extraTenantCost } = req.body;
 
-    if (!plan || !total || !properties?.length || !submittedBy?.email) {
+    if (!plan || !total || !Array.isArray(properties) || properties.length === 0 || !submittedBy?.email) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -34,6 +34,10 @@ export default async function handler(req, res) {
     }
 
     const propertyCount = properties.length;
+    const tenantCount = properties.reduce((sum, property) => sum + (Array.isArray(property.tenants) ? property.tenants.length : 0), 0);
+    if (tenantCount === 0) {
+      return res.status(400).json({ error: 'No valid tenants found in uploaded file' });
+    }
     const origin = req.headers.origin || 'https://www.compliantuk.co.uk';
 
     // Store full order payload in Supabase for large orders
@@ -51,7 +55,8 @@ export default async function handler(req, res) {
           landlord_email: submittedBy.email,
           price_per_property: pricePerProperty,
           extra_tenant_cost: extraTenantCost,
-          properties_data: JSON.stringify(properties),
+          properties_data: properties,
+          processing_report: processingReport || null,
           status: 'pending',
           created_at: new Date().toISOString(),
         })
@@ -75,6 +80,7 @@ export default async function handler(req, res) {
       bulkOrderId: String(bulkOrderId),
       plan,
       propertyCount: String(propertyCount),
+      tenantCount: String(tenantCount),
       totalGBP: String(total),
       landlordEmail: submittedBy.email,
     };

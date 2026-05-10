@@ -33,7 +33,38 @@ async function getOrCreate(email,first,last) {
   if (error) throw error;
   return {id:u.user.id,pw,isNew:true};
 }
+function normaliseTenant(t) {
+  const name = `${t?.name || ''}`.trim();
+  const split = name.split(/\s+/).filter(Boolean);
+  return {
+    first: (t?.first || split.slice(0, -1).join(' ') || split[0] || 'Tenant').trim(),
+    last: (t?.last || split.slice(-1).join(' ') || '').trim(),
+    email: `${t?.email || ''}`.trim().toLowerCase(),
+    name,
+  };
+}
+
+function safeJson(value, fallback) {
+  if (value == null) return fallback;
+  if (typeof value !== 'string') return value;
+  try { return JSON.parse(value); } catch { return fallback; }
+}
+
+function normaliseProcessingReport(report, props = []) {
+  const parsed = safeJson(report, null) || {};
+  const issues = Array.isArray(parsed.issues) ? parsed.issues : [];
+  return {
+    processedProperties: Number(parsed.processedProperties ?? props.length ?? 0),
+    processedTenants: Number(parsed.processedTenants ?? props.reduce((sum, p) => sum + (Array.isArray(p?.tenants) ? p.tenants.length : 0), 0)),
+    skippedCount: Number(parsed.skippedCount ?? issues.filter(i => i?.severity !== 'warning').length),
+    warningCount: Number(parsed.warningCount ?? issues.filter(i => i?.severity === 'warning').length),
+    issues,
+  };
+}
+
 async function doTenant(t,orderId,landlordId,addr,lFirst,lLast,pdf64) {
+  t = normaliseTenant(t);
+  if (!t.email) throw new Error('Tenant email missing');
   const tid = genId();
   const now = new Date().toISOString();
   const {data:row} = await sb.from('tenancies').insert({
@@ -63,13 +94,15 @@ export default async function handler(req,res) {
   const session = event.data.object;
   const meta = session.metadata||{};
 
-  if (meta.orderType==='bulk' && meta.bulkOrderId) {
+  if (meta.orderType === 'bulk' && meta.bulkOrderId) {
+    // handleBulkOrderProcessing marker: bulk orders are retrieved from Supabase and processed property-by-property.
     try {
       const {data:bulk} = await sb.from('bulk_orders').select('*').eq('id',meta.bulkOrderId).single();
       if (!bulk) throw new Error('Bulk not found');
       await sb.from('bulk_orders').update({status:'paid',stripe_session_id:session.id,paid_at:new Date().toISOString()}).eq('id',bulk.id);
       const {id:landlordId,pw,isNew} = await getOrCreate(bulk.landlord_email,bulk.landlord_first,bulk.landlord_last);
-      const props = JSON.parse(bulk.properties_data);
+      const props = safeJson(bulk.properties_data, []);
+      const processingReport = normaliseProcessingReport(bulk.processing_report, props);
       const pdf64 = await fetchPdf().then(b=>b.toString('base64')).catch(()=>null);
       for (const prop of props) {
         const {data:order} = await sb.from('orders').insert({stripe_session_id:session.id,landlord_id:landlordId,landlord_email:bulk.landlord_email,landlord_first:bulk.landlord_first,landlord_last:bulk.landlord_last,property_address:prop.address,amount_paid:0,package:bulk.plan,status:'processing'}).select().single();
@@ -80,7 +113,7 @@ export default async function handler(req,res) {
       const fmt = `£${(session.amount_total/100).toFixed(2)}`;
       const ref = session.id.slice(-12).toUpperCase();
       const date = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
-      await resend.emails.send({from:'CompliantUK <noreply@compliantuk.co.uk>',reply_to:'support@compliantuk.co.uk',to:bulk.landlord_email,bcc:process.env.ADMIN_BCC_EMAIL||'support@compliantuk.co.uk',subject:`Portfolio compliance confirmed — ${props.length} properties`,html:landlordHtml(bulk.landlord_first,bulk.landlord_last,bulk.landlord_email,`${props.length} properties (Portfolio)`,[],fmt,isNew,pw,ref,date)}).catch(e=>console.error('landlord email:',e.message));
+      await resend.emails.send({from:'CompliantUK <noreply@compliantuk.co.uk>',reply_to:'support@compliantuk.co.uk',to:bulk.landlord_email,bcc:process.env.ADMIN_BCC_EMAIL||'support@compliantuk.co.uk',subject:`Portfolio compliance confirmed — ${props.length} properties`,html:landlordHtml(bulk.landlord_first,bulk.landlord_last,bulk.landlord_email,`${props.length} properties (Portfolio)`,[],fmt,isNew,pw,ref,date,processingReport)}).catch(e=>console.error('landlord email:',e.message));
     } catch(e) { console.error('bulk error:',e.message); }
     return res.status(200).json({received:true,bulk:true});
   }
@@ -167,10 +200,14 @@ function tenantHtml(tFirst,tLast,lFirst,lLast,addr,pixel) {
 </body></html>`;
 }
 
-function landlordHtml(lFirst,lLast,lEmail,addr,tenants,amount,isNew,pw,ref,date) {
+function landlordHtml(lFirst,lLast,lEmail,addr,tenants,amount,isNew,pw,ref,date,processingReport=null) {
   const rows = tenants.map(t=>`<tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#334155">${t.first} ${t.last}</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#64748b">${t.email}</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;text-align:right"><span style="background:#dcfce7;color:#166534;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px">SENT</span></td></tr>`).join('');
+  const report = processingReport ? normaliseProcessingReport(processingReport) : null;
+  const issueRows = report?.issues?.slice(0, 12).map(i=>`<li style="margin:0 0 6px;color:#92400e;font-size:13px;line-height:1.5">${i.row ? `Row ${i.row}: ` : ''}${i.reason || 'Needs review'}</li>`).join('') || '';
+  const issueExtra = report?.issues?.length > 12 ? `<p style="margin:10px 0 0;color:#92400e;font-size:12px">+ ${report.issues.length - 12} more issue(s) retained in the processing record.</p>` : '';
+  const reportBlock = report ? `<div style="background:${report.skippedCount || report.warningCount ? '#fffbeb' : '#f0fdf4'};border:1px solid ${report.skippedCount || report.warningCount ? '#fde68a' : '#bbf7d0'};border-radius:12px;padding:20px 24px;margin:0 0 24px"><p style="margin:0 0 8px;font-size:15px;font-weight:800;color:${report.skippedCount || report.warningCount ? '#92400e' : '#166534'}">Bulk upload processing summary</p><p style="margin:0 0 12px;font-size:14px;color:#334155;line-height:1.7">Processed <strong>${report.processedProperties}</strong> propert${report.processedProperties === 1 ? 'y' : 'ies'} and <strong>${report.processedTenants}</strong> tenant email${report.processedTenants === 1 ? '' : 's'}. ${report.skippedCount || report.warningCount ? 'The item(s) below were omitted and need immediate attention.' : 'No skipped rows were detected.'}</p>${issueRows ? `<ul style="padding-left:18px;margin:0">${issueRows}</ul>${issueExtra}` : ''}</div>` : '';
   const acct = isNew
     ? `<div style="background:#1e3a5f;border-radius:12px;padding:28px 32px;margin:0 0 24px;border-left:4px solid #3b82f6"><h2 style="margin:0 0 6px;font-size:17px;font-weight:700;color:#fff">Your CompliantUK Account</h2><p style="margin:0 0 16px;color:#93c5fd;font-size:13px">Log in to track compliance and download certificates.</p><p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase">Email</p><p style="margin:0 0 16px;font-size:15px;color:#e2e8f0;font-family:monospace">${lEmail}</p><p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase">Temporary Password</p><p style="margin:0 0 20px;font-size:22px;font-weight:800;color:#60a5fa;font-family:monospace;letter-spacing:2px">${pw}</p><a href="${BASE}/login?email=${encodeURIComponent(lEmail)}&new=1" style="display:inline-block;background:#3b82f6;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">Log in to dashboard</a></div>`
     : `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:20px 24px;margin:0 0 24px"><p style="margin:0 0 8px;font-size:15px;font-weight:700;color:#166534">View in your dashboard</p><a href="${BASE}/login?email=${encodeURIComponent(lEmail)}" style="display:inline-block;background:#16a34a;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">Go to dashboard</a></div>`;
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,sans-serif"><table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0"><tr><td style="background:#080c14;border-radius:12px 12px 0 0;padding:28px 36px"><div style="font-weight:700;font-size:17px;color:white;margin-bottom:16px">Compliant<span style="color:#60a5fa">UK</span></div><h1 style="margin:0 0 6px;font-size:26px;font-weight:800;color:#fff">You're compliant.</h1><p style="margin:0;color:#93c5fd;font-size:15px">Payment confirmed. Documents delivered to your tenants.</p></td></tr><tr><td style="background:#fff;padding:36px"><p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.7">Hi ${lFirst}, the Renters' Rights Act 2025 Information Sheet has been emailed to each of your tenants.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:24px 28px;margin:0 0 24px"><p style="margin:0 0 16px;font-size:13px;font-weight:700;text-transform:uppercase;color:#94a3b8">Order Summary</p><table cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b;width:40%">Reference</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600;font-family:monospace">${ref}</td></tr><tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Date</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${date}</td></tr><tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Property</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${addr}</td></tr><tr><td style="padding:8px 0;font-size:13px;color:#64748b">Amount paid</td><td style="padding:8px 0;font-size:15px;color:#0f172a;font-weight:700">${amount}</td></tr></table></div>${rows.length?`<div style="margin:0 0 28px"><p style="margin:0 0 12px;font-size:13px;font-weight:700;text-transform:uppercase;color:#94a3b8">Tenant Delivery Status</p><table cellpadding="0" cellspacing="0" width="100%">${rows}</table></div>`:''} ${acct}</td></tr><tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px;text-align:center"><p style="margin:0;color:#94a3b8;font-size:12px">© 2026 CompliantUK</p></td></tr></table></td></tr></table></body></html>`;
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,sans-serif"><table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0"><tr><td style="background:#080c14;border-radius:12px 12px 0 0;padding:28px 36px"><div style="font-weight:700;font-size:17px;color:white;margin-bottom:16px">Compliant<span style="color:#60a5fa">UK</span></div><h1 style="margin:0 0 6px;font-size:26px;font-weight:800;color:#fff">You're compliant.</h1><p style="margin:0;color:#93c5fd;font-size:15px">Payment confirmed. Documents delivered to your tenants.</p></td></tr><tr><td style="background:#fff;padding:36px"><p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.7">Hi ${lFirst}, the Renters' Rights Act 2025 Information Sheet has been emailed to each of your tenants.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:24px 28px;margin:0 0 24px"><p style="margin:0 0 16px;font-size:13px;font-weight:700;text-transform:uppercase;color:#94a3b8">Order Summary</p><table cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b;width:40%">Reference</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600;font-family:monospace">${ref}</td></tr><tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Date</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${date}</td></tr><tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Property</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${addr}</td></tr><tr><td style="padding:8px 0;font-size:13px;color:#64748b">Amount paid</td><td style="padding:8px 0;font-size:15px;color:#0f172a;font-weight:700">${amount}</td></tr></table></div>${reportBlock}${rows.length?`<div style="margin:0 0 28px"><p style="margin:0 0 12px;font-size:13px;font-weight:700;text-transform:uppercase;color:#94a3b8">Tenant Delivery Status</p><table cellpadding="0" cellspacing="0" width="100%">${rows}</table></div>`:''} ${acct}</td></tr><tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px;text-align:center"><p style="margin:0;color:#94a3b8;font-size:12px">© 2026 CompliantUK</p></td></tr></table></td></tr></table></body></html>`;
 }
