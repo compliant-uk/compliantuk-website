@@ -1,73 +1,60 @@
 // Dynamic pricing calculator
-// Pricing structure from bulk.html
+// Canonical pricing structure used by index.html, bulk.html, bulk-upload.html,
+// api/create-checkout.js, and api/create-bulk-checkout.js.
+// Base price includes up to four tenants per property; tenant 5+ is charged
+// at the tier-specific extra tenant rate.
 
-const PRICING_TIERS = {
-  1: { name: 'Starter', price: 49, extraTenant: 8, min: 1, max: 1 },
-  2: { name: 'Essential', price: 39, extraTenant: 6, min: 2, max: 10 },
-  3: { name: 'Portfolio', price: 29, extraTenant: 6, min: 11, max: 49 },
-  4: { name: 'Scale', price: 22, extraTenant: 5, min: 50, max: 100 },
-  5: { name: 'Unlimited', price: 199, extraTenant: 5, min: 100, max: 250, monthly: true }
+export const PRICING_TIERS = {
+  starter: { name: 'Starter', price: 49, extraTenant: 8, min: 1, max: 1, includedTenants: 4 },
+  silver: { name: 'Silver', price: 44, extraTenant: 8, min: 2, max: 10, includedTenants: 4 },
+  bronze: { name: 'Bronze', price: 34, extraTenant: 7, min: 11, max: 25, includedTenants: 4 },
+  gold: { name: 'Gold', price: 24, extraTenant: 6, min: 26, max: 50, includedTenants: 4 },
+  platinum: { name: 'Platinum', price: 19, extraTenant: 5, min: 51, max: 100, includedTenants: 4 },
 };
 
-export function calculatePrice(numTenancies, extraTenants = 0, isSubscription = false) {
-  let tier = null;
-  
-  // Find appropriate tier
-  for (let t of Object.values(PRICING_TIERS)) {
-    if (numTenancies >= t.min && numTenancies <= t.max) {
-      tier = t;
-      break;
-    }
+export function selectTier(propertyCount) {
+  return Object.values(PRICING_TIERS).find((tier) => propertyCount >= tier.min && propertyCount <= tier.max) || null;
+}
+
+export function calculatePrice(propertyCount = 1, extraTenants = 0, tierKey = null) {
+  const numericPropertyCount = Number(propertyCount);
+  const numericExtraTenants = Math.max(0, Number(extraTenants) || 0);
+  const explicitTier = tierKey ? PRICING_TIERS[String(tierKey).toLowerCase()] : null;
+  const tier = explicitTier || selectTier(numericPropertyCount);
+
+  if (!Number.isFinite(numericPropertyCount) || numericPropertyCount < 1) {
+    return { error: 'Invalid number of properties' };
   }
-  
-  if (!tier) return { error: 'Invalid number of tenancies' };
-  
-  const baseCost = tier.price * numTenancies;
-  const extraCost = tier.extraTenant * extraTenants;
+
+  if (!tier) return { error: 'Invalid number of properties' };
+
+  const baseCost = tier.price * numericPropertyCount;
+  const extraCost = tier.extraTenant * numericExtraTenants;
   const subtotal = baseCost + extraCost;
-  
-  if (isSubscription && tier.monthly) {
-    // 3-month minimum subscription
-    const monthlyTotal = subtotal;
-    const threeMonthTotal = monthlyTotal * 3;
-    return {
-      tier: tier.name,
-      monthly: monthlyTotal,
-      threeMonth: threeMonthTotal,
-      total: threeMonthTotal,
-      breakdown: {
-        tenancies: numTenancies,
-        pricePerTenancy: tier.price,
-        baseCost: baseCost,
-        extraTenants: extraTenants,
-        extraCost: extraCost,
-        subtotal: subtotal,
-        months: 3,
-        renewal: 'Auto-renews monthly after 3-month term. Cancel anytime with 30 days notice.'
-      }
-    };
-  }
-  
+
   return {
     tier: tier.name,
     total: subtotal,
     breakdown: {
-      tenancies: numTenancies,
-      pricePerTenancy: tier.price,
-      baseCost: baseCost,
-      extraTenants: extraTenants,
-      extraCost: extraCost,
-      subtotal: subtotal
-    }
+      properties: numericPropertyCount,
+      pricePerProperty: tier.price,
+      includedTenantsPerProperty: tier.includedTenants,
+      extraTenants: numericExtraTenants,
+      extraTenantPrice: tier.extraTenant,
+      baseCost,
+      extraCost,
+      subtotal,
+    },
   };
 }
 
-// HTTP handler
+// HTTP handler for deployments that route this helper as an API endpoint.
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  
-  const { tenancies = 1, extraTenants = 0, isSubscription = false } = req.body;
-  const result = calculatePrice(tenancies, extraTenants, isSubscription);
-  
+
+  const { properties = 1, tenancies, extraTenants = 0, tier } = req.body || {};
+  const propertyCount = properties ?? tenancies ?? 1;
+  const result = calculatePrice(propertyCount, extraTenants, tier);
+
   return res.status(200).json(result);
 }
