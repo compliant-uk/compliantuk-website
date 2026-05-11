@@ -85,6 +85,14 @@ main{max-width:800px;margin:0 auto;padding:8px 24px 80px}
 .cm-col{font-size:12px;font-family:var(--mono);color:var(--blue2);min-width:140px}
 .cm-arrow{color:var(--text3);font-size:12px}
 .cm-field{font-size:12px;color:var(--text2)}
+.processing-report{display:none;margin-top:16px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:14px 16px;color:var(--text2);font-size:13px;line-height:1.55}
+.processing-report.show{display:block}
+.pr-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.pr-title{font-size:13px;font-weight:700;color:var(--text)}
+.pr-pill{font-size:11px;font-weight:700;font-family:var(--mono);padding:4px 8px;border-radius:999px;background:rgba(16,185,129,0.12);color:var(--emerald2);border:1px solid rgba(16,185,129,0.24)}
+.pr-pill.warn{background:rgba(245,158,11,0.12);color:var(--amber2);border-color:rgba(245,158,11,0.24)}
+.pr-list{margin-top:10px;display:grid;gap:6px}
+.pr-item{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:7px 9px;color:var(--text2)}
 .order-summary{background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:20px 24px;margin-bottom:20px}
 .os-head{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--emerald2);font-family:var(--mono);margin-bottom:14px}
 .os-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(16,185,129,0.1);font-size:14px}
@@ -239,6 +247,14 @@ footer{background:var(--bg1);border-top:1px solid var(--border);padding:28px max
       </div>
     </div>
 
+    <div class="processing-report" id="processing-report" aria-live="polite">
+      <div class="pr-head">
+        <span class="pr-title">Upload validation</span>
+        <span class="pr-pill" id="pr-pill">Pending</span>
+      </div>
+      <div id="pr-body">Upload a spreadsheet to validate rows before checkout.</div>
+    </div>
+
     <button class="pay-btn" id="step2-btn" onclick="goStep3()" style="margin-top:20px;display:none">Review order →</button>
   </div>
 
@@ -287,7 +303,7 @@ footer{background:var(--bg1);border-top:1px solid var(--border);padding:28px max
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+<script src="/assets/vendor/xlsx.full.min.js"></script>
 <script>
 // ── Plan config ──────────────────────────────────────────────────────────────
 const PLANS = {
@@ -350,25 +366,77 @@ function handleFile(input) {
     })
     .catch(err => {
       console.error('Parse error:', err);
-      alert('Error parsing file. Please check the format and try again.');
+      const detail = err && err.message ? ' ' + err.message : '';
+      alert('Error parsing file.' + detail);
       hideProgress();
       removeFile();
     });
 }
 
+function normaliseColumnKey(value) {
+  return String(value || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function hasSpreadsheetParser() {
+  return typeof window !== 'undefined'
+    && window.XLSX
+    && typeof window.XLSX.read === 'function'
+    && window.XLSX.utils
+    && typeof window.XLSX.utils.sheet_to_json === 'function';
+}
+
+function addNormalisedColumnLookup(row) {
+  const normalised = {};
+  Object.entries(row || {}).forEach(([key, value]) => {
+    normalised[normaliseColumnKey(key)] = value;
+  });
+  Object.defineProperty(row, '__normalisedColumns', {
+    value: normalised,
+    enumerable: false,
+    configurable: true,
+  });
+  return row;
+}
+
+function workbookRowsLookProcessable(rows) {
+  return rows.some(row => {
+    const lookup = row.__normalisedColumns || {};
+    const hasAddress = Boolean(lookup.propertyaddress || lookup.address);
+    const hasTenant = Object.keys(lookup).some(key => /^tenant\d+(first|last|name|email)$/.test(key));
+    return hasAddress && hasTenant;
+  });
+}
+
+function extractWorkbookRows(workbook) {
+  const sheetNames = workbook && Array.isArray(workbook.SheetNames) ? workbook.SheetNames : [];
+  let firstNonEmptyRows = [];
+  for (const sheetName of sheetNames) {
+    const sheet = workbook.Sheets[sheetName];
+    if (!sheet) continue;
+    const rows = XLSX.utils.sheet_to_json(sheet, { defval:'', raw:false, blankrows:false }).map(addNormalisedColumnLookup);
+    if (rows.length && !firstNonEmptyRows.length) firstNonEmptyRows = rows;
+    if (rows.length && workbookRowsLookProcessable(rows)) return rows;
+  }
+  return firstNonEmptyRows;
+}
+
 function parseExcelFile(file) {
   return new Promise((resolve, reject) => {
+    if (!hasSpreadsheetParser()) {
+      reject(new Error('Spreadsheet parser failed to load. Please refresh the page and try again, or upload the CSV template.'));
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
         const data     = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type:'array' });
-        const sheet    = workbook.Sheets[workbook.SheetNames[0]];
-        const rows     = XLSX.utils.sheet_to_json(sheet, { defval:'' });
+        const workbook = XLSX.read(data, { type:'array', cellDates:false });
+        const rows     = extractWorkbookRows(workbook);
+        if (!rows.length) throw new Error('No rows found in workbook. Please use the CompliantUK portfolio template.');
         resolve(parsePropertyData(rows));
       } catch (err) { reject(err); }
     };
-    reader.onerror = reject;
+    reader.onerror = () => reject(new Error('The browser could not read the selected file.'));
     reader.readAsArrayBuffer(file);
   });
 }
@@ -401,9 +469,18 @@ function parsePropertyData(rows) {
   };
   const validEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean(email));
   const rowLabel = (index, row) => `Row ${index + 2}${clean(row.property_address || row['Property Address'] || row.Address) ? ` (${clean(row.property_address || row['Property Address'] || row.Address)})` : ''}`;
+  const columnKey = value => String(value || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
   const getValue = (row, keys) => {
     for (const key of keys) {
       if (Object.prototype.hasOwnProperty.call(row, key) && clean(row[key])) return clean(row[key]);
+    }
+    const normalised = row.__normalisedColumns || Object.entries(row || {}).reduce((acc, [key, value]) => {
+      acc[columnKey(key)] = value;
+      return acc;
+    }, {});
+    for (const key of keys) {
+      const value = normalised[columnKey(key)];
+      if (clean(value)) return clean(value);
     }
     return '';
   };
@@ -487,13 +564,18 @@ function removeFile() {
   document.getElementById('step2-btn').style.display = 'none';
   parsedData = null;
   processingReport = null;
-  document.getElementById('processing-report').classList.remove('show');
+  const reportBox = document.getElementById('processing-report');
+  if (reportBox) reportBox.classList.remove('show');
 }
 
 function renderProcessingReport() {
   const box = document.getElementById('processing-report');
   const body = document.getElementById('pr-body');
   const pill = document.getElementById('pr-pill');
+  if (!box || !body || !pill) {
+    console.warn('Processing report container is missing; continuing without report UI.');
+    return;
+  }
   if (!processingReport) { box.classList.remove('show'); return; }
   const hasIssues = processingReport.skippedCount > 0 || processingReport.warningCount > 0;
   pill.textContent = hasIssues ? `${processingReport.skippedCount} skipped` : 'All rows processed';

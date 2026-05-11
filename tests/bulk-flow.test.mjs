@@ -68,6 +68,34 @@ const csvText = readFileSync('templates/compliantuk-portfolio-template.csv', 'ut
 const csvRows = parseCsv(csvText);
 const templateResult = parsePropertyData(csvRows);
 
+const friendlyHeadingRows = [
+  {
+    'Property Address': '10 Browser Upload Road',
+    'Landlord First': 'Acceptance',
+    'Landlord Last': 'Tester',
+    'Landlord Email': 'acceptance.landlord@example.com',
+    'Tenant 1 First': 'Taylor',
+    'Tenant 1 Last': 'Resident',
+    'Tenant 1 Email': 'taylor.resident@example.com',
+  },
+];
+const friendlyHeadingResult = parsePropertyData(friendlyHeadingRows);
+
+test('Bulk upload page uses the vendored SheetJS parser bundle instead of a fragile CDN path', () => {
+  const vendorSource = readFileSync('assets/vendor/xlsx.full.min.js', 'utf8');
+  return bulkUploadHtml.includes('src="/assets/vendor/xlsx.full.min.js"')
+    && vendorSource.includes('xlsx.js')
+    && bulkUploadHtml.includes('hasSpreadsheetParser()')
+    || 'Vendored XLSX parser bundle or load guard missing';
+});
+
+test('Parser accepts friendly spreadsheet headings with spaces and title case', () => {
+  return friendlyHeadingResult.properties.length === 1
+    && friendlyHeadingResult.report.processedTenants === 1
+    && friendlyHeadingResult.report.skippedCount === 0
+    || JSON.stringify(friendlyHeadingResult);
+});
+
 test('CSV template includes tenant columns up to tenant6 for extra-tenant pricing', () => {
   const header = csvText.split(/\r?\n/)[0];
   return header.includes('tenant6_first') && header.includes('tenant6_email') || 'tenant6 columns missing';
