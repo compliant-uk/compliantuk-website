@@ -99,14 +99,23 @@ export default async function handler(req,res) {
     try {
       const {data:bulk} = await sb.from('bulk_orders').select('*').eq('id',meta.bulkOrderId).single();
       if (!bulk) throw new Error('Bulk not found');
-      await sb.from('bulk_orders').update({status:'paid',stripe_session_id:session.id,paid_at:new Date().toISOString()}).eq('id',bulk.id);
+      const paidAt = bulk.paid_at || new Date().toISOString();
+      await sb.from('bulk_orders').update({status:'paid',stripe_session_id:session.id,paid_at:paidAt}).eq('id',bulk.id);
       const {id:landlordId,pw,isNew} = await getOrCreate(bulk.landlord_email,bulk.landlord_first,bulk.landlord_last);
       const props = safeJson(bulk.properties_data, []);
+      const childSessionIds = props.map((_, index) => `${session.id}:bulk:${index + 1}`);
+      if (childSessionIds.length) {
+        const {count:existingChildOrderCount} = await sb.from('orders').select('id',{count:'exact',head:true}).in('stripe_session_id', childSessionIds);
+        if (existingChildOrderCount === childSessionIds.length) {
+          await sb.from('bulk_orders').update({status:'processed',stripe_session_id:session.id,paid_at:paidAt}).eq('id',bulk.id);
+          return res.status(200).json({received:true,bulk:true,idempotent:true});
+        }
+      }
       const processingReport = normaliseProcessingReport(bulk.processing_report, props);
       const pdf64 = await fetchPdf().then(b=>b.toString('base64')).catch(()=>null);
       for (const [index, prop] of props.entries()) {
         const propertyAddress = prop.address || prop.propertyAddress || 'Your property';
-        const childSessionId = `${session.id}:bulk:${index + 1}`;
+        const childSessionId = childSessionIds[index];
         const {data:order,error:orderError} = await sb.from('orders').insert({stripe_session_id:childSessionId,landlord_id:landlordId,landlord_email:bulk.landlord_email,landlord_first:bulk.landlord_first,landlord_last:bulk.landlord_last,property_address:propertyAddress,amount_paid:0,package:bulk.plan,status:'processing'}).select().single();
         if (orderError || !order?.id) throw new Error(`Bulk order insert failed for property ${index + 1}: ${orderError?.message || 'missing order id'}`);
         for (const t of (prop.tenants||[])) await doTenant(t,order.id,landlordId,propertyAddress,bulk.landlord_first,bulk.landlord_last,pdf64).catch(e=>console.error('tenant:',e.message));
