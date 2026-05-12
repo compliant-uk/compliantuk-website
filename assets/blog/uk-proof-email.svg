@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Proof of service email delivery for UK landlords</title><desc id="desc">UK-relevant illustration for CompliantUK landlord compliance content.</desc>
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dbeafe"/><stop offset="1" stop-color="#f8fafc"/></linearGradient></defs>
+  
+        <rect width="1200" height="675" fill="#e0f2fe"/><rect x="150" y="130" width="900" height="430" rx="28" fill="#fff" stroke="#bae6fd" stroke-width="8"/><path d="M185 175 L600 390 L1015 175" fill="none" stroke="#0284c7" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/><rect x="265" y="415" width="670" height="44" rx="22" fill="#dbeafe"/><circle cx="890" cy="245" r="84" fill="#dcfce7"/><path d="M850 245 L880 276 L932 214" fill="none" stroke="#16a34a" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="42" y="42" width="420" height="58" rx="29" fill="rgba(15,23,42,0.78)"/>
+  <path d="M95 72H410" stroke="#dbeafe" stroke-width="10" stroke-linecap="round" opacity="0.92"/>
+  <path d="M95 72H245" stroke="#60a5fa" stroke-width="10" stroke-linecap="round"/>
+  
+  <g transform="translate(1060 42)"><rect width="78" height="58" rx="29" fill="rgba(255,255,255,0.88)"/><path d="M39 10L18 19v17c0 16 9 28 21 33 12-5 21-17 21-33V19L39 10z" fill="#2563eb"/><path d="M29 37 L37 45 L51 27" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>
