@@ -74,7 +74,7 @@ async function doTenant(t,orderId,landlordId,addr,lFirst,lLast,pdf64) {
   }).select().single();
   const pixel = `${BASE}/api/track?id=${tid}`;
   await resend.emails.send({
-    from:'CompliantUK <noreply@compliantuk.co.uk>',reply_to:'support@compliantuk.co.uk',
+    from:'CompliantUK <noreply@compliantuk.co.uk>',
     to:t.email,subject:"Important: Renters' Rights Act 2025 — Information Sheet from your landlord",
     html:tenantHtml(t.first,t.last,lFirst,lLast,addr,pixel),
     attachments:pdf64?[{filename:'Renters-Rights-Act-Information-Sheet-2026.pdf',content:pdf64,encoding:'base64'}]:[],
