@@ -26,7 +26,9 @@ export async function generateAndStoreCertificate({
   trackingId,
 }) {
   const pdf = await buildCertificatePdf({
-    propertyAddress, tenantFirst, tenantLast, tenantEmail,
+    propertyAddress,     tenantFirst: sanitizeString(tenantFirst),
+    tenantLast: sanitizeString(tenantLast),
+    tenantEmail: sanitizeString(tenantEmail),
     sentAt, readAt: null, ipAddress: null, device: null,
     trackingId, landlordId,
   });
@@ -60,10 +62,10 @@ export async function generateAndStoreCertificate({
  * Build the PDF bytes — pure function, no side effects
  */
 export async function buildCertificatePdf({
-  propertyAddress,
-  tenantFirst,
-  tenantLast,
-  tenantEmail,
+  propertyAddress: rawPropertyAddress,
+  tenantFirst: rawTenantFirst,
+  tenantLast: rawTenantLast,
+  tenantEmail: rawTenantEmail,
   sentAt,
   readAt,
   ipAddress,
@@ -74,6 +76,11 @@ export async function buildCertificatePdf({
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([595, 842]); // A4
   const { width, height } = page.getSize();
+
+  const propertyAddress = sanitizeString(rawPropertyAddress);
+  const tenantFirst = sanitizeString(rawTenantFirst);
+  const tenantLast = sanitizeString(rawTenantLast);
+  const tenantEmail = sanitizeString(rawTenantEmail);
 
   const bold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const regular = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -252,10 +259,10 @@ export default async function handler(req, res) {
 
     // Otherwise generate on-the-fly and stream back
     const pdf = await buildCertificatePdf({
-      propertyAddress: data.property_address,
-      tenantFirst:     data.tenant_first,
-      tenantLast:      data.tenant_last,
-      tenantEmail:     data.tenant_email,
+      propertyAddress: sanitizeString(data.property_address),
+      tenantFirst:     sanitizeString(data.tenant_first),
+      tenantLast:      sanitizeString(data.tenant_last),
+      tenantEmail:     sanitizeString(data.tenant_email),
       sentAt:          data.sent_at,
       readAt:          data.read_at,
       ipAddress:       data.tenant_ip,
@@ -294,6 +301,11 @@ function formatDate(isoString) {
     hour: '2-digit', minute: '2-digit', second: '2-digit',
     timeZone: 'Europe/London',
   }) + ' GMT';
+}
+
+function sanitizeString(str) {
+  if (!str) return "";
+  return str.normalize("NFD").replace(/\p{Diacritic}/gu, "").replace(/ł/g, "l").replace(/Ł/g, "L");
 }
 
 function wrapText(text, maxChars) {
