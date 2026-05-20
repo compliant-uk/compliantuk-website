@@ -1,11 +1,10 @@
 // api/contact.js
-// Real backend for contact form submissions using Resend email service
+// Real backend for contact form submissions using MailerSend email service
 // Stores submissions in Supabase and sends notifications to support
 
-import { Resend } from 'resend';
 import { createClient } from '@supabase/supabase-js';
+import { sendEmail } from './mailersend-service.js';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 export default async function handler(req, res) {
@@ -42,8 +41,7 @@ export default async function handler(req, res) {
 
     // Send confirmation email to user
     try {
-      await resend.emails.send({
-        from: 'CompliantUK <noreply@compliantuk.co.uk>',
+      await sendEmail({
         to: email,
         subject: 'We received your message — CompliantUK',
         html: `<!DOCTYPE html>
@@ -96,8 +94,7 @@ export default async function handler(req, res) {
 
     // Send notification email to support
     try {
-      await resend.emails.send({
-        from: 'CompliantUK <noreply@compliantuk.co.uk>',
+      await sendEmail({
         to: process.env.ADMIN_BCC_EMAIL || 'support@compliantuk.co.uk',
         subject: `New contact form submission: ${subject || 'Website enquiry'}`,
         html: `<p><strong>New contact form submission</strong></p>

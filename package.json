@@ -7,10 +7,11 @@
     "test:bulk": "node tests/bulk-flow.test.mjs && python3.11 tests/template_integrity.py"
   },
   "dependencies": {
-    "raw-body": "^2.5.2",
-    "pdf-lib": "^1.17.1",
-    "stripe": "^14.0.0",
     "@supabase/supabase-js": "^2.39.0",
-    "resend": "^3.2.0"
+    "mailersend": "^3.0.0",
+    "pdf-lib": "^1.17.1",
+    "raw-body": "^2.5.2",
+    "resend": "^3.2.0",
+    "stripe": "^14.0.0"
   }
 }
