@@ -10,10 +10,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 const PLAN_LABELS = {
-  silver:   'Silver (2–10 properties)',
-  bronze:   'Bronze (11–25 properties)',
-  gold:     'Gold (25–50 properties)',
-  platinum: 'Platinum (50–100 properties)',
+  bronze:   'Bronze (2–10 properties)',
+  silver:   'Silver (11–25 properties)',
+  gold:     'Gold (26–50 properties)',
+  platinum: 'Platinum (51–100 properties)',
+  agency:   'Agency/Batch (101+ properties)',
 };
 
 export default async function handler(req, res) {

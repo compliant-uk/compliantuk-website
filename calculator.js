@@ -6,14 +6,17 @@
 
 export const PRICING_TIERS = {
   starter: { name: 'Starter', price: 49, extraTenant: 8, min: 1, max: 1, includedTenants: 4 },
-  silver: { name: 'Silver', price: 44, extraTenant: 8, min: 2, max: 10, includedTenants: 4 },
-  bronze: { name: 'Bronze', price: 34, extraTenant: 7, min: 11, max: 25, includedTenants: 4 },
-  gold: { name: 'Gold', price: 24, extraTenant: 6, min: 26, max: 50, includedTenants: 4 },
-  platinum: { name: 'Platinum', price: 19, extraTenant: 5, min: 51, max: 100, includedTenants: 4 },
+  bronze: { name: 'Bronze', price: 44, extraTenant: 8, min: 2, max: 10, includedTenants: 4 },
+  silver: { name: 'Silver', price: 39, extraTenant: 7, min: 11, max: 25, includedTenants: 4 },
+  gold: { name: 'Gold', price: 29, extraTenant: 6, min: 26, max: 50, includedTenants: 4 },
+  platinum: { name: 'Platinum', price: 24, extraTenant: 5, min: 51, max: 100, includedTenants: 4 },
+  agency: { name: 'Agency/Batch', price: 19, extraTenant: 5, min: 101, max: 1000, includedTenants: 4 },
 };
 
 export function selectTier(propertyCount) {
-  return Object.values(PRICING_TIERS).find((tier) => propertyCount >= tier.min && propertyCount <= tier.max) || null;
+  const count = Number(propertyCount);
+  if (count >= 101) return PRICING_TIERS.agency;
+  return Object.values(PRICING_TIERS).find((tier) => count >= tier.min && count <= tier.max) || null;
 }
 
 export function calculatePrice(propertyCount = 1, extraTenants = 0, tierKey = null) {
