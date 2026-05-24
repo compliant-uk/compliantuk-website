@@ -236,7 +236,7 @@ document.getElementById('article-cat').className = 'article-cat ' + post.catClas
 document.getElementById('article-date').textContent = post.date;
 document.getElementById('article-read').textContent = post.read;
 document.getElementById('article-h1').textContent = post.title;
-document.getElementById('article-intro').textContent = post.intro;
+	document.getElementById('article-intro').textContent = post.intro || post.metaDesc || "";
 document.getElementById('article-tags').innerHTML = post.tags.map(function(t){ return '<span class="article-tag">' + t + '</span>'; }).join('');
 document.getElementById('article-body').innerHTML = post.body;
 document.getElementById('toc-list').innerHTML = post.toc.map(function(t){ return '<li><a href="#">' + t + '</a></li>'; }).join('');
