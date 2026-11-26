@@ -1,0 +1,11 @@
+# Internal docs, tests and scripts: never deploy as public static files
+CLAUDE.md
+README.md
+*.md
+!blog/**/*.md
+SUPABASE_SCHEMA.sql
+migrations/
+tests/
+scripts/
+test-suite.mjs
+cleanup_routes.py

@@ -1,8 +1,8 @@
-// api/marketing-test.js
+// scripts/marketing-test.js (moved out of /api: Vercel Hobby allows max 12 functions, and this was a public unauthenticated email-sending endpoint)
 // Dedicated test script for MailerSend marketing/bulk emails
 // This is separate from the transactional Resend service
 
-import { sendEmail } from './mailersend-service.js';
+import { sendEmail } from '../lib/mailersend-service.js';
 
 export default async function handler(req, res) {
   // Only allow POST for testing
