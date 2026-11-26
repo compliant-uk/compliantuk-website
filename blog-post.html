@@ -129,7 +129,7 @@ footer{border-top:1px solid var(--border);padding:32px 5%;background:var(--bg)}
     <div class="nav-right">
       <a href="/blog" class="nav-link">← Blog</a>
       <a href="/contact" class="nav-link">Contact</a>
-      <a href="/#get-compliant" class="nav-btn">Get compliant — £49</a>
+      <a href="/#check" class="nav-btn">Check my property — free</a>
     </div>
   <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
 </div>
@@ -137,10 +137,10 @@ footer{border-top:1px solid var(--border);padding:32px 5%;background:var(--bg)}
 <div class="mobile-menu" id="mobile-menu"><div class="mm-inner">
   <a href="/" class="mm-link" onclick="closeMenu()">Home <span class="mm-link-arrow">›</span></a>
   <a href="/blog" class="mm-link" onclick="closeMenu()">← Blog <span class="mm-link-arrow">›</span></a>
-  <a href="/bulk" class="mm-link" onclick="closeMenu()">Portfolio & Agency <span class="mm-link-arrow">›</span></a>
+  <a href="/agents" class="mm-link" onclick="closeMenu()">Letting agents <span class="mm-link-arrow">›</span></a>
   <a href="/contact" class="mm-link" onclick="closeMenu()">Contact <span class="mm-link-arrow">›</span></a>
   <a href="/login" class="mm-link" onclick="closeMenu()">Log in <span class="mm-link-arrow">›</span></a>
-  <a href="/#get-compliant" class="mm-cta" onclick="closeMenu()">Get compliant — £49</a>
+  <a href="/#check" class="mm-cta" onclick="closeMenu()">Check my property — free</a>
 </div></div>
 
 <div class="layout">
@@ -163,25 +163,25 @@ footer{border-top:1px solid var(--border);padding:32px 5%;background:var(--bg)}
     <div class="article-body" id="article-body"></div>
     <div class="inline-cta">
       <div>
-        <div class="ic-title">Ready to become compliant?</div>
-        <div class="ic-sub">Official Information Sheet delivered to your tenant with timestamped proof of service. From £49 per property.</div>
+        <div class="ic-title">Ready for the rental property register?</div>
+        <div class="ic-sub">Registration opens region by region from 15 December 2026. Check your dates and the documents you'll need — free.</div>
       </div>
-      <a href="/#get-compliant" class="ic-btn">Get compliant now →</a>
+      <a href="/#check" class="ic-btn">Check my property →</a>
     </div>
   </article>
 
   <aside class="sidebar">
     <div class="sc">
-      <div class="sc-h">⏰ Deadline</div>
+      <div class="sc-h" id="dw-label">⏰ Register opens in</div>
       <div class="sc-b">
         <div class="dw-countdown" id="dw-days">--</div>
-        <div class="dw-sub">days until 31 May 2026</div>
+        <div class="dw-sub" id="dw-sub">days until 15 December 2026 (West Midlands)</div>
       </div>
     </div>
     <div class="cta-card">
-      <div class="cta-card-title">Become compliant today</div>
-      <div class="cta-card-sub">Official Information Sheet + proof of service certificate. From £49.</div>
-      <a href="/#get-compliant" class="cta-card-btn">Get compliant — £49 →</a>
+      <div class="cta-card-title">Get register-ready</div>
+      <div class="cta-card-sub">Certificate vault, gap report, data sheet and 28-day tracking. From £29 per property.</div>
+      <a href="/#check" class="cta-card-btn">Check my property — free →</a>
     </div>
     <div class="sc">
       <div class="sc-h">📖 In this guide</div>
@@ -267,9 +267,12 @@ document.getElementById('related-sidebar').innerHTML = related.filter(function(r
 
 // Countdown
 function tick() {
-  var diff = new Date('2026-05-31T23:59:59') - new Date();
-  var el = document.getElementById('dw-days');
-  if (el) el.textContent = Math.max(0, Math.floor(diff / 86400000));
+  if (!window.PRS) return;
+  var st = PRS.status(new Date());
+  var el = document.getElementById('dw-days'), lb = document.getElementById('dw-label'), sb = document.getElementById('dw-sub');
+  if (st.phase === 'pre') { if (el) el.textContent = st.days; }
+  else if (st.phase === 'open') { if (el) el.textContent = st.days; if (lb) lb.textContent = '⏰ ' + st.region.name + ' deadline'; if (sb) sb.textContent = 'days until ' + PRS.fmt(st.region.end); }
+  else { if (el) el.textContent = '✓'; if (lb) lb.textContent = '📋 Register'; if (sb) sb.textContent = 'All regions of England now required'; }
 }
 tick();
 setInterval(tick, 60000);
@@ -281,5 +284,7 @@ function toggleMenu(){
   b.classList.toggle('open',!open);
 }
 </script>
+<script src="/prs-regions.js"></script>
+<script>tick();</script>
 </body>
 </html>

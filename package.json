@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "node test-suite.mjs && node tests/bulk-flow.test.mjs && python3.11 tests/template_integrity.py",
-    "test:bulk": "node tests/bulk-flow.test.mjs && python3.11 tests/template_integrity.py"
+    "test": "node test-suite.mjs && node tests/prs-regions.test.mjs && node tests/bulk-flow.test.mjs && python3.11 tests/template_integrity.py",
+    "test:bulk": "node tests/bulk-flow.test.mjs && python3.11 tests/template_integrity.py",
+    "test:prs": "node tests/prs-regions.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",

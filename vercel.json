@@ -41,6 +41,10 @@
     "api/unsubscribe.js": {
       "memory": 256,
       "maxDuration": 10
+    },
+    "api/prs-readiness.js": {
+      "memory": 256,
+      "maxDuration": 15
     }
   },
   "crons": [

@@ -49,9 +49,9 @@ export default async function handler(req, res) {
   </td></tr>
   <tr><td style="background:#fff;padding:36px">
     <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 20px">Thank you for subscribing to CompliantUK updates.</p>
-    <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 20px">We'll keep you informed about the Renters' Rights Act 2025 — deadlines, changes, enforcement updates and new guides as they're published.</p>
-    <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 24px"><strong>The 31 May 2026 deadline is approaching.</strong> If you haven't yet served your Information Sheet to all tenants, you can do so in minutes from £49.</p>
-    <a href="https://www.compliantuk.co.uk" style="display:inline-block;background:#3b82f6;color:white;padding:13px 28px;border-radius:9px;text-decoration:none;font-weight:700;font-size:14px">Become compliant now →</a>
+    <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 20px">We'll keep you informed about the Renters' Rights Act 2025 — the rental property register rollout, deadlines for your region, enforcement updates and new guides as they're published.</p>
+    <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 24px"><strong>Phase 2 starts 15 December 2026.</strong> The national rental property register opens region by region, starting with the West Midlands (deadline 14 March 2027). Check your property's dates and the documents you'll need in 30 seconds.</p>
+    <a href="https://www.compliantuk.co.uk" style="display:inline-block;background:#3b82f6;color:white;padding:13px 28px;border-radius:9px;text-decoration:none;font-weight:700;font-size:14px">Check my property free →</a>
   </td></tr>
   <tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;border-radius:0 0 12px 12px;padding:20px;text-align:center">
     <p style="margin:0;color:#94a3b8;font-size:12px">© 2026 CompliantUK · <a href="${unsubscribeUrl}" style="color:#94a3b8">Unsubscribe</a></p>
