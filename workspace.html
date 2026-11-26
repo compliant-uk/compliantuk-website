@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register workspace — CompliantUK</title>
+<meta name="description" content="Your Rental Property Register workspace: certificate vault, gap report, 28-day tracker and Register-Ready data sheet.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://www.compliantuk.co.uk/workspace">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/prs-regions.js"></script>
+<script src="/pw-check.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Geist+Mono:wght@400;500&display=swap');
+:root{--bg:#080c14;--bg1:#0d1220;--bg2:#111827;--bg3:#1a2235;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--blue:#3b82f6;--blue2:#60a5fa;--blue3:#1d4ed8;--emerald:#10b981;--emerald2:#34d399;--amber:#f59e0b;--amber2:#fbbf24;--red:#ef4444;--red2:#fca5a5;--font:'Bricolage Grotesque',sans-serif;--mono:'Geist Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:var(--blue2)}
+nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 max(4%,20px)}
+.nw{max-width:1180px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.ln{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.4px}.ln span{color:var(--blue2)}
+.nav-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nlink{font-size:13px;color:var(--text2);text-decoration:none;padding:7px 10px;border-radius:7px}
+.nlink:hover{background:rgba(255,255,255,0.05);color:var(--text)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--blue);color:#fff;border:none;padding:10px 18px;border-radius:9px;font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;text-decoration:none;transition:all .15s}
+.btn:hover{background:#2563eb}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn-g{background:rgba(255,255,255,0.05);border:1px solid var(--border2);color:var(--text2)}
+.btn-g:hover{background:rgba(255,255,255,0.09);color:var(--text)}
+.btn-s{padding:6px 12px;font-size:12.5px;border-radius:7px}
+.btn-d{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--red2)}
+.main{max-width:1180px;margin:0 auto;padding:30px max(4%,20px) 70px}
+h1{font-size:26px;font-weight:800;letter-spacing:-.8px}
+.sub{font-size:14px;color:var(--text2);margin-top:4px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 22px}
+.chip{font-size:12px;font-weight:700;font-family:var(--mono);padding:5px 11px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);background:rgba(255,255,255,0.03)}
+.chip.ok{color:var(--emerald2);border-color:rgba(16,185,129,0.35);background:rgba(16,185,129,0.08)}
+.chip.warn{color:var(--amber2);border-color:rgba(245,158,11,0.35);background:rgba(245,158,11,0.08)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat{background:var(--bg1);border:1px solid var(--border2);border-radius:14px;padding:18px 20px}
+.stat .l{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px}
+.stat .v{font-size:1.8rem;font-weight:800;letter-spacing:-1px;line-height:1.1}
+.stat .s{font-size:12px;color:var(--text3);margin-top:3px}
+.v.g{color:var(--emerald2)}.v.a{color:var(--amber2)}.v.r{color:var(--red2)}.v.b{color:var(--blue2)}
+.panel{background:var(--bg1);border:1px solid var(--border2);border-radius:16px;margin-bottom:16px;overflow:hidden}
+.ph{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer}
+.ph:hover{background:rgba(255,255,255,0.02)}
+.ph h2{font-size:16px;font-weight:700;letter-spacing:-.3px}
+.ph .meta{font-size:12px;color:var(--text3);font-family:var(--mono);margin-top:2px}
+.pb{padding:4px 20px 20px;border-top:1px solid var(--border);display:none}
+.panel.open>.pb{display:block}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.grid .full{grid-column:1/-1}
+label.f{display:block;font-size:11.5px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+input,select,textarea{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:10px 12px;font-size:14px;color:var(--text);font-family:var(--font);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+input[type=checkbox]{width:auto}
+.hint{font-size:12px;color:var(--text3);margin-top:4px;line-height:1.45}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;font-family:var(--mono);white-space:nowrap}
+.p-ok{background:rgba(16,185,129,0.1);color:var(--emerald2);border:1px solid rgba(16,185,129,0.25)}
+.p-am{background:rgba(245,158,11,0.1);color:var(--amber2);border:1px solid rgba(245,158,11,0.25)}
+.p-rd{background:rgba(239,68,68,0.1);color:var(--red2);border:1px solid rgba(239,68,68,0.3)}
+.tabs{display:flex;gap:6px;margin:14px 0 4px;flex-wrap:wrap}
+.tab{background:none;border:1px solid var(--border2);color:var(--text2);padding:7px 13px;border-radius:7px;font-size:13px;font-family:var(--font);cursor:pointer}
+.tab.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.gap{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text2)}
+.gap:last-child{border-bottom:none}
+.gap b{color:var(--text)}
+.dot{width:9px;height:9px;border-radius:50%;margin-top:7px;flex-shrink:0}
+.d-r{background:var(--red)}.d-a{background:var(--amber)}.d-g{background:var(--emerald)}
+table.t{width:100%;border-collapse:collapse;margin-top:10px}
+table.t th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);padding:9px 10px;text-align:left;border-bottom:1px solid var(--border)}
+table.t td{padding:10px;border-bottom:1px solid var(--border);font-size:13.5px;color:var(--text2);vertical-align:middle}
+.mono{font-family:var(--mono);font-size:12.5px}
+.upl{margin-top:16px;background:var(--bg2);border:1px dashed var(--border2);border-radius:12px;padding:16px}
+.msg{font-size:13px;margin-top:10px;min-height:18px}
+.msg.e{color:var(--red2)}.msg.o{color:var(--emerald2)}
+.gate{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px}
+.card{background:var(--bg1);border:1px solid var(--border2);border-radius:20px;padding:36px;max-width:480px;width:100%;text-align:center}
+.card h2{font-size:22px;font-weight:800;margin:10px 0 8px}
+.card p{font-size:14px;color:var(--text2);margin-bottom:18px}
+.loading{display:flex;align-items:center;justify-content:center;padding:70px;gap:10px;color:var(--text2)}
+.spinner{width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.note{background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:14px 16px;font-size:13.5px;color:var(--text2);margin-bottom:18px}
+.note b{color:var(--text)}
+#print{display:none}
+@media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.nav-right .nlink{display:none}table.t th:nth-child(4),table.t td:nth-child(4){display:none}}
+@media print{
+  body{background:#fff;color:#000}
+  #app,#gate,#paywall,nav{display:none!important}
+  #print{display:block;font-family:Arial,sans-serif;color:#000;font-size:11.5pt}
+  #print h1{font-size:18pt;margin-bottom:4pt}
+  #print h2{font-size:13pt;margin:16pt 0 6pt;border-bottom:1.5pt solid #000;padding-bottom:3pt}
+  #print h3{font-size:11.5pt;margin:10pt 0 4pt}
+  #print table{width:100%;border-collapse:collapse;margin-bottom:6pt}
+  #print td,#print th{border:0.75pt solid #999;padding:4pt 6pt;text-align:left;vertical-align:top;font-size:10.5pt}
+  #print th{background:#eee;width:38%}
+  #print .pp{page-break-before:always}
+  #print .small{font-size:9pt;color:#444}
+  #print .box{display:inline-block;width:10pt;height:10pt;border:1pt solid #000;margin-right:5pt;vertical-align:middle}
+}
+</style>
+</head>
+<body>
+<div class="gate" id="gate"><div class="card"><div style="font-size:38px">🔒</div><h2>Sign in to your Register workspace</h2><p>Your certificate vault, gap report and 28-day tracker are behind your CompliantUK login.</p><a class="btn" style="width:100%" href="/login?next=register">Log in →</a></div></div>
+
+<div class="gate" id="paywall"><div class="card"><div style="font-size:38px">🏠</div><h2>Get Register-Ready</h2><p>Your account doesn't include the Register workspace yet. Choose a plan to unlock the certificate vault, gap report, 28-day tracker and the printable Register-Ready data sheet.</p>
+<a class="btn" style="width:100%;margin-bottom:10px" href="/?buy=register_ready#pricing">Register-Ready — £29 per property</a>
+<a class="btn btn-g" style="width:100%" href="/?buy=monitor#pricing">Ready + Monitor — £29 + £2.50/month</a>
+<p style="margin:16px 0 0;font-size:12.5px">Just paid? It can take a minute to activate. <a href="#" onclick="location.reload();return false">Refresh</a> · <a href="#" onclick="signOut();return false">Sign out</a></p></div></div>
+
+<div id="app" style="display:none">
+<nav><div class="nw">
+  <a href="/" class="logo"><svg width="30" height="30" viewBox="0 0 32 32" fill="none"><defs><linearGradient id="sg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><path d="M16 2L4 7v8c0 7.18 5.16 13.9 12 15.93C22.84 28.9 28 22.18 28 15V7L16 2z" fill="url(#sg)"/><polyline points="10,16 14,20 22,12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="ln">Compliant<span>UK</span></span></a>
+  <div class="nav-right">
+    <a class="nlink" href="/dashboard">Information Sheet dashboard</a>
+    <span class="nlink mono" id="navEmail" style="cursor:default"></span>
+    <button class="btn btn-g btn-s" onclick="signOut()">Sign out</button>
+  </div>
+</div></nav>
+<div class="main">
+  <h1>Register workspace</h1>
+  <p class="sub">Get every property ready for the GOV.UK <em>Register your rental property</em> service, then keep the record up to date.</p>
+  <div class="chips" id="chips"></div>
+  <div class="stats">
+    <div class="stat"><div class="l">Properties</div><div class="v b" id="sProps">—</div><div class="s" id="sPropsSub">of your plan</div></div>
+    <div class="stat"><div class="l">Register-Ready</div><div class="v g" id="sReady">—</div><div class="s">no blocking gaps</div></div>
+    <div class="stat"><div class="l">Gaps to fix</div><div class="v r" id="sGaps">—</div><div class="s" id="sGapsSub">red items</div></div>
+    <div class="stat"><div class="l">Next expiry</div><div class="v a" id="sNext" style="font-size:1.25rem;padding-top:6px">—</div><div class="s" id="sNextSub">&nbsp;</div></div>
+  </div>
+  <div class="row" style="justify-content:space-between;margin-bottom:16px">
+    <div class="row">
+      <button class="btn" id="addBtn" onclick="toggleAdd(true)">＋ Add property</button>
+      <button class="btn btn-g" onclick="printSheet()">🖨 Print Register-Ready data sheet</button>
+    </div>
+    <a class="btn btn-g btn-s" id="buyMore" style="display:none" href="/?buy=register_ready#pricing">Add more properties to your plan</a>
+  </div>
+
+  <div class="panel open" id="addPanel" style="display:none"><div class="pb" style="display:block;border-top:none;padding-top:18px">
+    <h2 style="font-size:16px">Add a property</h2>
+    <div class="grid">
+      <div class="full"><label class="f">Full address</label><input id="aAddr" placeholder="12 Example Road, Birmingham"></div>
+      <div><label class="f">Postcode</label><input id="aPc" placeholder="B16 9ST"></div>
+      <div><label class="f">Bedrooms</label><input id="aBeds" type="number" min="0" max="30"></div>
+      <div><label class="f">Gas supply?</label><select id="aGas"><option value="true">Yes</option><option value="false">No gas supply</option></select></div>
+    </div>
+    <div class="row" style="margin-top:14px"><button class="btn" id="aSave" onclick="addProperty()">Save property</button><button class="btn btn-g" onclick="toggleAdd(false)">Cancel</button></div>
+    <div class="msg" id="aMsg"></div>
+  </div></div>
+
+  <div id="props"><div class="loading"><div class="spinner"></div> Loading your workspace…</div></div>
+
+  <div class="panel" id="profilePanel">
+    <div class="ph" onclick="this.parentNode.classList.toggle('open')"><div><h2>Landlord details</h2><div class="meta" id="profMeta">Used on your data sheet</div></div><span>▾</span></div>
+    <div class="pb">
+      <div class="grid">
+        <div><label class="f">Landlord type</label><select data-pf="landlord_type"><option value="">Choose…</option><option value="individual">Individual / sole trader</option><option value="joint">Joint landlord</option><option value="organisation">Company / organisation</option></select></div>
+        <div><label class="f">Full name or organisation</label><input data-pf="full_name"></div>
+        <div><label class="f">Phone</label><input data-pf="phone"></div>
+        <div class="full"><label class="f">Correspondence address (must be in England or Wales)</label><input data-pf="correspondence_address"></div>
+        <div><label class="f">Companies House number</label><input data-pf="company_number" placeholder="If applicable"></div>
+        <div><label class="f">Landlord number (from GOV.UK)</label><input data-pf="landlord_ref" placeholder="Given after you register" style="text-transform:uppercase"></div>
+        <div><label class="f">Date you registered as a landlord</label><input type="date" data-pf="account_created_on"></div>
+        <div class="full"><label class="f">Letting / managing agent (name, email, phone)</label><input data-pf="agent_name"></div>
+      </div>
+      <div class="row" style="margin-top:14px"><button class="btn" onclick="saveProfile(this)">Save details</button></div>
+      <div class="msg" id="profMsg"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="pwPanel">
+    <div class="ph" onclick="this.parentNode.classList.toggle('open')"><div><h2>Password</h2><div class="meta">Change your temporary password</div></div><span>▾</span></div>
+    <div class="pb">
+      <div class="grid"><div><label class="f">New password</label><input type="password" id="pw1" placeholder="At least 10 characters"></div><div><label class="f">Confirm</label><input type="password" id="pw2"></div></div>
+      <p class="hint">We check new passwords against known data breaches (only a partial hash leaves your device).</p>
+      <div class="row" style="margin-top:12px"><button class="btn" onclick="changePw(this)">Update password</button></div>
+      <div class="msg" id="pwMsg"></div>
+    </div>
+  </div>
+  <p class="hint" style="margin-top:20px">CompliantUK is an independent preparation service, not part of government. You register and pay the government fee on GOV.UK yourself. Suggested expiry dates are a guide: always check the certificate.</p>
+</div>
+</div>
+<div id="print"></div>
+
+<script>
+const SUPABASE_URL = 'https://ihfbagpupottobyeciwq.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_-U8VyL_5cWmquttTZfEekQ_LqPIEZJd'; // publishable key - safe in frontend (RLS enforced)
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const BUCKET = 'prs-vault';
+const P = window.PRS;
+const CERT = {
+  gas:         { label: 'Gas safety certificate', months: 12 },
+  eicr:        { label: 'Electrical safety (EICR)', months: 60 },
+  epc:         { label: 'Energy Performance Certificate', months: 120 },
+  licence:     { label: 'HMO / property licence', months: 60 },
+  deposit:     { label: 'Deposit protection certificate', months: 0 },
+  how_to_rent: { label: 'Tenancy agreement / other tenancy document', months: 0 },
+  other:       { label: 'Other document', months: 0 },
+};
+let S = { user: null, ents: [], profile: null, props: [], certs: [], open: {}, tab: {} };
+
+// ── helpers ───────────────────────────────────────────────────────────────
+function esc(s){ return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function addMonths(iso, m){ const [y,mo,d]=iso.split('-').map(Number); const r=new Date(Date.UTC(y,mo-1+m,d)); if(r.getUTCDate()!==d) r.setUTCDate(0); return r.toISOString().slice(0,10); }
+function addDays(iso, n){ const [y,m,d]=iso.split('-').map(Number); return new Date(Date.UTC(y,m-1,d+n)).toISOString().slice(0,10); }
+function daysTo(iso){ const [y,m,d]=iso.split('-').map(Number); const t=new Date(); return Math.round((Date.UTC(y,m-1,d)-Date.UTC(t.getFullYear(),t.getMonth(),t.getDate()))/86400000); }
+function fmtD(iso){ if(!iso) return '—'; const [y,m,d]=iso.split('-').map(Number); return P.fmtShort(new Date(Date.UTC(y,m-1,d))); }
+function allowed(){ return S.ents.filter(e=>e.status!=='canceled').reduce((a,e)=>a+e.properties,0); }
+function monitorOn(){ return S.ents.some(e=>e.product==='monitor' && e.status==='active'); }
+function certsFor(pid){ return S.certs.filter(c=>c.property_id===pid); }
+function latest(pid, type){ return certsFor(pid).filter(c=>c.cert_type===type).sort((a,b)=>(b.expires_on||b.issued_on||'').localeCompare(a.expires_on||a.issued_on||''))[0]; }
+function regionOf(p){ return p.region ? P.REGIONS.find(r=>r.name===p.region) : null; }
+function setMsg(id, text, ok){ const el=document.getElementById(id); if(!el) return; el.textContent=text||''; el.className='msg '+(ok?'o':'e'); }
+
+// ── gap report ────────────────────────────────────────────────────────────
+function certGap(p, type, required){
+  const c = latest(p.id, type), L = CERT[type].label;
+  if (!c) return required ? { lvl:'r', t:`<b>${L}</b> missing — upload it to your vault.` } : null;
+  if (c.expires_on) {
+    const d = daysTo(c.expires_on);
+    if (d < 0) return { lvl:'r', t:`<b>${L}</b> expired on ${fmtD(c.expires_on)}. Renew it, then update the register within 28 days.` };
+    if (d <= 60) return { lvl:'a', t:`<b>${L}</b> expires in ${d} day${d===1?'':'s'} (${fmtD(c.expires_on)}). Book the renewal now.` };
+  } else if (CERT[type].months) {
+    return { lvl:'a', t:`<b>${L}</b> has no expiry date recorded.` };
+  }
+  return { lvl:'g', t:`<b>${L}</b> valid${c.expires_on?` until ${fmtD(c.expires_on)}`:''}.` };
+}
+function gaps(p){
+  const g = [];
+  if (p.has_gas) g.push(certGap(p,'gas',true));
+  g.push(certGap(p,'eicr',true));
+  const epc = certGap(p,'epc',true); g.push(epc);
+  const rating = (latest(p.id,'epc')?.epc_rating || p.epc_rating || '').toUpperCase();
+  if (rating && 'FG'.includes(rating)) g.push({ lvl:'r', t:`<b>EPC rating ${esc(rating)}</b> is below the legal minimum of E for letting (unless a valid exemption is registered).` });
+  if (p.is_hmo && !p.licence_ref) g.push({ lvl:'r', t:'<b>HMO licence</b> reference missing.' });
+  if (!p.bedrooms && p.bedrooms !== 0) g.push({ lvl:'a', t:'<b>Number of bedrooms</b> not recorded.' });
+  if (!p.tenancy_status) g.push({ lvl:'a', t:'<b>Current rental status</b> not recorded.' });
+  if (!p.tenancy_type || !p.rent_amount) g.push({ lvl:'a', t:'<b>Tenancy and rent details</b> incomplete (needed within 28 days of registering).' });
+  const r = regionOf(p);
+  if (!p.property_ref) {
+    if (r) {
+      const end = P.iso(r.end), dl = daysTo(end), st = P.iso(r.start);
+      if (dl < 0) g.push({ lvl:'r', t:`<b>Not registered</b> — the ${esc(r.name)} deadline (${fmtD(end)}) has passed. Register now.` });
+      else if (daysTo(st) > 0) g.push({ lvl:'a', t:`<b>Not registered yet</b> — ${esc(r.name)} opens ${fmtD(st)}, deadline ${fmtD(end)}.` });
+      else g.push({ lvl: dl <= 30 ? 'r' : 'a', t:`<b>Not registered yet</b> — ${esc(r.name)} is open now. Deadline ${fmtD(end)} (${dl} days).` });
+    } else g.push({ lvl:'a', t:'<b>Not registered yet</b> — add a postcode so we can work out your region and deadline.' });
+  }
+  if (p.record_started_on && !p.record_completed) {
+    const due = addDays(p.record_started_on, 28), d = daysTo(due);
+    g.push({ lvl: d < 0 || d <= 7 ? 'r' : 'a', t: d < 0 ? `<b>28-day deadline missed</b> (${fmtD(due)}): complete the property record now or it may be deactivated.` : `<b>Complete the property record</b> by ${fmtD(due)} (${d} days left).` });
+  }
+  if (p.property_ref) {
+    certsFor(p.id).filter(c=>!c.on_register && ['gas','eicr','epc','licence'].includes(c.cert_type) && c.created_at.slice(0,10) >= (p.record_started_on||'0000')).forEach(c=>{
+      const due = addDays(c.created_at.slice(0,10), 28), d = daysTo(due);
+      g.push({ lvl: d < 0 ? 'r' : 'a', t:`<b>Update the register</b> with your new ${esc(CERT[c.cert_type].label.toLowerCase())} by ${fmtD(due)}, then tick “on register”.` });
+    });
+  }
+  return g.filter(Boolean);
+}
+
+// ── init / load ───────────────────────────────────────────────────────────
+async function init(){
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { document.getElementById('gate').style.display='flex'; return; }
+  S.user = session.user;
+  document.getElementById('navEmail').textContent = S.user.email;
+  await load();
+}
+async function load(){
+  const uid = S.user.id;
+  const [e,pr,p,c] = await Promise.all([
+    sb.from('prs_entitlements').select('*').eq('user_id',uid).order('created_at'),
+    sb.from('prs_profiles').select('*').eq('user_id',uid).maybeSingle(),
+    sb.from('prs_properties').select('*').eq('user_id',uid).order('created_at'),
+    sb.from('prs_certificates').select('*').eq('user_id',uid).order('created_at'),
+  ]);
+  S.ents = e.data||[]; S.profile = pr.data||null; S.props = p.data||[]; S.certs = c.data||[];
+  if (!S.ents.filter(x=>x.status!=='canceled').length) { document.getElementById('app').style.display='none'; document.getElementById('paywall').style.display='flex'; return; }
+  document.getElementById('paywall').style.display='none';
+  document.getElementById('app').style.display='block';
+  render();
+}
+function render(){
+  const a = allowed(), used = S.props.length, mon = monitorOn();
+  const chips = [];
+  S.ents.forEach(e=>chips.push(`<span class="chip ${e.status==='active'?'ok':'warn'}">${e.product==='monitor'?'Ready + Monitor':'Register-Ready'} · ${e.properties} propert${e.properties===1?'y':'ies'}${e.status!=='active'?' · '+e.status.replace('_',' '):''}</span>`));
+  chips.push(mon ? '<span class="chip ok">Expiry alerts on (60/30/7 days)</span>' : '<span class="chip warn">Expiry alerts off · <a href="/?buy=monitor#pricing" style="color:inherit">add Monitor</a></span>');
+  const firstReg = S.props.map(p=>p.record_started_on).filter(Boolean).sort()[0];
+  if (firstReg) chips.push(`<span class="chip">Annual renewal ${fmtD(addMonths(firstReg,12))}</span>`);
+  document.getElementById('chips').innerHTML = chips.join('');
+  document.getElementById('sProps').textContent = `${used}/${a}`;
+  document.getElementById('sPropsSub').textContent = used >= a ? 'plan full' : `${a-used} slot${a-used===1?'':'s'} left`;
+  const allG = S.props.map(p=>({p,g:gaps(p)}));
+  document.getElementById('sReady').textContent = allG.filter(x=>!x.g.some(i=>i.lvl==='r')).length;
+  const reds = allG.reduce((n,x)=>n+x.g.filter(i=>i.lvl==='r').length,0), ambers = allG.reduce((n,x)=>n+x.g.filter(i=>i.lvl==='a').length,0);
+  document.getElementById('sGaps').textContent = reds;
+  document.getElementById('sGapsSub').textContent = `${ambers} amber to review`;
+  const next = S.certs.filter(c=>c.expires_on && daysTo(c.expires_on)>=0).sort((x,y)=>x.expires_on.localeCompare(y.expires_on))[0];
+  document.getElementById('sNext').textContent = next ? fmtD(next.expires_on) : '—';
+  document.getElementById('sNextSub').textContent = next ? `${CERT[next.cert_type].label.split(' (')[0]} · ${(S.props.find(p=>p.id===next.property_id)||{}).postcode||''}` : 'nothing expiring';
+  const full = used >= a;
+  document.getElementById('addBtn').disabled = full;
+  document.getElementById('addBtn').title = full ? 'Your plan is full — add more properties to your plan' : '';
+  const bm = document.getElementById('buyMore'); bm.style.display = full ? 'inline-flex' : 'none';
+  bm.href = `/?buy=${mon?'monitor':'register_ready'}&email=${encodeURIComponent(S.user.email)}#pricing`;
+  renderProfile();
+  const wrap = document.getElementById('props');
+  if (!S.props.length) { wrap.innerHTML = `<div class="note"><b>Start here:</b> add your first property. Then upload its gas safety certificate, EICR and EPC. We read the dates from PDFs for you and build your gap report and data sheet.</div>`; if (!full) toggleAdd(true); return; }
+  wrap.innerHTML = allG.map(x=>propCard(x.p, x.g)).join('');
+}
+function renderProfile(){
+  const pf = S.profile || {};
+  document.querySelectorAll('[data-pf]').forEach(el=>{ if (document.activeElement!==el) el.value = pf[el.dataset.pf] ?? ''; });
+  document.getElementById('profMeta').textContent = pf.landlord_ref ? `Landlord number ${pf.landlord_ref}` : 'Landlord number not recorded yet';
+}
+
+// ── property card ─────────────────────────────────────────────────────────
+function propCard(p, g){
+  const reds = g.filter(i=>i.lvl==='r').length, ambers = g.filter(i=>i.lvl==='a').length;
+  const pill = reds ? `<span class="pill p-rd">${reds} gap${reds===1?'':'s'}</span>` : ambers ? `<span class="pill p-am">${ambers} to review</span>` : '<span class="pill p-ok">✓ Register-Ready</span>';
+  const tab = S.tab[p.id] || 'gaps', open = S.open[p.id];
+  const r = regionOf(p);
+  return `<div class="panel ${open?'open':''}" id="p-${p.id}">
+   <div class="ph" onclick="toggleProp('${p.id}')"><div style="min-width:0"><h2 style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.address)}</h2><div class="meta">${esc(p.postcode||'')}${r?' · '+esc(r.name):''}${p.property_ref?' · '+esc(p.property_ref):''}</div></div><div class="row">${pill}<span>▾</span></div></div>
+   <div class="pb">
+    <div class="tabs">${[['gaps','Gap report'],['certs','Certificate vault ('+certsFor(p.id).length+')'],['details','Property details'],['track','Register & 28-day tracker']].map(([k,l])=>`<button class="tab ${tab===k?'on':''}" onclick="setTab('${p.id}','${k}')">${l}</button>`).join('')}</div>
+    ${tab==='gaps' ? gapsView(p,g) : tab==='certs' ? certsView(p) : tab==='details' ? detailsView(p) : trackView(p)}
+   </div></div>`;
+}
+function gapsView(p,g){
+  const order = { r:0, a:1, g:2 };
+  return `<div style="margin-top:8px">${g.sort((x,y)=>order[x.lvl]-order[y.lvl]).map(i=>`<div class="gap"><span class="dot d-${i.lvl}"></span><span>${i.t}</span></div>`).join('')}</div>`;
+}
+function certsView(p){
+  const rows = certsFor(p.id).sort((a,b)=>(a.cert_type).localeCompare(b.cert_type)).map(c=>{
+    const d = c.expires_on ? daysTo(c.expires_on) : null;
+    const st = d===null ? '<span class="pill p-am">no expiry</span>' : d<0 ? '<span class="pill p-rd">expired</span>' : d<=60 ? `<span class="pill p-am">${d} days</span>` : '<span class="pill p-ok">valid</span>';
+    return `<tr><td><b style="color:var(--text)">${esc(CERT[c.cert_type].label)}</b>${c.epc_rating?` · rating <b>${esc(c.epc_rating)}</b>`:''}<div class="mono" style="color:var(--text3)">${esc(c.file_name||'')}</div></td><td class="mono">${fmtD(c.issued_on)}</td><td class="mono">${fmtD(c.expires_on)} ${st}</td><td><label style="font-size:12px;display:flex;gap:6px;align-items:center"><input type="checkbox" ${c.on_register?'checked':''} onchange="setOnRegister('${c.id}',this.checked)"> on register</label></td><td style="white-space:nowrap">${c.file_path?`<button class="btn btn-g btn-s" onclick="viewFile('${c.id}')">View</button> `:''}<button class="btn btn-d btn-s" onclick="delCert('${c.id}')">Delete</button></td></tr>`;
+  }).join('');
+  return `${rows?`<table class="t"><thead><tr><th>Document</th><th>Issued</th><th>Expires</th><th>Register</th><th></th></tr></thead><tbody>${rows}</tbody></table>`:'<p class="hint" style="margin-top:10px">No documents yet.</p>'}
+   <div class="upl"><div class="grid" style="margin-top:0">
+     <div><label class="f">Document type</label><select id="ct-${p.id}" onchange="suggest('${p.id}')">${Object.entries(CERT).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
+     <div class="full" style="grid-column:span 2"><label class="f">File (PDF or photo, max 10 MB)</label><input type="file" id="cf-${p.id}" accept="application/pdf,image/jpeg,image/png,image/webp,image/heic" onchange="readFile('${p.id}')"></div>
+     <div><label class="f">Issued / inspection date</label><input type="date" id="ci-${p.id}" onchange="suggest('${p.id}',true)"></div>
+     <div><label class="f">Expiry / next due date</label><input type="date" id="ce-${p.id}"></div>
+     <div><label class="f">EPC rating (EPC only)</label><select id="cr-${p.id}"><option value="">—</option>${'ABCDEFG'.split('').map(x=>`<option>${x}</option>`).join('')}</select></div>
+   </div>
+   <p class="hint" id="cx-${p.id}">Choose a PDF and we'll try to read the dates for you. Check them before saving.</p>
+   <div class="row" style="margin-top:10px"><button class="btn" onclick="uploadCert('${p.id}',this)">Save to vault</button></div>
+   <div class="msg" id="cm-${p.id}"></div></div>`;
+}
+function fld(p, key, label, type, opts){
+  const v = p[key] ?? '';
+  if (type==='select') return `<div><label class="f">${label}</label><select data-k="${key}">${opts.map(([val,l])=>`<option value="${val}" ${String(v)===String(val)?'selected':''}>${l}</option>`).join('')}</select></div>`;
+  return `<div class="${type==='wide'?'full':''}"><label class="f">${label}</label><input data-k="${key}" type="${type==='wide'?'text':type}" value="${esc(v)}"></div>`;
+}
+function detailsView(p){
+  return `<div class="grid" id="df-${p.id}">
+    ${fld(p,'address','Full address','wide')}
+    ${fld(p,'postcode','Postcode','text')}
+    ${fld(p,'property_type','Property type','select',[['',"Choose…"],['house','House'],['flat','Flat / maisonette'],['bungalow','Bungalow'],['room','Room / bedsit'],['other','Other']])}
+    ${fld(p,'bedrooms','Bedrooms','number')}
+    ${fld(p,'tenancy_status','Current rental status','select',[['',"Choose…"],['let','Let / occupied'],['becoming_let','Becoming let'],['vacant','Vacant']])}
+    ${fld(p,'tenancy_type','Tenancy type','select',[['',"Choose…"],['assured_periodic','Assured periodic'],['assured','Assured (other)'],['regulated','Regulated'],['other','Other / not sure']])}
+    ${fld(p,'rent_amount','Rent (£)','number')}
+    ${fld(p,'rent_frequency','Rent frequency','select',[['',"Choose…"],['monthly','Per month'],['weekly','Per week'],['four_weekly','Every 4 weeks']])}
+    ${fld(p,'has_gas','Gas supply','select',[['true','Yes'],['false','No gas supply']])}
+    ${fld(p,'is_hmo','HMO / licensed?','select',[['false','No'],['true','Yes — licensed']])}
+    ${fld(p,'licence_ref','Licence reference','text')}
+    ${fld(p,'deposit_scheme','Deposit scheme & reference','text')}
+    ${fld(p,'agent_contact','Managing / letting agent contact','wide')}
+    ${fld(p,'freeholder_contact','Freeholder contact (if leasehold)','wide')}
+    ${fld(p,'superior_landlord_contact','Superior landlord contact (if any)','wide')}
+    ${fld(p,'joint_landlords','Joint landlords (names, emails)','wide')}
+    <div class="full"><label class="f">Notes</label><textarea data-k="notes" rows="2">${esc(p.notes||'')}</textarea></div>
+  </div>
+  <div class="row" style="margin-top:14px;justify-content:space-between"><button class="btn" onclick="saveDetails('${p.id}',this)">Save details</button><button class="btn btn-d btn-s" onclick="delProp('${p.id}')">Remove property</button></div>
+  <div class="msg" id="dm-${p.id}"></div>`;
+}
+function trackView(p){
+  const due = p.record_started_on ? addDays(p.record_started_on,28) : null;
+  const r = regionOf(p);
+  return `<div class="note" style="margin-top:12px">${r?`<b>${esc(r.name)}</b>: registration opens ${P.fmt(r.start)}, deadline ${P.fmt(r.end)} (before midnight). `:''}After you register a property on GOV.UK you get a rental property number and have <b>28 days</b> to provide any outstanding information (certificates, tenancy and rent details, licences). Changes and expiries must also be updated within 28 days.</div>
+  <div class="grid" id="tf-${p.id}">
+    ${fld(p,'property_ref','Rental property number','text')}
+    ${fld(p,'record_started_on','Date registered on GOV.UK','date')}
+    ${fld(p,'fee_paid_on','Fee paid on','date')}
+    <div class="full"><label style="display:flex;gap:8px;align-items:center;font-size:14px;color:var(--text2)"><input type="checkbox" data-k="record_completed" ${p.record_completed?'checked':''}> All outstanding information has been provided on GOV.UK</label></div>
+  </div>
+  <p class="hint">${due ? `28-day deadline: <b style="color:var(--text)">${fmtD(due)}</b>${p.record_completed?' — completed ✓':` (${daysTo(due)} days)`}` : 'Enter the date you registered to start the 28-day countdown.'}${p.record_started_on?` · Estimated government fee on that date: £${P.estimateFee(new Date(p.record_started_on+'T00:00:00Z')).fee.toFixed(2)}`:''}</p>
+  <div class="row" style="margin-top:14px"><button class="btn" onclick="saveTrack('${p.id}',this)">Save tracker</button><a class="btn btn-g" href="https://www.gov.uk/guidance/register-your-rental-property-service-guidance-for-landlords" target="_blank" rel="noopener">GOV.UK guidance ↗</a></div>
+  <div class="msg" id="tm-${p.id}"></div>`;
+}
+function toggleProp(id){ S.open[id] = !S.open[id]; render(); }
+function setTab(id, t){ S.tab[id] = t; S.open[id] = true; render(); }
+function toggleAdd(on){ document.getElementById('addPanel').style.display = on ? 'block' : 'none'; if (on) document.getElementById('aAddr').focus(); }
+
+// ── actions ───────────────────────────────────────────────────────────────
+async function lookupRegion(pc){
+  try {
+    const ctl = new AbortController(); const t = setTimeout(()=>ctl.abort(), 8000);
+    const r = await fetch('https://api.postcodes.io/postcodes/'+encodeURIComponent(pc.replace(/\s+/g,'')), { signal: ctl.signal }); clearTimeout(t);
+    const j = await r.json(); if (j.status!==200) return null;
+    const reg = j.result.country==='England' ? P.findRegion(j.result.region) : null;
+    return { region: reg ? reg.name : null, country: j.result.country, postcode: j.result.postcode };
+  } catch(e){ return null; }
+}
+async function addProperty(){
+  const addr = document.getElementById('aAddr').value.trim(), pc = document.getElementById('aPc').value.trim().toUpperCase();
+  const beds = document.getElementById('aBeds').value, gas = document.getElementById('aGas').value==='true';
+  if (addr.length < 5) return setMsg('aMsg','Please enter the full address.');
+  if (!/^[A-Z]{1,2}[0-9][A-Z0-9]?\s*[0-9][A-Z]{2}$/.test(pc)) return setMsg('aMsg','Please enter a full UK postcode.');
+  const btn = document.getElementById('aSave'); btn.disabled = true; btn.textContent = 'Saving…';
+  const loc = await lookupRegion(pc);
+  if (loc && loc.country && loc.country!=='England') setMsg('aMsg',`Note: this postcode is in ${loc.country}. The register applies to England only.`);
+  const { data, error } = await sb.from('prs_properties').insert({ user_id:S.user.id, address:addr, postcode:loc?.postcode||pc, region:loc?.region||null, bedrooms: beds===''?null:parseInt(beds,10), has_gas:gas, tenancy_status:'let' }).select().single();
+  btn.disabled = false; btn.textContent = 'Save property';
+  if (error) return setMsg('aMsg', /PROPERTY_LIMIT/.test(error.message) ? 'Your plan is full. Add more properties to your plan to continue.' : error.message);
+  ['aAddr','aPc','aBeds'].forEach(i=>document.getElementById(i).value='');
+  setMsg('aMsg',''); toggleAdd(false);
+  S.open[data.id] = true; S.tab[data.id] = 'certs';
+  await load();
+}
+function collect(container){
+  const o = {};
+  container.querySelectorAll('[data-k]').forEach(el=>{
+    const k = el.dataset.k; let v = el.type==='checkbox' ? el.checked : el.value.trim();
+    if (k==='has_gas' || k==='is_hmo') v = v==='true';
+    else if (k==='bedrooms') v = v==='' ? null : parseInt(v,10);
+    else if (k==='rent_amount') v = v==='' ? null : Number(v);
+    else if (el.type==='date' && v==='') v = null;
+    else if (k==='property_ref') v = v.toUpperCase() || null;
+    o[k] = v;
+  });
+  return o;
+}
+async function saveProp(id, fields, msgId, btn){
+  btn.disabled = true;
+  if (fields.postcode) { const old = S.props.find(p=>p.id===id); if (!old || old.postcode !== fields.postcode.toUpperCase()) { const loc = await lookupRegion(fields.postcode); if (loc) { fields.postcode = loc.postcode; fields.region = loc.region; } } }
+  fields.updated_at = new Date().toISOString();
+  const { error } = await sb.from('prs_properties').update(fields).eq('id', id);
+  btn.disabled = false;
+  if (error) return setMsg(msgId, error.message);
+  await load(); setMsg(msgId, '✓ Saved', true);
+}
+function saveDetails(id, btn){ saveProp(id, collect(document.getElementById('df-'+id)), 'dm-'+id, btn); }
+function saveTrack(id, btn){ saveProp(id, collect(document.getElementById('tf-'+id)), 'tm-'+id, btn); }
+async function delProp(id){
+  if (!confirm('Remove this property and all its documents from your workspace?')) return;
+  const files = certsFor(id).map(c=>c.file_path).filter(Boolean);
+  if (files.length) await sb.storage.from(BUCKET).remove(files);
+  await sb.from('prs_properties').delete().eq('id', id);
+  await load();
+}
+async function saveProfile(btn){
+  const o = { user_id: S.user.id, updated_at: new Date().toISOString() };
+  document.querySelectorAll('[data-pf]').forEach(el=>{ let v = el.value.trim(); if (el.dataset.pf==='landlord_ref') v = v.toUpperCase(); o[el.dataset.pf] = v || null; });
+  btn.disabled = true;
+  const { error } = await sb.from('prs_profiles').upsert(o, { onConflict: 'user_id' });
+  btn.disabled = false;
+  if (error) return setMsg('profMsg', error.message);
+  await load(); setMsg('profMsg','✓ Saved', true);
+}
+
+// ── certificates ──────────────────────────────────────────────────────────
+function suggest(pid, fromIssued){
+  const type = document.getElementById('ct-'+pid).value, iss = document.getElementById('ci-'+pid).value, exp = document.getElementById('ce-'+pid);
+  const m = CERT[type].months;
+  if (iss && m && (fromIssued || !exp.value)) { exp.value = addMonths(iss, m); document.getElementById('cx-'+pid).textContent = `Suggested expiry: ${m>=12?(m/12)+' year'+(m===12?'':'s'):m+' months'} after the issue date. Check the certificate and change it if it says otherwise.`; }
+}
+let pdfjsReady = null;
+function loadPdfJs(){
+  if (pdfjsReady) return pdfjsReady;
+  pdfjsReady = new Promise((res, rej)=>{ const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'; s.onload = ()=>{ window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; res(window.pdfjsLib); }; s.onerror = rej; document.head.appendChild(s); });
+  return pdfjsReady;
+}
+async function pdfText(file){
+  const lib = await loadPdfJs();
+  const doc = await lib.getDocument({ data: await file.arrayBuffer() }).promise;
+  let out = '';
+  for (let i = 1; i <= Math.min(doc.numPages, 4); i++) { const pg = await doc.getPage(i); const tc = await pg.getTextContent(); out += tc.items.map(x=>x.str).join(' ') + '\n'; }
+  return out;
+}
+async function readFile(pid){
+  const f = document.getElementById('cf-'+pid).files[0], hint = document.getElementById('cx-'+pid);
+  if (!f) return;
+  if (f.size > 10*1024*1024) { hint.textContent = 'That file is over 10 MB. Please upload a smaller copy.'; return; }
+  if (f.type !== 'application/pdf') { hint.textContent = 'Photo uploaded: enter the dates from the certificate below.'; return; }
+  hint.textContent = 'Reading your PDF…';
+  try {
+    const info = window.CertParse.extract(await pdfText(f));
+    if (info.type) document.getElementById('ct-'+pid).value = info.type;
+    const type = document.getElementById('ct-'+pid).value;
+    if (info.issued) document.getElementById('ci-'+pid).value = info.issued;
+    if (info.expires) document.getElementById('ce-'+pid).value = info.expires;
+    else if (info.issued && CERT[type].months) document.getElementById('ce-'+pid).value = addMonths(info.issued, CERT[type].months);
+    if (info.rating) document.getElementById('cr-'+pid).value = info.rating;
+    const bits = [];
+    if (info.type) bits.push(`looks like a ${CERT[info.type].label.toLowerCase()}`);
+    if (info.issued) bits.push(`issued ${fmtD(info.issued)}`);
+    if (info.expires) bits.push(`expiry ${fmtD(info.expires)}`); else if (info.issued && CERT[type].months) bits.push('expiry suggested from issue date');
+    if (info.rating) bits.push(`EPC rating ${info.rating}`);
+    hint.textContent = bits.length ? `We read: ${bits.join(', ')}. Please check before saving.` : "We couldn't find dates in this PDF (it may be a scan). Please enter them below.";
+  } catch(e) { hint.textContent = "We couldn't read this PDF. Please enter the dates below."; }
+}
+async function uploadCert(pid, btn){
+  const type = document.getElementById('ct-'+pid).value, f = document.getElementById('cf-'+pid).files[0];
+  const issued = document.getElementById('ci-'+pid).value || null, expires = document.getElementById('ce-'+pid).value || null, rating = document.getElementById('cr-'+pid).value || null;
+  if (!f && !issued && !expires) return setMsg('cm-'+pid, 'Choose a file or enter the certificate dates.');
+  if (issued && expires && expires < issued) return setMsg('cm-'+pid, 'The expiry date is before the issue date.');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  let path = null;
+  if (f) {
+    if (f.size > 10*1024*1024) { btn.disabled=false; btn.textContent='Save to vault'; return setMsg('cm-'+pid,'File is over 10 MB.'); }
+    const safe = f.name.replace(/[^A-Za-z0-9._-]+/g,'_').slice(-80);
+    path = `${S.user.id}/${pid}/${Date.now()}-${safe}`;
+    const up = await sb.storage.from(BUCKET).upload(path, f, { contentType: f.type || 'application/octet-stream', upsert: false });
+    if (up.error) { btn.disabled=false; btn.textContent='Save to vault'; return setMsg('cm-'+pid, 'Upload failed: '+up.error.message); }
+  }
+  const { error } = await sb.from('prs_certificates').insert({ user_id:S.user.id, property_id:pid, cert_type:type, issued_on:issued, expires_on:expires, epc_rating: type==='epc'?rating:null, file_path:path, file_name:f?f.name.slice(0,120):null });
+  btn.disabled = false; btn.textContent = 'Save to vault';
+  if (error) { if (path) await sb.storage.from(BUCKET).remove([path]); return setMsg('cm-'+pid, error.message); }
+  if (type==='epc' && rating) await sb.from('prs_properties').update({ epc_rating: rating }).eq('id', pid);
+  await load(); setMsg('cm-'+pid, '✓ Saved to your vault', true);
+}
+async function viewFile(cid){
+  const c = S.certs.find(x=>x.id===cid); if (!c?.file_path) return;
+  const w = window.open('', '_blank');
+  const { data, error } = await sb.storage.from(BUCKET).createSignedUrl(c.file_path, 120);
+  if (error) { if (w) w.close(); return alert('Could not open file: '+error.message); }
+  if (w) w.location = data.signedUrl; else location.href = data.signedUrl;
+}
+async function delCert(cid){
+  const c = S.certs.find(x=>x.id===cid); if (!c || !confirm('Delete this document from your vault?')) return;
+  if (c.file_path) await sb.storage.from(BUCKET).remove([c.file_path]);
+  await sb.from('prs_certificates').delete().eq('id', cid);
+  await load();
+}
+async function setOnRegister(cid, v){ await sb.from('prs_certificates').update({ on_register: v }).eq('id', cid); await load(); }
+
+// ── print data sheet ──────────────────────────────────────────────────────
+function printSheet(){
+  const pf = S.profile || {}, L = { house:'House', flat:'Flat / maisonette', bungalow:'Bungalow', room:'Room / bedsit', other:'Other', let:'Let / occupied', becoming_let:'Becoming let', vacant:'Vacant', assured_periodic:'Assured periodic', assured:'Assured (other)', regulated:'Regulated', monthly:'per month', weekly:'per week', four_weekly:'every 4 weeks' };
+  const tr = (k,v)=>`<tr><th>${k}</th><td>${v ? esc(v) : '<span class="small">— to provide —</span>'}</td></tr>`;
+  let h = `<h1>Register-Ready data sheet</h1><p class="small">Prepared ${P.fmt(new Date())} with CompliantUK for the GOV.UK “Register your rental property” service. Keep this sheet beside you when you register. CompliantUK is not part of government.</p>
+  <h2>Landlord</h2><table>${tr('Landlord type', {individual:'Individual / sole trader', joint:'Joint landlord', organisation:'Company / organisation'}[pf.landlord_type]||'')}${tr('Name / organisation', pf.full_name)}${tr('Email', S.user.email)}${tr('Phone', pf.phone)}${tr('Correspondence address (England or Wales)', pf.correspondence_address)}${tr('Companies House number', pf.company_number)}${tr('Landlord number', pf.landlord_ref)}${tr('Letting / managing agent', pf.agent_name)}</table>
+  <h3>What you need on the day</h3><p><span class="box"></span>GOV.UK One Login (create one in advance) <span class="box" style="margin-left:14px"></span>Debit/credit card for the fee (£65 per property per year, pro-rated during rollout)</p>`;
+  S.props.forEach((p, i)=>{
+    const r = regionOf(p), g = gaps(p).filter(x=>x.lvl!=='g');
+    const cRow = t=>{ const c = latest(p.id,t); return `<tr><th>${CERT[t].label}</th><td>${c ? `Issued ${fmtD(c.issued_on)} · Expires ${fmtD(c.expires_on)}${c.epc_rating?' · Rating '+esc(c.epc_rating):''}${c.file_name?' · File: '+esc(c.file_name):''}` : (t==='gas' && !p.has_gas ? 'Not applicable — no gas supply' : '<span class="small">— missing —</span>')}</td></tr>`; };
+    h += `<div class="${i===0?'':'pp'}"><h2>Property ${i+1}: ${esc(p.address)}</h2>
+    <table>${tr('Address', p.address)}${tr('Postcode', p.postcode)}${tr('Region / registration window', r ? `${r.name}: ${P.fmt(r.start)} – ${P.fmt(r.end)}` : '')}${tr('Property type', L[p.property_type]||p.property_type)}${tr('Bedrooms', p.bedrooms!=null?String(p.bedrooms):'')}${tr('Current rental status', L[p.tenancy_status]||p.tenancy_status)}${tr('Tenancy type', L[p.tenancy_type]||p.tenancy_type)}${tr('Rent', p.rent_amount!=null?`£${Number(p.rent_amount).toFixed(2)} ${L[p.rent_frequency]||''}`:'')}${tr('HMO / licence', p.is_hmo ? ('Licensed' + (p.licence_ref?' — ref '+p.licence_ref:'')) : 'No')}${tr('Deposit scheme', p.deposit_scheme)}${tr('Managing / letting agent', p.agent_contact)}${tr('Freeholder', p.freeholder_contact)}${tr('Superior landlord', p.superior_landlord_contact)}${tr('Joint landlords', p.joint_landlords)}</table>
+    <h3>Safety and energy documents</h3><table>${cRow('gas')}${cRow('eicr')}${cRow('epc')}${p.is_hmo?cRow('licence'):''}</table>
+    <h3>After you register</h3><table>${tr('Rental property number', p.property_ref)}${tr('Date registered', p.record_started_on?fmtD(p.record_started_on):'')}${tr('28-day completion deadline', p.record_started_on?fmtD(addDays(p.record_started_on,28)):'')}${tr('Fee paid on', p.fee_paid_on?fmtD(p.fee_paid_on):'')}</table>
+    ${g.length ? `<h3>Still to sort</h3><ul>${g.map(x=>`<li>${x.t.replace(/<[^>]+>/g,'')}</li>`).join('')}</ul>` : '<p><b>No gaps found — this property is Register-Ready.</b></p>'}</div>`;
+  });
+  if (!S.props.length) h += '<p>No properties added yet.</p>';
+  document.getElementById('print').innerHTML = h;
+  window.print();
+}
+
+// ── account ───────────────────────────────────────────────────────────────
+async function changePw(btn){
+  const a = document.getElementById('pw1').value, b = document.getElementById('pw2').value;
+  if (a !== b) return setMsg('pwMsg','Passwords do not match.');
+  btn.disabled = true; btn.textContent = 'Checking…';
+  const weak = await window.checkPasswordSafety(a, S.user.email);
+  if (weak) { btn.disabled=false; btn.textContent='Update password'; return setMsg('pwMsg', weak); }
+  const { error } = await sb.auth.updateUser({ password: a });
+  btn.disabled = false; btn.textContent = 'Update password';
+  if (error) return setMsg('pwMsg', error.message);
+  document.getElementById('pw1').value = document.getElementById('pw2').value = '';
+  setMsg('pwMsg','✓ Password updated', true);
+}
+async function signOut(){ await sb.auth.signOut(); location.href = '/login'; }
+</script>
+<script src="/cert-parse.js"></script>
+<script>init();</script>
+</body>
+</html>

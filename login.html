@@ -135,7 +135,7 @@ footer a:hover{color:var(--text2)}
 
 <script>
 const SUPABASE_URL = 'https://ihfbagpupottobyeciwq.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZmJhZ3B1cG90dG9ieWVjaXdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5MjU1OTcsImV4cCI6MjA5MDUwMTU5N30.UdlRjqvluSDtBPKdaUhmvBkquxXmb7bHjkrcKRhWw9A';
+const SUPABASE_ANON_KEY = 'sb_publishable_-U8VyL_5cWmquttTZfEekQ_LqPIEZJd'; // publishable key - safe in frontend (RLS enforced)
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -143,7 +143,7 @@ const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 (async () => {
   try {
     const { data: { session } } = await sb.auth.getSession();
-    if (session) window.location.href = '/dashboard';
+    if (session) window.location.href = (new URLSearchParams(window.location.search).get('next') === 'register') ? '/workspace' : '/dashboard';
   } catch (e) {
     console.error('Session check error:', e);
   }
@@ -151,6 +151,7 @@ const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Show temp banner if arriving from a new account email
 const params = new URLSearchParams(window.location.search);
+const DEST = params.get('next') === 'register' ? '/workspace' : '/dashboard';
 if (params.get('new') === '1') {
   document.getElementById('tempBanner').style.display = 'block';
 }
@@ -192,7 +193,7 @@ async function handleLogin() {
     // Success — small delay to ensure session is persisted before redirect
     btn.textContent = 'Logging in…';
     await new Promise(r => setTimeout(r, 600));
-    window.location.href = '/dashboard';
+    window.location.href = DEST;
   } catch (e) {
     btn.disabled = false;
     btn.textContent = 'Log in to dashboard →';

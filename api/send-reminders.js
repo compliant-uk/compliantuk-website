@@ -1,10 +1,12 @@
 // api/send-reminders.js
-// Cron job: runs every hour, sends reminder to tenants who haven't read
+// Cron job (daily 09:00 per vercel.json): Monitor-plan register alerts (lib/prs-alerts.js), then reminder to tenants who haven't read
 // the Information Sheet within 48 hours and haven't yet received a reminder.
 // Registered in vercel.json: "schedule": "0 * * * *"
 
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
+import Stripe from 'stripe';
+import { runPrsAlerts } from '../lib/prs-alerts.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -15,6 +17,24 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const BASE_URL = 'https://www.compliantuk.co.uk';
 
 export default async function handler(req, res) {
+  if (req.method !== 'GET' && req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  // Rental Property Register (Monitor plan) alerts — run first, never block tenant reminders
+  let prs;
+  try {
+    const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY) : null;
+    prs = await runPrsAlerts({ sb: supabase, resend, stripe });
+  } catch (e) {
+    console.error('prs alerts error:', e);
+    prs = { error: e.message };
+  }
+  const cap = { code: 200, body: {}, status(c) { this.code = c; return this; }, json(b) { this.body = b; return this; } };
+  await tenantReminders(req, cap);
+  return res.status(cap.code).json({ ...cap.body, prs });
+}
+
+async function tenantReminders(req, res) {
   // Allow GET (cron) or POST (manual trigger)
   if (req.method !== 'GET' && req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });

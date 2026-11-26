@@ -164,6 +164,10 @@ nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filt
     <p class="page-sub"><span class="live-dot"></span> Live · updates in real time as tenants read their documents</p>
   </div>
 
+  <a href="/workspace" style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(59,130,246,0.14),rgba(29,78,216,0.08));border:1px solid rgba(59,130,246,0.35);border-radius:14px;padding:16px 20px;margin-bottom:22px;text-decoration:none;color:inherit">
+    <div><div style="font-weight:700;font-size:15px">🏠 Rental Property Register workspace</div><div style="font-size:13px;color:var(--text2,#94a3b8);margin-top:3px">Certificate vault, gap report, data sheet and 28-day tracker for the new GOV.UK register.</div></div>
+    <span style="font-weight:700;color:#60a5fa;white-space:nowrap">Open workspace →</span>
+  </a>
   <!-- Stats -->
   <div class="stats-row">
     <div class="stat-card">
@@ -217,7 +221,7 @@ nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filt
     <div style="max-width:400px">
       <div style="margin-bottom:14px">
         <label style="display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px">New password</label>
-        <input type="password" id="newPassword" placeholder="At least 8 characters"
+        <input type="password" id="newPassword" placeholder="At least 10 characters"
           style="width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:11px 13px;font-size:14px;color:var(--text);font-family:var(--font);outline:none;transition:border-color .15s"
           onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'">
       </div>
@@ -238,9 +242,10 @@ nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filt
 </div>
 </div><!-- /app -->
 
+<script src="/pw-check.js"></script>
 <script>
 const SUPABASE_URL = 'https://ihfbagpupottobyeciwq.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloZmJhZ3B1cG90dG9ieWVjaXdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5MjU1OTcsImV4cCI6MjA5MDUwMTU5N30.UdlRjqvluSDtBPKdaUhmvBkquxXmb7bHjkrcKRhWw9A'; // publishable key - safe in frontend
+const SUPABASE_ANON_KEY = 'sb_publishable_-U8VyL_5cWmquttTZfEekQ_LqPIEZJd'; // publishable key - safe in frontend (RLS enforced)
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -588,16 +593,16 @@ async function changePassword() {
 
   msg.style.display = 'none';
 
-  if (pw.length < 8) {
-    showPwMsg('Password must be at least 8 characters.', '#fca5a5');
-    return;
-  }
   if (pw !== confirm) {
     showPwMsg('Passwords do not match.', '#fca5a5');
     return;
   }
 
   btn.disabled = true;
+  btn.textContent = 'Checking…';
+  const { data: { user: me } } = await sb.auth.getUser();
+  const weak = await window.checkPasswordSafety(pw, me?.email);
+  if (weak) { showPwMsg(weak, '#fca5a5'); btn.disabled = false; btn.textContent = 'Update password'; return; }
   btn.textContent = 'Updating…';
 
   const { error } = await sb.auth.updateUser({ password: pw });

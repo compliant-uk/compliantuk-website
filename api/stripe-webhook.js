@@ -89,10 +89,23 @@ export default async function handler(req,res) {
     const raw = await getRawBody(req);
     event = stripe.webhooks.constructEvent(raw,req.headers['stripe-signature'],process.env.STRIPE_WEBHOOK_SECRET);
   } catch(e) { return res.status(400).send(`Webhook Error: ${e.message}`); }
+  // Subscription lifecycle (Ready + Monitor). Needs these events enabled on the Stripe
+  // webhook endpoint; api/send-reminders also re-syncs subscription status daily.
+  if (event.type==='customer.subscription.updated' || event.type==='customer.subscription.deleted') {
+    const sub = event.data.object;
+    const status = event.type==='customer.subscription.deleted' ? 'canceled' : mapSubStatus(sub.status);
+    await sb.from('prs_entitlements').update({status,current_period_end:periodEnd(sub),updated_at:new Date().toISOString()}).eq('stripe_subscription_id',sub.id);
+    return res.status(200).json({received:true,subscription:status});
+  }
   if (event.type!=='checkout.session.completed') return res.status(200).json({received:true});
 
   const session = event.data.object;
   const meta = session.metadata||{};
+
+  if (meta.orderType === 'prs') {
+    try { return res.status(200).json(await handlePrs(session, meta)); }
+    catch(e) { console.error('prs error:', e.message); return res.status(500).json({error:'prs processing failed'}); }
+  }
 
   if (meta.orderType === 'bulk' && meta.bulkOrderId) {
     // handleBulkOrderProcessing marker: bulk orders are retrieved from Supabase and processed property-by-property.
@@ -222,4 +235,60 @@ function landlordHtml(lFirst,lLast,lEmail,addr,tenants,amount,isNew,pw,ref,date,
     ? `<div style="background:#1e3a5f;border-radius:12px;padding:28px 32px;margin:0 0 24px;border-left:4px solid #3b82f6"><h2 style="margin:0 0 6px;font-size:17px;font-weight:700;color:#fff">Your CompliantUK Account</h2><p style="margin:0 0 16px;color:#93c5fd;font-size:13px">Log in to track compliance and download certificates.</p><p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase">Email</p><p style="margin:0 0 16px;font-size:15px;color:#e2e8f0;font-family:monospace">${lEmail}</p><p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase">Temporary Password</p><p style="margin:0 0 20px;font-size:22px;font-weight:800;color:#60a5fa;font-family:monospace;letter-spacing:2px">${pw}</p><a href="${BASE}/login?email=${encodeURIComponent(lEmail)}&new=1" style="display:inline-block;background:#3b82f6;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">Log in to dashboard</a></div>`
     : `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:20px 24px;margin:0 0 24px"><p style="margin:0 0 8px;font-size:15px;font-weight:700;color:#166534">View in your dashboard</p><a href="${BASE}/login?email=${encodeURIComponent(lEmail)}" style="display:inline-block;background:#16a34a;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">Go to dashboard</a></div>`;
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,sans-serif"><table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0"><tr><td style="background:#080c14;border-radius:12px 12px 0 0;padding:28px 36px"><div style="font-weight:700;font-size:17px;color:white;margin-bottom:16px">Compliant<span style="color:#60a5fa">UK</span></div><h1 style="margin:0 0 6px;font-size:26px;font-weight:800;color:#fff">You're compliant.</h1><p style="margin:0;color:#93c5fd;font-size:15px">Payment confirmed. Documents delivered to your tenants.</p></td></tr><tr><td style="background:#fff;padding:36px"><p style="margin:0 0 24px;color:#334155;font-size:15px;line-height:1.7">Hi ${lFirst}, the Renters' Rights Act 2025 Information Sheet has been emailed to each of your tenants.</p><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:24px 28px;margin:0 0 24px"><p style="margin:0 0 16px;font-size:13px;font-weight:700;text-transform:uppercase;color:#94a3b8">Order Summary</p><table cellpadding="0" cellspacing="0" width="100%"><tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b;width:40%">Reference</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600;font-family:monospace">${ref}</td></tr><tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Date</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${date}</td></tr><tr><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b">Property</td><td style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f172a;font-weight:600">${addr}</td></tr><tr><td style="padding:8px 0;font-size:13px;color:#64748b">Amount paid</td><td style="padding:8px 0;font-size:15px;color:#0f172a;font-weight:700">${amount}</td></tr></table></div>${reportBlock}${rows.length?`<div style="margin:0 0 28px"><p style="margin:0 0 12px;font-size:13px;font-weight:700;text-transform:uppercase;color:#94a3b8">Tenant Delivery Status</p><table cellpadding="0" cellspacing="0" width="100%">${rows}</table></div>`:''} ${acct}</td></tr><tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px;text-align:center"><p style="margin:0;color:#94a3b8;font-size:12px">© 2026 CompliantUK</p></td></tr></table></td></tr></table></body></html>`;
+}
+
+// ── Rental Property Register service (Phase 2) ──────────────────────────────
+function mapSubStatus(s) {
+  if (s === 'active' || s === 'trialing') return 'active';
+  if (s === 'past_due' || s === 'unpaid' || s === 'incomplete') return 'past_due';
+  return 'canceled';
+}
+function periodEnd(sub) {
+  const t = sub?.current_period_end || sub?.items?.data?.[0]?.current_period_end;
+  return t ? new Date(t * 1000).toISOString() : null;
+}
+function esc(s) {
+  return `${s ?? ''}`.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+async function handlePrs(session, meta) {
+  const { data: existing } = await sb.from('prs_entitlements').select('id').eq('stripe_session_id', session.id).maybeSingle();
+  if (existing) return { received: true, prs: true, idempotent: true };
+  const email = (meta.landlordEmail || session.customer_details?.email || session.customer_email || '').toLowerCase();
+  if (!email) return { received: true, error: 'no email' };
+  const product = meta.product === 'monitor' ? 'monitor' : 'register_ready';
+  const properties = Math.max(1, parseInt(meta.properties, 10) || 1);
+  const first = meta.landlordFirst || 'Landlord';
+  const last = meta.landlordLast || '';
+  const { id: userId, pw, isNew } = await getOrCreate(email, first, last);
+  let subId = null, cpe = null;
+  if (session.subscription) {
+    subId = typeof session.subscription === 'string' ? session.subscription : session.subscription.id;
+    try { cpe = periodEnd(await stripe.subscriptions.retrieve(subId)); } catch (e) { console.error('sub retrieve:', e.message); }
+  }
+  const { error } = await sb.from('prs_entitlements').insert({
+    user_id: userId, product, properties, status: 'active', amount_paid: session.amount_total,
+    stripe_session_id: session.id, stripe_customer_id: typeof session.customer === 'string' ? session.customer : session.customer?.id || null,
+    stripe_subscription_id: subId, current_period_end: cpe,
+  });
+  if (error) {
+    if (error.code === '23505') return { received: true, prs: true, idempotent: true };
+    throw error;
+  }
+  await sb.from('prs_profiles').upsert({ user_id: userId, full_name: `${first} ${last}`.trim() }, { onConflict: 'user_id', ignoreDuplicates: true });
+  const label = product === 'monitor' ? 'Ready + Monitor' : 'Register-Ready';
+  const amount = `£${((session.amount_total || 0) / 100).toFixed(2)}`;
+  await resend.emails.send({
+    from: 'CompliantUK <noreply@compliantuk.co.uk>', reply_to: 'support@compliantuk.co.uk', to: email,
+    bcc: process.env.ADMIN_BCC_EMAIL || 'support@compliantuk.co.uk',
+    subject: `You're in — ${label} for ${properties} propert${properties === 1 ? 'y' : 'ies'}`,
+    html: prsWelcomeHtml({ first, email, label, properties, amount, isNew, pw, monitor: product === 'monitor', ref: session.id.slice(-12).toUpperCase() }),
+  }).catch(e => console.error('prs email:', e.message));
+  return { received: true, prs: true };
+}
+function prsWelcomeHtml({ first, email, label, properties, amount, isNew, pw, monitor, ref }) {
+  const login = `${BASE}/login?email=${encodeURIComponent(email)}${isNew ? '&new=1' : ''}&next=register`;
+  const acct = isNew
+    ? `<div style="background:#1e3a5f;border-radius:12px;padding:24px 28px;margin:0 0 24px"><p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#93c5fd;text-transform:uppercase">Your login</p><p style="margin:0 0 12px;font-size:15px;color:#e2e8f0;font-family:monospace">${esc(email)}</p><p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#93c5fd;text-transform:uppercase">Temporary password</p><p style="margin:0 0 18px;font-size:22px;font-weight:800;color:#60a5fa;font-family:monospace;letter-spacing:2px">${esc(pw)}</p><a href="${login}" style="display:inline-block;background:#3b82f6;color:#fff;padding:12px 26px;border-radius:8px;text-decoration:none;font-weight:700">Open your Register workspace</a><p style="margin:14px 0 0;font-size:12px;color:#93c5fd">Please change this password after you first log in.</p></div>`
+    : `<p style="margin:0 0 24px"><a href="${login}" style="display:inline-block;background:#3b82f6;color:#fff;padding:12px 26px;border-radius:8px;text-decoration:none;font-weight:700">Open your Register workspace</a></p>`;
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;background:#f8fafc;font-family:-apple-system,Segoe UI,Arial,sans-serif"><table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px"><tr><td align="center"><table width="600" cellpadding="0" cellspacing="0" style="max-width:600px"><tr><td style="background:#080c14;border-radius:12px 12px 0 0;padding:28px 36px"><div style="font-weight:700;font-size:17px;color:#fff;margin-bottom:14px">Compliant<span style="color:#60a5fa">UK</span></div><h1 style="margin:0 0 6px;font-size:24px;color:#fff">Payment confirmed. Let's get you Register-Ready.</h1><p style="margin:0;color:#93c5fd;font-size:14px">${esc(label)} · ${properties} propert${properties === 1 ? 'y' : 'ies'} · ${esc(amount)} · Ref ${esc(ref)}</p></td></tr><tr><td style="background:#fff;padding:32px 36px;color:#334155;font-size:15px;line-height:1.7"><p style="margin:0 0 16px">Hi ${esc(first)},</p><p style="margin:0 0 16px">Your Register workspace is ready. In about 15 minutes per property you can:</p><ol style="margin:0 0 20px;padding-left:20px"><li>Add each property and upload your gas safety, EICR and EPC certificates to your private vault. We read the dates for you.</li><li>Check the gap report and fix anything missing or expired.</li><li>Print your Register-Ready data sheet and use it to complete the GOV.UK "Register your rental property" service in one sitting.</li><li>Record your landlord (L-) and property (P-) numbers so the 28-day tracker can keep you on time.</li></ol>${monitor ? '<p style="margin:0 0 20px;padding:14px 18px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px">Monitor is active: we will email you 60, 30 and 7 days before any certificate expires, and before your 28-day record deadlines.</p>' : ''}${acct}<p style="margin:0;font-size:13px;color:#64748b">The government registration fee (£65 per property per year, pro-rated in the first year) is paid directly on GOV.UK and is not included. CompliantUK is an independent preparation service and is not part of government.</p></td></tr><tr><td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:18px;text-align:center;color:#94a3b8;font-size:12px">© 2026 CompliantUK · support@compliantuk.co.uk</td></tr></table></td></tr></table></body></html>`;
 }

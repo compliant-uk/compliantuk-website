@@ -1,2 +1,6 @@
 .vercel
 .env*.local
+
+# Local AI-assistant notes (may contain environment details; never commit)
+CLAUDE.md
+.env*

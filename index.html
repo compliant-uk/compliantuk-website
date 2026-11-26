@@ -405,14 +405,14 @@ footer{padding:80px max(5%,20px) 40px;background:var(--bg1);border-top:1px solid
 <section class="sec pcs" id="pricing"><div class="sec-in">
 <div class="ey">Pricing</div>
 <h2>Simple pricing. <span class="sr">A fraction of a single penalty.</span></h2>
-<p class="sp">Early access is open now. Reserve your place today — <strong>no payment is taken</strong> until your account is set up and you choose to go ahead. The government's own fee is separate and paid directly on GOV.UK.</p>
+<p class="sp">Your Register workspace is ready the moment you pay — upload certificates, get your gap report and data sheet, and be ready for day one. Secure card payment via Stripe. The government's own fee is separate and paid directly on GOV.UK.</p>
 <div class="pr-grid">
 <div class="pr"><div class="pr-n">Register-Ready</div><div class="pr-a"><sup>£</sup>29</div><div class="pr-u">per property · one-off</div>
 <ul class="pr-l"><li><span class="lc">✓</span>Free readiness check</li><li><span class="lc">✓</span>Certificate vault (gas, EICR/EIC, EPC, licences)</li><li><span class="lc">✓</span>Automatic expiry-date reading</li><li><span class="lc">✓</span>Compliance gap report</li><li><span class="lc">✓</span>Register-Ready data sheet</li><li><span class="lc">✓</span>28-day completion tracker</li><li><span class="lc">✓</span>GOV.UK One Login &amp; registration walkthrough</li></ul>
-<button class="pr-b" onclick="openReserve('register-ready')">Reserve early access →</button></div>
+<button class="pr-b" onclick="openBuy('register_ready')">Get Register-Ready →</button></div>
 <div class="pr pr-feat"><div class="pr-badge">Most popular</div><div class="pr-n">Ready + Monitor</div><div class="pr-a"><sup>£</sup>29<span class="pr-plus"> + £2.50/mo</span></div><div class="pr-u">per property</div>
 <ul class="pr-l"><li><span class="lc">✓</span>Everything in Register-Ready</li><li><span class="lc">✓</span>Certificate expiry alerts at 60, 30 and 7 days</li><li><span class="lc">✓</span>"Update within 28 days" prompts after any change</li><li><span class="lc">✓</span>Annual renewal reminder for the government fee</li><li><span class="lc">✓</span>Live portfolio dashboard</li></ul>
-<button class="pr-b pr-b-p" onclick="openReserve('monitor')">Reserve early access →</button></div>
+<button class="pr-b pr-b-p" onclick="openBuy('monitor')">Get Ready + Monitor →</button></div>
 <div class="pr"><div class="pr-n">Portfolio &amp; Agency</div><div class="pr-a"><span class="pr-from">from</span><sup>£</sup>1.50</div><div class="pr-u">per property / month</div>
 <ul class="pr-l"><li><span class="lc">✓</span>Bulk spreadsheet upload</li><li><span class="lc">✓</span>Landlord registration progress tracker</li><li><span class="lc">✓</span>Agent access-link &amp; password manager</li><li><span class="lc">✓</span>Team logins</li><li><span class="lc">✓</span>Priority support</li></ul>
 <a class="pr-b" href="/agents#quote">Get a portfolio quote →</a></div>
@@ -451,21 +451,20 @@ footer{padding:80px max(5%,20px) 40px;background:var(--bg1);border-top:1px solid
 <a href="#check" class="cta-p" onclick="focusChecker()">Check my property free →</a>
 </div></section>
 
-<div class="modal" id="modal" onclick="if(event.target===this)closeReserve()"><div class="modal-box">
-<button class="modal-x" onclick="closeReserve()" aria-label="Close">×</button>
-<div id="modal-form">
-<div class="modal-h">Reserve early access</div>
-<p class="modal-p" id="modal-plan">Register-Ready — £29 per property</p>
-<div class="f" style="margin-bottom:10px"><label for="rv-name">Your name *</label><input type="text" id="rv-name" placeholder="Jane Smith"></div>
-<div class="f" style="margin-bottom:10px"><label for="rv-email">Email *</label><input type="email" id="rv-email" placeholder="you@example.com"></div>
-<div class="fr"><div class="f"><label for="rv-props">Properties</label><input type="number" id="rv-props" min="1" value="1"></div><div class="f"><label for="rv-pc">Main postcode</label><input type="text" id="rv-pc" placeholder="B16 9ST" maxlength="9"></div></div>
-<p class="modal-small">No payment today. We'll email you when your account is ready, in time for your region's registration window.</p>
-<button class="sbtn" id="rv-btn" onclick="submitReserve()">Reserve my place →</button>
+<div class="modal" id="modal" onclick="if(event.target===this)closeBuy()"><div class="modal-box">
+<button class="modal-x" onclick="closeBuy()" aria-label="Close">×</button>
+<div class="modal-h" id="modal-h">Get Register-Ready</div>
+<div style="display:flex;gap:8px;margin-bottom:14px"><button type="button" class="rs-again" id="pl-rr" style="flex:1;margin:0" onclick="setPlan('register_ready')">Register-Ready</button><button type="button" class="rs-again" id="pl-mo" style="flex:1;margin:0" onclick="setPlan('monitor')">Ready + Monitor</button></div>
+<p class="modal-p" id="modal-plan">£29 per property, one-off</p>
+<div class="f" style="margin-bottom:10px"><label for="rv-name">Your name *</label><input type="text" id="rv-name" placeholder="Jane Smith" autocomplete="name"></div>
+<div class="f" style="margin-bottom:10px"><label for="rv-email">Email *</label><input type="email" id="rv-email" placeholder="you@example.com" autocomplete="email"></div>
+<div class="fr"><div class="f"><label for="rv-props">Properties</label><input type="number" id="rv-props" min="1" max="500" value="1" oninput="updTotal()"></div><div class="f"><label for="rv-pc">Main postcode</label><input type="text" id="rv-pc" placeholder="B16 9ST" maxlength="9"></div></div>
+<div id="rv-total" style="font-size:15px;font-weight:700;margin:4px 0 6px"></div>
+<p class="modal-small" id="rv-small">Your login is emailed straight after payment. The GOV.UK registration fee (£65 per property per year, pro-rated during rollout) is paid separately to the government.</p>
+<button class="sbtn" id="rv-btn" onclick="submitBuy()">Continue to secure payment →</button>
 <div class="ck-err" id="rv-err"></div>
-</div>
-<div id="modal-done" style="display:none;text-align:center;padding:12px 0"><div style="font-size:40px">✅</div><div class="modal-h">You're on the list</div><p class="modal-p">We've emailed you a confirmation. We'll be in touch before your region's registration window opens.</p><button class="sbtn" onclick="closeReserve()">Done</button></div>
+<p class="modal-small" style="margin-top:10px">Already bought? <a href="/login?next=register" style="color:var(--blue2)">Log in to your workspace</a></p>
 </div></div>
-
 <footer>
 <div class="fi">
 <div>
@@ -608,7 +607,7 @@ function showResult(c, region, est){
     if (c.let_status === 'empty') h += '<div class="rs-box rs-info">ℹ️ During the rollout you only need to register properties that are let, or become let. In future, empty properties will need registering before they are advertised.</div>';
     if (c.tenancy_type === 'unsure') h += '<div class="rs-box rs-info">ℹ️ Registration applies to assured (including periodic) and regulated tenancies. Not sure which you have? <a href="/contact">Ask us</a>.</div>';
     h += '<div class="rs-docs"><div class="rs-dh">Documents you\'ll need</div><ul>' + (c.gas==='yes' ? '<li>Gas safety certificate</li>' : '') + '<li>EICR or EIC (electrical)</li><li>Energy Performance Certificate</li><li>Rent and tenancy details</li>' + (c.hmo!=='no' ? '<li>HMO licence (one registration for the whole property)</li>' : '<li>Any selective or additional licence</li>') + '<li>GOV.UK One Login account</li></ul></div>';
-    h += '<button class="sbtn" onclick="openReserve(\'register-ready\')">Get Register-Ready — £29 →</button>';
+    h += '<button class="sbtn" onclick="openBuy(\'register_ready\')">Get Register-Ready — £29 →</button>';
   }
   h += '<button class="rs-again" onclick="resetCheck()">← Check another property</button>';
   if (c.optin) h += '<p class="rs-mail">We\'ve emailed a copy of this result to ' + esc(c.email) + '.</p>';
@@ -618,32 +617,48 @@ function showResult(c, region, est){
 }
 function resetCheck(){ document.getElementById('result').style.display='none'; document.getElementById('checker').style.display='block'; document.getElementById('pc').value=''; document.getElementById('pc').focus(); }
 
-// ── Reserve early access ───────────────────────────────────────────────────
-var PLAN_LABELS = { 'register-ready':'Register-Ready — £29 per property (one-off)', 'monitor':'Ready + Monitor — £29 + £2.50 per property per month' };
-var currentPlan = 'register-ready';
-function openReserve(plan){
-  currentPlan = plan; document.getElementById('modal-plan').textContent = PLAN_LABELS[plan] || plan;
-  document.getElementById('modal-form').style.display='block'; document.getElementById('modal-done').style.display='none'; document.getElementById('rv-err').textContent='';
+// ── Buy: Stripe checkout ───────────────────────────────────────────────────
+var currentPlan = 'register_ready';
+function setPlan(plan){
+  currentPlan = plan === 'monitor' ? 'monitor' : 'register_ready';
+  var mo = currentPlan === 'monitor';
+  document.getElementById('modal-h').textContent = mo ? 'Get Ready + Monitor' : 'Get Register-Ready';
+  document.getElementById('modal-plan').textContent = mo ? '£29 per property set-up, then £2.50 per property per month. Cancel any time.' : '£29 per property, one-off';
+  document.getElementById('pl-rr').style.borderColor = mo ? '' : 'var(--blue2)';
+  document.getElementById('pl-mo').style.borderColor = mo ? 'var(--blue2)' : '';
+  updTotal();
+}
+function updTotal(){
+  var n = Math.max(1, Math.min(500, parseInt(document.getElementById('rv-props').value,10)||1));
+  var t = 'Total today: £' + (29*n).toFixed(2);
+  if (currentPlan === 'monitor') t += ' · then £' + (2.5*n).toFixed(2) + '/month';
+  document.getElementById('rv-total').textContent = t;
+}
+function openBuy(plan){
+  document.getElementById('rv-err').textContent='';
   if (lastCheck) { document.getElementById('rv-email').value = lastCheck.email; document.getElementById('rv-pc').value = lastCheck.postcode; }
+  setPlan(plan);
   document.getElementById('modal').classList.add('open');
 }
-function closeReserve(){ document.getElementById('modal').classList.remove('open'); }
-async function submitReserve(){
+function closeBuy(){ document.getElementById('modal').classList.remove('open'); }
+async function submitBuy(){
   var err = document.getElementById('rv-err'); err.textContent='';
   var name = document.getElementById('rv-name').value.trim(), email = document.getElementById('rv-email').value.trim();
-  var props = parseInt(document.getElementById('rv-props').value,10)||1, pc = document.getElementById('rv-pc').value.trim().toUpperCase();
+  var props = parseInt(document.getElementById('rv-props').value,10), pc = document.getElementById('rv-pc').value.trim().toUpperCase();
   if (!name) { err.textContent='Please enter your name.'; return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent='Please enter a valid email address.'; return; }
-  var btn = document.getElementById('rv-btn'); btn.disabled=true; btn.textContent='Reserving…';
+  if (!(props >= 1 && props <= 500)) { err.textContent='Please enter between 1 and 500 properties. For larger portfolios, get an agency quote.'; return; }
+  var btn = document.getElementById('rv-btn'); btn.disabled=true; btn.textContent='Opening secure checkout…';
   try {
-    var r = await fetch('/api/prs-readiness', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ type:'reserve', plan: currentPlan, name: name, email: email, properties: props, postcode: pc, region: lastCheck ? lastCheck.region : '', optin: true }) });
+    var r = await fetch('/api/create-checkout', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ product: currentPlan, name: name, email: email, properties: props, postcode: pc }) });
     var j = await r.json();
-    if (!r.ok || !j.success) throw new Error(j.error || 'failed');
-    document.getElementById('modal-form').style.display='none'; document.getElementById('modal-done').style.display='block';
-  } catch(e) { err.textContent = 'Something went wrong. Please try again or email support@compliantuk.co.uk.'; }
-  btn.disabled=false; btn.textContent='Reserve my place →';
+    if (!r.ok || !j.url) throw new Error(j.error || 'failed');
+    window.location.href = j.url; return;
+  } catch(e) { err.textContent = (e && e.message && e.message !== 'failed' ? e.message + ' ' : '') + 'If this keeps happening, email support@compliantuk.co.uk.'; }
+  btn.disabled=false; btn.textContent='Continue to secure payment →';
 }
-document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeReserve(); });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeBuy(); });
+(function(){ try { var q = new URLSearchParams(location.search); var b = q.get('buy'); if (b === 'register_ready' || b === 'monitor') { if (q.get('email')) document.getElementById('rv-email').value = q.get('email'); openBuy(b); } } catch(e){} })();
 
 function toggleMenu(){document.getElementById('mob').classList.toggle('open')}
 function faq(btn){const p=btn.nextElementSibling;const exp=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',!exp);p.style.maxHeight=exp?'0':p.scrollHeight+'px'}

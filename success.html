@@ -172,9 +172,25 @@ footer{background:var(--bg1);border-top:1px solid var(--border);padding:28px max
 <footer><div class="fi"><a href="/" class="logo"><div class="lm"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><path d="M16 2L4 7v8c0 7.18 5.16 13.9 12 15.93C22.84 28.9 28 22.18 28 15V7L16 2z" fill="url(#sg)"/><polyline points="10,16 14,20 22,12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div><span class="ln">Compliant<span>UK</span></span></a><div class="fl"><a href="/about">About</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/contact">Contact</a><a href="/dashboard">Dashboard</a></div><span style="font-size:13px;color:var(--text3)">© 2026 CompliantUK</span></div></footer>
 
 <script>
+(function(){
+  var prod=new URLSearchParams(location.search).get('product');
+  if(prod!=='register_ready'&&prod!=='monitor')return;
+  var mo=prod==='monitor';
+  document.title='Payment confirmed — CompliantUK Register workspace';
+  document.querySelector('.sh').innerHTML='<div class="sh-icon">✅</div><h1>You\'re <span class="sr">Register-Ready.</span></h1><p>Payment confirmed for '+(mo?'Ready + Monitor':'Register-Ready')+'. We\'ve emailed your login details — open your Register workspace to start uploading certificates.</p>';
+  document.querySelector('main').innerHTML='<div class="card"><h2>What happens next</h2><ul class="nsteps">'+
+  '<li class="nstep"><span class="nsi">📧</span><div class="nst"><h4>Check your email</h4><p>Your login link and temporary password arrive within a couple of minutes (check spam). Already have a CompliantUK account? Just log in with your existing password.</p></div></li>'+
+  '<li class="nstep"><span class="nsi">🏠</span><div class="nst"><h4>Add your properties</h4><p>Enter each address — we look up your registration region and opening date automatically.</p></div></li>'+
+  '<li class="nstep"><span class="nsi">📄</span><div class="nst"><h4>Upload certificates to your private vault</h4><p>Gas safety, EICR, EPC and licences. We read the dates from the PDF and your gap report shows exactly what is missing or expiring.</p></div></li>'+
+  '<li class="nstep"><span class="nsi">🖨️</span><div class="nst"><h4>Print your Register-Ready data sheet</h4><p>Everything GOV.UK asks for, on one page — then register on day one and we track your 28-day completion window.</p></div></li>'+
+  (mo?'<li class="nstep"><span class="nsi">🔔</span><div class="nst"><h4>Monitoring is on</h4><p>We email you 60, 30 and 7 days before any certificate expires, plus 28-day update and annual renewal reminders. Manage or cancel any time.</p></div></li>':'')+
+  '</ul></div><div class="dcta"><div><h3>Open your Register workspace</h3><p>Certificate vault, gap report, data sheet and 28-day tracker — landlord access only.</p></div><a href="/login?next=register" class="dbtn">Open workspace →</a></div>';
+})();
+</script>
+<script>
 const raw=sessionStorage.getItem('pendingOrder');
-if(raw){try{const o=JSON.parse(raw);document.getElementById('sum-addr').textContent=o.propertyAddress||'—';document.getElementById('sum-landlord').textContent=`${o.landlordFirst||''} ${o.landlordLast||''}`.trim()||'—';document.getElementById('sum-tc').textContent=`${o.tenantCount||1} tenant${(o.tenantCount||1)>1?'s':''}`;document.getElementById('sum-price').textContent=`£${o.price||49}`;}catch(e){}}
-if(!document.getElementById('slist').innerHTML)document.getElementById('slist').innerHTML='<div class="si"><span class="sd"></span><span class="se">Email sent to tenant(s) ✓</span></div>';
+if(raw&&document.getElementById('sum-addr')){try{const o=JSON.parse(raw);document.getElementById('sum-addr').textContent=o.propertyAddress||'—';document.getElementById('sum-landlord').textContent=`${o.landlordFirst||''} ${o.landlordLast||''}`.trim()||'—';document.getElementById('sum-tc').textContent=`${o.tenantCount||1} tenant${(o.tenantCount||1)>1?'s':''}`;document.getElementById('sum-price').textContent=`£${o.price||49}`;}catch(e){}}
+if(document.getElementById('slist')&&!document.getElementById('slist').innerHTML)document.getElementById('slist').innerHTML='<div class="si"><span class="sd"></span><span class="se">Email sent to tenant(s) ✓</span></div>';
 function handleNotify(){const e=document.getElementById('ne').value.trim();if(!e||!e.includes('@')){alert('Please enter a valid email.');return}fetch('/api/notify-waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,service:'tenancy-agreement-generator'})}).catch(()=>{});document.getElementById('ne').value='';alert("You're on the list — we'll email you when it launches!")}
 function toggleMenu(){var m=document.getElementById('mobile-menu');var b=document.getElementById('hamburger');var open=m.classList.contains('open');m.classList.toggle('open',!open);b.classList.toggle('open',!open);}
 </script>
