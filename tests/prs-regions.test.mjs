@@ -1,0 +1,21 @@
+// Tests for /prs-regions.js — region windows, GOV.UK fee pro-rating and status logic.
+import { readFileSync } from 'fs';
+import vm from 'vm';
+import assert from 'assert/strict';
+const ctx = { globalThis: {} }; ctx.globalThis = ctx;
+vm.runInNewContext(readFileSync(new URL('../prs-regions.js', import.meta.url), 'utf8'), ctx);
+const P = ctx.PRS;
+const D = (y, m, d) => new Date(Date.UTC(y, m - 1, d));
+let n = 0; const t = (name, fn) => { fn(); n++; console.log('  ✅ ' + name); };
+console.log('PRS regions tests');
+t('9 regions, West Midlands first', () => { assert.equal(P.REGIONS.length, 9); assert.equal(P.REGIONS[0].name, 'West Midlands'); });
+t('GOV.UK worked example 1: 15 Dec 2026 = £5.34', () => assert.equal(P.estimateFee(D(2026, 12, 15)).fee, 5.34));
+t('GOV.UK worked example 2: 25 Jun 2027 = £39.60', () => assert.equal(P.estimateFee(D(2027, 6, 25)).fee, 39.6));
+t('After 15 Nov 2027 full £65', () => assert.equal(P.estimateFee(D(2027, 11, 15)).fee, 65));
+t('ONS region names map (Yorkshire)', () => assert.equal(P.findRegion('Yorkshire and The Humber').name, 'Yorkshire and Humberside'));
+t('Unknown region → null', () => assert.equal(P.findRegion('Wales'), null));
+t('Pre-launch status on 26 Nov 2026 = 19 days', () => { const s = P.status(D(2026, 11, 26)); assert.equal(s.phase, 'pre'); assert.equal(s.days, 19); });
+t('Open status on 20 Jan 2027 = West Midlands (earliest deadline)', () => { const s = P.status(D(2027, 1, 20)); assert.equal(s.phase, 'open'); assert.equal(s.region.name, 'West Midlands'); });
+t('Deadline day still counts as open', () => assert.match(P.regionState(P.REGIONS[0], D(2027, 3, 14)), /1 day left/));
+t('Post-rollout status after 14 Nov 2027', () => assert.equal(P.status(D(2027, 11, 20)).phase, 'post'));
+console.log(`\n${n} PRS tests passed`);

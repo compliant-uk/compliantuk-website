@@ -31,7 +31,7 @@ function test(name, fn) {
 // ── FILE EXISTENCE TESTS ─────────────────────────────────────
 console.log('\n📁 FILE EXISTENCE TESTS');
 const requiredFiles = [
-  'index.html', 'bulk.html', 'bulk-upload.html', 'about.html', 'contact.html',
+  'index.html', 'information-sheet.html', 'agents.html', 'bulk.html', 'bulk-upload.html', 'about.html', 'contact.html',
   'blog.html', 'blog-post.html', 'success.html', 'login.html', 'register.html',
   'dashboard.html', 'privacy.html', 'terms.html',
   'api/contact.js', 'api/create-checkout.js', 'api/create-bulk-checkout.js',
@@ -118,8 +118,8 @@ test('Schema: RLS enabled', () => schema.includes('ROW LEVEL SECURITY') || 'No R
 // ── PRICING LOGIC TESTS (CRITICAL) ───────────────────────────
 console.log('\n💰 PRICING LOGIC TESTS (CRITICAL)');
 
-// Test current index.html pricing
-const indexCode = readFileSync('index.html', 'utf8');
+// Test single-property Information Sheet checkout pricing (moved from index.html to information-sheet.html)
+const indexCode = readFileSync('information-sheet.html', 'utf8') // single-property checkout moved here in PRS pivot;
 // Correct: uses PRICING.starter.included (which is 4) or literal n-4
 const hasCorrectFrontendPricing = indexCode.includes('n - PRICING.starter.included') || indexCode.includes('n - 4') || indexCode.includes('n-4');
 // Wrong: uses n-1 (charges from tenant 2 instead of tenant 5)

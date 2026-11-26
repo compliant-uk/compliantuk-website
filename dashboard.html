@@ -197,7 +197,7 @@ nav{position:sticky;top:0;z-index:99;background:rgba(8,12,20,0.95);backdrop-filt
     </div>
     <div style="display:flex;gap:8px;align-items:center">
       <button id="globalDlAll" onclick="downloadAllCertsGlobal(this)" style="display:none;background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3);padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">⬇ All Certificates</button>
-      <a href="/#get-compliant" class="add-btn">＋ Add property</a>
+      <a href="/information-sheet#get-compliant" class="add-btn">＋ Add property</a>
     </div>
   </div>
 
@@ -360,7 +360,7 @@ function renderOrders(filter) {
         <div class="empty-icon">${filter === 'all' ? '🏠' : filter === 'complete' ? '✅' : '⏳'}</div>
         <div class="empty-title">${filter === 'all' ? 'No properties yet' : filter === 'complete' ? 'No fully compliant properties yet' : 'All caught up!'}</div>
         <div class="empty-sub">${filter === 'all' ? 'Add your first property to get started.' : filter === 'complete' ? 'Log into your dashboard to generate your proof-of-service certificate for each tenant.' : 'All your tenants have read their Information Sheets.'}</div>
-        ${filter === 'all' ? '<a href="/#get-compliant" class="add-btn" style="display:inline-flex;width:auto">＋ Add your first property</a>' : ''}
+        ${filter === 'all' ? '<a href="/information-sheet#get-compliant" class="add-btn" style="display:inline-flex;width:auto">＋ Add your first property</a>' : ''}
       </div>`;
     return;
   }

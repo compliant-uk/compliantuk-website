@@ -203,7 +203,7 @@ footer{border-top:1px solid var(--border);padding:32px 5%;background:var(--bg)}
       <a href="/" class="nav-link">Home</a>
       <a href="/bulk" class="nav-link">Portfolio</a>
       <a href="/contact" class="nav-link">Contact</a>
-      <a href="/#get-compliant" class="nav-btn">Get compliant — £49</a>
+      <a href="/#check" class="nav-btn">Check my property — free</a>
     </div>
     <button class="hamburger" id="hb" onclick="toggleMobileMenu()" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -214,18 +214,18 @@ footer{border-top:1px solid var(--border);padding:32px 5%;background:var(--bg)}
 <div class="mobile-menu" id="mm">
   <div class="mm-inner">
     <a href="/" class="mm-link" onclick="closeMobileMenu()">Home <span class="mm-link-arrow">›</span></a>
-    <a href="/bulk" class="mm-link" onclick="closeMobileMenu()">Portfolio &amp; Agency <span class="mm-link-arrow">›</span></a>
+    <a href="/agents" class="mm-link" onclick="closeMobileMenu()">Letting agents <span class="mm-link-arrow">›</span></a>
     <a href="/about" class="mm-link" onclick="closeMobileMenu()">About <span class="mm-link-arrow">›</span></a>
     <a href="/contact" class="mm-link" onclick="closeMobileMenu()">Contact <span class="mm-link-arrow">›</span></a>
-    <a href="/#get-compliant" class="mm-cta" onclick="closeMobileMenu()">Get compliant — £49</a>
+    <a href="/#check" class="mm-cta" onclick="closeMobileMenu()">Check my property — free</a>
   </div>
 </div>
 
 <div class="alert-banner">
   <div class="alert-banner-inner">
-    <span class="ab-badge">LIVE</span>
-    <span class="ab-text">Renters Rights Act 2025 Phase 1 is now in force — 31 May 2026 deadline for Information Sheet delivery</span>
-    <a href="/#get-compliant" class="ab-link">Get compliant now →</a>
+    <span class="ab-badge">PHASE 2</span>
+    <span class="ab-text" id="ab-text">The national rental property register opens 15 December 2026, starting with the West Midlands</span>
+    <a href="/#check" class="ab-link">Check your property free →</a>
   </div>
 </div>
 
@@ -288,11 +288,11 @@ footer{border-top:1px solid var(--border);padding:32px 5%;background:var(--bg)}
   <!-- SIDEBAR -->
   <aside class="blog-aside">
     <div class="aside-card urgent-card">
-      <div class="urgent-label">⏰ Deadline in</div>
+      <div class="urgent-label" id="dw-label">⏰ Register opens in</div>
       <div class="urgent-days" id="dw-days">--</div>
-      <div class="urgent-sub">days until 31 May 2026</div>
-      <div class="urgent-desc">Information Sheet must be served to every tenant</div>
-      <a href="/#get-compliant" class="urgent-btn">Get compliant — £49 →</a>
+      <div class="urgent-sub" id="dw-sub">days until 15 December 2026</div>
+      <div class="urgent-desc" id="dw-desc">West Midlands landlords register first — deadline 14 March 2027</div>
+      <a href="/#check" class="urgent-btn">Check my property — free →</a>
     </div>
     <div class="aside-card">
       <div class="aside-card-title">Most read</div>
@@ -548,11 +548,24 @@ function render(){
 }
 
 function updateCountdown(){
-  var deadline = new Date('2026-05-31T23:59:59');
-  var diff = deadline - new Date();
-  var days = Math.max(0, Math.floor(diff/(1000*60*60*24)));
-  var el = document.getElementById('dw-days');
-  if(el) el.textContent = days;
+  if(!window.PRS) return;
+  var st = PRS.status(new Date());
+  var el = document.getElementById('dw-days'), lb = document.getElementById('dw-label'), sb = document.getElementById('dw-sub'), ds = document.getElementById('dw-desc'), ab = document.getElementById('ab-text');
+  if(st.phase === 'pre'){
+    if(el) el.textContent = st.days;
+  } else if(st.phase === 'open'){
+    if(el) el.textContent = st.days;
+    if(lb) lb.textContent = '⏰ ' + st.region.name + ' deadline in';
+    if(sb) sb.textContent = 'days until ' + PRS.fmt(st.region.end);
+    if(ds) ds.textContent = 'Register every let property in ' + st.region.name + ' before the deadline';
+    if(ab) ab.textContent = st.region.name + ' registration is open — deadline ' + PRS.fmt(st.region.end);
+  } else {
+    if(el) el.textContent = '✓';
+    if(lb) lb.textContent = '📋 Rental property register';
+    if(sb) sb.textContent = 'All regions now required';
+    if(ds) ds.textContent = 'Keep every record updated within 28 days of any change';
+    if(ab) ab.textContent = 'All let properties in England must now be on the rental property register';
+  }
 }
 
 function renderMostRead(){
@@ -583,5 +596,7 @@ setInterval(updateCountdown, 60000);
 renderMostRead();
 render();
 </script>
+<script src="/prs-regions.js"></script>
+<script>updateCountdown();</script>
 </body>
 </html>
